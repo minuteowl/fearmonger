@@ -26,11 +26,10 @@ public class PersonObject : MonoBehaviour {
 	/*======== FUNCTIONS ========*/
 
 	// Constructor is not the initializer; see Start() method
-	public PersonObject(RoomObject r, Vector2 pos2d, int plevel)
+	public PersonObject(RoomObject r, Vector2 pos2d)
 	{
 		this.currentRoom = r;
 		this.transform.position = pos2d;
-		this.playerlevel = plevel;
 	}
 
 	// Use this for initialization
@@ -78,13 +77,6 @@ public class PersonObject : MonoBehaviour {
 			currentSanity -= delta;
 			return currentSanity;
 		}
-	}
-
-	// This is a special condition, not sure if we will actually use this
-	public void Kill()
-	{
-		isDead = true;
-		currentSanity = 0;
 	}
 
 }

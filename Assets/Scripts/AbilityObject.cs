@@ -2,9 +2,8 @@
 using System.Collections;
 
 public class AbilityObject : MonoBehaviour {
-
-	PlayerLevel plevel; // this is a pointer to the level object
-
+	
+	public string Name;
 	public int RequiredLevel;
 	public int Damage;
 	int ExpMultiplier;
@@ -14,8 +13,9 @@ public class AbilityObject : MonoBehaviour {
 		get { return (int)countdown; }
 	}
 
-	public AbilityObject(int requiredlevel, int damage, int xpmultiplier, float recoverytime)
+	public AbilityObject(string name, int requiredlevel, int damage, int xpmultiplier, float recoverytime)
 	{
+		Name = name;
 		RequiredLevel = requiredlevel;
 		Damage = damage;
 		ExpMultiplier = xpmultiplier;
@@ -24,7 +24,7 @@ public class AbilityObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		plevel = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLevel>();
+		//plevel = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLevel>();
 	}
 
 	int UseAbility(PersonObject p){

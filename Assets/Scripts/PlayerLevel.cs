@@ -4,36 +4,36 @@ using System.Collections;
  * DESCRIPTION:
  * This class handles the player's leveling and experience.
  */
-public class PlayerLevel : MonoBehaviour {
+public static class PlayerLevel  {
 
 	/*======== VARIABLES ========*/
 
 	// Treat these variables as read-only
-	public int Level;
-	public int ExpCurrent;
-	public int ExpToNextLevel;
+	static int Level;
+	static int ExpCurrent;
+	static int ExpToNextLevel;
 
 	/*======== FUNCTIONS ========*/
 
 	// Use this for initialization
-	void Start () {
+	static void Start () {
 		Level = 1;
 		ExpCurrent = 0;
 		ExpToNextLevel = 10*(Level+1);
 	}
 
-	void LevelUp(){
+	static void LevelUp(){
 		Level++;
 		ExpToNextLevel = 10*(Level+1);
 		ExpCurrent = ExpCurrent - ExpToNextLevel;  // Bring to zero or leftover experience
 	}
 
-	public void AddExperience(int e){
+	public static void AddExperience(int e){
 		ExpCurrent += e;
 	}
 
 	// Update is called once per frame
-	void Update () {
+	static void Update () {
 		if (ExpCurrent >= ExpToNextLevel){
 			LevelUp();
 		}

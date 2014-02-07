@@ -46,10 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Prefabs\People\AbilityObject.cs" />
-     <Compile Include="Assets\Prefabs\People\PersonObject.cs" />
-     <Compile Include="Assets\Prefabs\People\RoomObject.cs" />
-     <Compile Include="Assets\Prefabs\Player\PlayerLevel.cs" />
+     <Compile Include="Assets\Scripts\AbilityObject.cs" />
+     <Compile Include="Assets\Scripts\CameraScript.cs" />
+     <Compile Include="Assets\Scripts\PersonObject.cs" />
+     <Compile Include="Assets\Scripts\PlayerLevel.cs" />
+     <Compile Include="Assets\Scripts\RoomObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
