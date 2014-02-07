@@ -1,21 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/* 
+ * DESCRIPTION:
+ * This class handles the player's leveling and experience.
+ */
 public class PlayerLevel : MonoBehaviour {
 
-	public int Level = 1;
-	public int ExpCurrent = 0;
-	public int ExpToNextLevel = 20;
+	/*======== VARIABLES ========*/
 
+	// Treat these variables as read-only
+	public int Level;
+	public int ExpCurrent;
+	public int ExpToNextLevel;
+
+	/*======== FUNCTIONS ========*/
 
 	// Use this for initialization
 	void Start () {
 		Level = 1;
+		ExpCurrent = 0;
+		ExpToNextLevel = 10*(Level+1);
 	}
 
 	void LevelUp(){
 		Level++;
 		ExpToNextLevel = 10*(Level+1);
+		ExpCurrent = ExpCurrent - ExpToNextLevel;  // Bring to zero or leftover experience
 	}
 
 	public void AddExperience(int e){
@@ -26,7 +36,6 @@ public class PlayerLevel : MonoBehaviour {
 	void Update () {
 		if (ExpCurrent >= ExpToNextLevel){
 			LevelUp();
-			ExpCurrent -= ExpToNextLevel; // Bring to zero or leftover experience
 		}
 	}
 }
