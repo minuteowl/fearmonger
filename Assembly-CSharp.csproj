@@ -49,6 +49,9 @@
      <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\PersonObject.cs" />
+     <Compile Include="Assets\Scripts\Player\GrabZone.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\PlayerLevel.cs" />
      <Compile Include="Assets\Scripts\RoomObject.cs" />
   </ItemGroup>
