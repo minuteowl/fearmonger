@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{91895805-9592-9979-6826-9C4916BC48B1}</ProjectGuid>
+	<ProjectGuid>{4426453A-0BE0-918E-3B53-720B85C78630}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -49,11 +49,12 @@
      <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\PersonObject.cs" />
-     <Compile Include="Assets\Scripts\Player\GrabZone.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
-     <Compile Include="Assets\Scripts\PlayerLevel.cs" />
+     <Compile Include="Assets\Scripts\Player\TargetArea.cs" />
      <Compile Include="Assets\Scripts\RoomObject.cs" />
+     <Compile Include="Assets\Scripts\Static\PlayerLevel.cs" />
+     <Compile Include="Assets\Scripts\mainmenu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

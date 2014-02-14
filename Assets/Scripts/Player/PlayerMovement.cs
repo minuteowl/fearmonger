@@ -3,16 +3,30 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-	Vector2 facingDirection;
+	Vector3 facingDirection;
+	Vector3 front, frontCheck;
+	float epsilon = 0.03f;
+	Transform TargetArea;
+	float targetAreaOffset;
+	BoxCollider2D bodyCollider;
+	CircleCollider2D targetCollider;
 
-	Vector2 xAxis, yAxis;
+	[HideInInspector]
+	public bool IsHoldingSomething = false;
+
+	Vector3 xAxis = new Vector3(1,0,0);
+	Vector3 yAxis = new Vector3(0,1,0);
 
 	public bool IsInvisible = true;
+	public float Speed = 10f;
 
 	// Use this for initialization
 	void Start () {
-		xAxis = new Vector2(1,0);
-		yAxis = new Vector2(0,1);
+		TargetArea = transform.FindChild("TargetArea");
+		bodyCollider = (BoxCollider2D)this.transform.GetComponent("BoxCollider2D");
+		targetCollider = (CircleCollider2D)TargetArea.GetComponent("CircleCollider2D");
+		targetAreaOffset = bodyCollider.size.x + targetCollider.radius;
+		facingDirection = yAxis;
 	}
 
 	void EnterRoom()
@@ -28,6 +42,9 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Move()
 	{
+		if (!Physics2D.Linecast(front, frontCheck, 1 << LayerMask.NameToLayer("Solid"))){
+			this.transform.position += facingDirection*Speed*Time.deltaTime;
+		}
 	}
 
 	// Update is called once per frame
@@ -65,5 +82,10 @@ public class PlayerMovement : MonoBehaviour {
 			}
 
 		}
+		TargetArea.position = transform.position + facingDirection*targetAreaOffset;
+		front = transform.position + facingDirection*bodyCollider.size.x;
+		frontCheck = front + facingDirection*epsilon;
 	}
+	
 }
+

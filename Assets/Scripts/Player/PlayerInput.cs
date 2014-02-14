@@ -26,21 +26,21 @@ public static class PlayerInput {
 
 	public static bool InputActivate()
 	{
-		return (Input.GetKey("v") || Input.GetKey("V") || Input.GetKey ("space"));
+		return (Input.GetKeyDown("v") || Input.GetKeyDown ("space"));
 	}
 
 	public static bool InputInvisible()
 	{
-		return (Input.GetKey("c") || Input.GetKey("C"));
+		return (Input.GetKeyDown("c"));
 	}
 
 	public static bool InputMap()
 	{
-		return (Input.GetKey("x") && !Input.GetKey("z") && !Input.GetKey ("enter"));
+		return (Input.GetKeyDown("x") && !Input.GetKeyDown("z") && !Input.GetKeyDown ("enter"));
 	}
 
 	public static bool InputMenu()
 	{
-		return ((Input.GetKey("z")||Input.GetKey ("enter")) && !Input.GetKey("x"));
+		return ((Input.GetKeyDown("z")||Input.GetKeyDown("enter")) && !Input.GetKeyDown("x"));
 	}
 }

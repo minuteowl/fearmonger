@@ -20,19 +20,18 @@ public class RoomObject : MonoBehaviour {
 	// We will do the other 2 spawnpoints later
 
 	static float Tick  = 5f; // tick = countdown rate
-	static float CameraDistance = 10f;
 	private float MaxStayDuration = 20f; // later on we can make this vary
 	private float StayDuration;
 
 	// Pretend that these are read-only
-	public int RoomNumber;
+	//public int RoomNumber;
 	public bool IsVacant;
 
 	/*======== FUNCTIONS ========*/
 
-	public RoomObject(int roomNumber){
-		this.RoomNumber = roomNumber;
-	}
+	//public RoomObject(int roomNumber){
+	//	this.RoomNumber = roomNumber;
+	//}
 
 	// Use this for initialization
 	void Start () {
@@ -40,7 +39,7 @@ public class RoomObject : MonoBehaviour {
 		IsVacant = true;
 		DoorLocation = (Vector2)transform.GetChild(0).position;
 		spawnPoint1 = (Vector2)this.transform.position;
-		CameraPosition = this.transform.position - new Vector3(0,0,CameraDistance);
+		CameraPosition = this.transform.FindChild("CameraPosition").position;
 	}
 
 	void CheckIn(){
@@ -67,7 +66,7 @@ public class RoomObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void Update () {
-		Debug.Log ("Updating room number "+RoomNumber);
+		//Debug.Log ("Updating room number "+RoomNumber);
 		if (IsVacant) {
 			;; // do something here when room is vacant
 		}
@@ -84,6 +83,10 @@ public class RoomObject : MonoBehaviour {
 			// Stay duration has ended
 			CheckOut();
 		}
+	}
+
+	public void CenterOnRoom(){
+		camera.transform.position = CameraPosition;
 	}
 
 }
