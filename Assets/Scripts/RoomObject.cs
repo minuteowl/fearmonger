@@ -10,14 +10,12 @@ public class RoomObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
 
-	private ArrayList members = new ArrayList();
-	private Vector2 spawnPoint1;
+	public bool IsInFocus = false;
 
-	[HideInInspector]
-	public Vector3 CameraPosition;
-	[HideInInspector]
-	public Vector2 DoorLocation;
-	// We will do the other 2 spawnpoints later
+	private ArrayList members = new ArrayList();
+	public Vector3 spawnLoc1, spawnLoc2, spawnLoc3, bedLoc1, bedLoc2, bedLoc3,
+		DoorLocation, lampLoc1, lampLoc2;
+	public Transform bed1, bed2, bed3, lamp1, lamp2;
 
 	static float Tick  = 5f; // tick = countdown rate
 	private float MaxStayDuration = 20f; // later on we can make this vary
@@ -26,26 +24,51 @@ public class RoomObject : MonoBehaviour {
 	// Pretend that these are read-only
 	//public int RoomNumber;
 	public bool IsVacant;
+	public Vector3 CameraPosition;
 
 	/*======== FUNCTIONS ========*/
 
 	//public RoomObject(int roomNumber){
 	//	this.RoomNumber = roomNumber;
 	//}
+	void Reset()
+	{
+		bed1.position = bedLoc1;
+		bed2.position = bedLoc2;
+		bed3.position = bedLoc3;
+		lamp1.position = lampLoc1;
+		lamp2.position = lampLoc2;
+	}
+
 
 	// Use this for initialization
 	void Start () {
 	//	plevel = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLevel>();
 		IsVacant = true;
-		DoorLocation = (Vector2)transform.GetChild(0).position;
-		spawnPoint1 = (Vector2)this.transform.position;
+		DoorLocation = transform.FindChild ("Entry").position;
+		spawnLoc1 = new Vector3(0,0,0);
+		spawnLoc2 = new Vector3(2,3,0);
+		spawnLoc3 = new Vector3(2,-3,0);
+		spawnLoc1 = transform.FindChild("Spawn 1").position;
+		spawnLoc2 = transform.FindChild("Spawn 2").position;
+		spawnLoc3 = transform.FindChild("Spawn 3").position;
+		//bed1 = transform.FindChild("Bed 1");
+		//bed2 = transform.FindChild("Bed 2");
+		//bed3 = transform.FindChild("Bed 3");
+		bedLoc1 = bed1.position;
+		bedLoc2 = bed2.position;
+		bedLoc3 = bed3.position;
+		//lamp1 = transform.FindChild("Lamp 1");
+		//lamp2 = transform.FindChild("Lamp 2");
+		//lampLoc1 = lamp1.position;
+		//lampLoc2 = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
 	}
 
 	void CheckIn(){
 		// person object constructor gets 1. pointer to this, 2. a spawn location,
 		// and 3. the value of the player's level.
-		PersonObject p = new PersonObject(this, spawnPoint1);
+		PersonObject p = new PersonObject(this, spawnLoc1);
 		members.Add (p);
 		IsVacant = false;
 		StayDuration = MaxStayDuration;
@@ -74,12 +97,12 @@ public class RoomObject : MonoBehaviour {
 			// count down
 			StayDuration -= Tick*Time.deltaTime;
 			foreach (PersonObject m in members){
-				if (m.Sanity<1){
+				if (!IsInFocus && m.Sanity<1){
 					CheckOut();
 				}
 			}
 		}
-		else {
+		else if (!IsInFocus){
 			// Stay duration has ended
 			CheckOut();
 		}
@@ -87,6 +110,7 @@ public class RoomObject : MonoBehaviour {
 
 	public void CenterOnRoom(){
 		camera.transform.position = CameraPosition;
+		IsInFocus = true;
 	}
 
 }

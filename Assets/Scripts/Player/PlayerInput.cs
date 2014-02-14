@@ -24,6 +24,11 @@ public static class PlayerInput {
 		return (Input.GetKey("down") && !Input.GetKey("up"));
 	}
 
+	public static bool InputGrab()
+	{
+		return (Input.GetKeyDown ("space"));
+	}
+
 	public static bool InputActivate()
 	{
 		return (Input.GetKeyDown("v") || Input.GetKeyDown ("space"));

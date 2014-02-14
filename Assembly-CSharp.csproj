@@ -48,10 +48,13 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraScript.cs" />
+     <Compile Include="Assets\Scripts\LampObject.cs" />
+     <Compile Include="Assets\Scripts\MapMenu.cs" />
+     <Compile Include="Assets\Scripts\MovableObject.cs" />
      <Compile Include="Assets\Scripts\PersonObject.cs" />
+     <Compile Include="Assets\Scripts\Player\GrabFocus.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
-     <Compile Include="Assets\Scripts\Player\TargetArea.cs" />
      <Compile Include="Assets\Scripts\RoomObject.cs" />
      <Compile Include="Assets\Scripts\Static\PlayerLevel.cs" />
      <Compile Include="Assets\Scripts\mainmenu.cs" />
