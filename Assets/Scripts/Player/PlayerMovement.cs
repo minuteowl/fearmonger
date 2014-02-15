@@ -2,7 +2,10 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-
+	
+	private MapMenu menu;
+	private Vector3 pos = new Vector3 (45, 45, 0);
+	int size = 60;
 	private Vector3 facingDirection;
 	public Vector3 FacingDirection {
 		get { return facingDirection;}
@@ -76,7 +79,7 @@ public class PlayerMovement : MonoBehaviour {
 		}
 		else if (PlayerInput.InputMap())
 		{
-			Debug.Log("Open map");
+			menu.OpenMenu();
 		}
 		else if (PlayerInput.InputInvisible())
 		{
