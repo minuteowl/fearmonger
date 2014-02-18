@@ -11,10 +11,14 @@ public class RoomObject : MonoBehaviour {
 	/*======== VARIABLES ========*/
 
 	public bool IsInFocus = false;
+	public int numberOccupants;
+
+	public string RoomName;
 
 	private ArrayList members = new ArrayList();
+	[HideInInspector]
 	public Vector3 spawnLoc1, spawnLoc2, spawnLoc3, bedLoc1, bedLoc2, bedLoc3,
-		DoorLocation, lampLoc1, lampLoc2;
+		DoorLocation, lampLoc1, lampLoc2, entryLoc;
 	public Transform bed1, bed2, bed3, lamp1, lamp2;
 
 	static float Tick  = 5f; // tick = countdown rate
@@ -31,7 +35,7 @@ public class RoomObject : MonoBehaviour {
 	//public RoomObject(int roomNumber){
 	//	this.RoomNumber = roomNumber;
 	//}
-	void Reset()
+	void ResetFurniture()
 	{
 		bed1.position = bedLoc1;
 		bed2.position = bedLoc2;
@@ -52,14 +56,10 @@ public class RoomObject : MonoBehaviour {
 		spawnLoc1 = transform.FindChild("Spawn 1").position;
 		spawnLoc2 = transform.FindChild("Spawn 2").position;
 		spawnLoc3 = transform.FindChild("Spawn 3").position;
-		//bed1 = transform.FindChild("Bed 1");
-		//bed2 = transform.FindChild("Bed 2");
-		//bed3 = transform.FindChild("Bed 3");
 		bedLoc1 = bed1.position;
 		bedLoc2 = bed2.position;
 		bedLoc3 = bed3.position;
-		//lamp1 = transform.FindChild("Lamp 1");
-		//lamp2 = transform.FindChild("Lamp 2");
+		entryLoc = transform.FindChild("Entry").position;
 		//lampLoc1 = lamp1.position;
 		//lampLoc2 = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
@@ -72,6 +72,7 @@ public class RoomObject : MonoBehaviour {
 		members.Add (p);
 		IsVacant = false;
 		StayDuration = MaxStayDuration;
+		numberOccupants = 1;
 	}
 
 	public int GetDuration()
@@ -85,6 +86,10 @@ public class RoomObject : MonoBehaviour {
 			m.Leave();
 		}
 		IsVacant = true;
+		numberOccupants = 0;
+		if (!IsInFocus) {
+			ResetFurniture ();
+		}
 	}
 	
 	// Update is called once per frame
@@ -108,9 +113,5 @@ public class RoomObject : MonoBehaviour {
 		}
 	}
 
-	public void CenterOnRoom(){
-		camera.transform.position = CameraPosition;
-		IsInFocus = true;
-	}
 
 }

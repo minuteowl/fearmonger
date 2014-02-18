@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class MovableObject : MonoBehaviour {
 
 	public int Weight = 0;

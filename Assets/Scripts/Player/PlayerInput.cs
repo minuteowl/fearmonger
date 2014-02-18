@@ -23,15 +23,15 @@ public static class PlayerInput {
 	{
 		return (Input.GetKey("down") && !Input.GetKey("up"));
 	}
-
-	public static bool InputGrab()
+	
+	public static bool InputAction()
 	{
 		return (Input.GetKeyDown ("space"));
 	}
 
-	public static bool InputActivate()
+	public static bool InputCancel()
 	{
-		return (Input.GetKeyDown("v") || Input.GetKeyDown ("space"));
+		return (Input.GetKeyDown ("shift"));
 	}
 
 	public static bool InputInvisible()
@@ -39,12 +39,12 @@ public static class PlayerInput {
 		return (Input.GetKeyDown("c"));
 	}
 
-	public static bool InputMap()
+	public static bool InputMapMenu()
 	{
 		return (Input.GetKeyDown("x") && !Input.GetKeyDown("z") && !Input.GetKeyDown ("enter"));
 	}
 
-	public static bool InputMenu()
+	public static bool InputStatMenu()
 	{
 		return ((Input.GetKeyDown("z")||Input.GetKeyDown("enter")) && !Input.GetKeyDown("x"));
 	}
