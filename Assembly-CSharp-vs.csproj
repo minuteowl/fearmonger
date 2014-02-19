@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
+     <Compile Include="Assets\Scripts\FlashAbility.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerActivity.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Player\Selector.cs" />
