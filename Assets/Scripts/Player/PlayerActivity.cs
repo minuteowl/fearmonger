@@ -8,9 +8,9 @@ public class PlayerActivity : MonoBehaviour {
 	private Selector grab;
 	private Transform grabTransform;
 	private float grabDistance;
+	public Vector3 zDistanceVector = Vector3.zero;//new Vector3(0,0,-2);
 
-	GameManager game = GameManager.Instance;
-
+	GameManager game;
 
 	// Motion
 	private Vector3 facingDirection;
@@ -25,12 +25,18 @@ public class PlayerActivity : MonoBehaviour {
 	public bool IsInvisible = true;
 
 
+	public void FaceUp()
+	{
+		facingDirection = new Vector3(0,1,0);
+	}
+
 	// Use this for initialization
 	void Start () {
 		bodyCollider = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
 		facingDirection = yAxis;
 		grabTransform = transform.FindChild("Selector");
 		grab = grabTransform.GetComponent<Selector>();
+		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 		game.currentView = GameManager.View.Game;
 		Debug.Log("Begin.");
 		grabDistance = bodyCollider.size.x/2 + grab.box.size.x/2;
@@ -79,7 +85,7 @@ public class PlayerActivity : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (game.currentView==GameManager.View.Game){
-			grabTransform.position = transform.position + (grabDistance*facingDirection);
+			grabTransform.position = transform.position + (grabDistance*facingDirection) + zDistanceVector;
 			if (PlayerInput.InputAction()) {
 				if (grab.isHolding) {
 					if (grab.currentFocus==Selector.FocusType.None) {

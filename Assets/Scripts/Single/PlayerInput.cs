@@ -9,9 +9,19 @@ public static class PlayerInput {
 		return (Input.GetKey("right") && !Input.GetKey("left"));
 	}
 
+	public static bool InputRightOnce()
+	{
+		return (Input.GetKeyDown("right") && !Input.GetKey("left"));
+	}
+
 	public static bool InputLeft()
 	{
 		return (Input.GetKey("left") && !Input.GetKey("right"));
+	}
+
+	public static bool InputLeftOnce()
+	{
+		return (Input.GetKeyDown("left") && !Input.GetKey("right"));
 	}
 
 	public static bool InputUp()
@@ -19,9 +29,19 @@ public static class PlayerInput {
 		return (Input.GetKey("up") && !Input.GetKey("down"));
 	}
 
+	public static bool InputUpOnce()
+	{
+		return (Input.GetKeyDown("up") && !Input.GetKey("down"));
+	}
+
 	public static bool InputDown()
 	{
 		return (Input.GetKey("down") && !Input.GetKey("up"));
+	}
+
+	public static bool InputDownOnce()
+	{
+		return (Input.GetKeyDown("down") && !Input.GetKey("up"));
 	}
 	
 	public static bool InputAction()

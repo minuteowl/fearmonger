@@ -49,13 +49,13 @@
      <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerActivity.cs" />
-     <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Player\Selector.cs" />
      <Compile Include="Assets\Scripts\Rooms\LampObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\MovableObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\PersonObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\RoomObject.cs" />
      <Compile Include="Assets\Scripts\Single\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Single\PlayerInput.cs" />
      <Compile Include="Assets\Scripts\Single\PlayerLevel.cs" />
      <Compile Include="Assets\Scripts\mainmenu.cs" />
   </ItemGroup>
