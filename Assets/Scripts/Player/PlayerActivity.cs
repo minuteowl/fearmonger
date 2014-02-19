@@ -14,9 +14,6 @@ public class PlayerActivity : MonoBehaviour {
 
 	// Motion
 	private Vector3 facingDirection;
-	private Vector3 front1, front2, frontCheck1, frontCheck2;
-	private float epsilon = 0.03f;
-	private float radius;
 	public BoxCollider2D bodyCollider;
 	private Vector3 xAxis = new Vector3(1,0,0);
 	private Vector3 yAxis = new Vector3(0,1,0);
@@ -30,7 +27,6 @@ public class PlayerActivity : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		radius = 0.5f - epsilon;
 		bodyCollider = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
 		facingDirection = yAxis;
 		grabTransform = transform.FindChild("Selector");
@@ -82,23 +78,21 @@ public class PlayerActivity : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (game.currentView==GameManager.View.Map){
-			if (PlayerInput.InputCancel())
-			{
-				Debug.Log("Closing map, return to game.");
-				game.currentView = GameManager.View.Game;
-			}
-		}
-		
-		else if (game.currentView==GameManager.View.Game){
+		if (game.currentView==GameManager.View.Game){
 			grabTransform.position = transform.position + (grabDistance*facingDirection);
 			if (PlayerInput.InputAction()) {
 				if (grab.isHolding) {
-					grab.Drop();
+					if (grab.currentFocus==Selector.FocusType.None) {
+						grab.Drop();
+					}
+					else {
+						Debug.Log("Can't drop that here.");
+					}
 				}
 				else { // Is not holding anything
 					if (grab.currentFocus==Selector.FocusType.Door) {
 						Debug.Log("Exit room, go to map.");
+						game.GoToMap();
 					}
 					else if (grab.currentFocus==Selector.FocusType.Movable) {
 						Debug.Log ("Pick up object");

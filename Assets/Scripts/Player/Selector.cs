@@ -8,6 +8,7 @@ public class Selector : MonoBehaviour {
 	public Transform heldTransform, focusTransform;
 	public MovableObject heldObject;
 	public bool isHolding = false;
+	float radius;
 
 	public enum FocusType {None, Movable, Person, Solid, Door};
 	public FocusType currentFocus;
@@ -17,6 +18,7 @@ public class Selector : MonoBehaviour {
 		box = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
 		currentFocus = FocusType.None;
 		heldObject = null;
+		radius = box.size.x/2;
 	}
 
 	// This gets called externally when a menu opens up
@@ -62,6 +64,7 @@ public class Selector : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		GetDetected();
 		UpdateAppearance();
 		if (isHolding) {
 			heldTransform.position = transform.position;
@@ -69,49 +72,42 @@ public class Selector : MonoBehaviour {
 		else 
 		{
 
+
 		}
 	}
 
-	void OnTriggerExit2D(Collider2D other) {
-		Debug.Log("None.");
-		currentFocus = FocusType.None;
-		focusTransform = null;
-	}
-
-	void OnTriggerEnter2D(Collider2D other) {
-		if (!isHolding) {
-			if (other.CompareTag("Door")) {
-				if (currentFocus!=FocusType.Door ) {
-					Debug.Log("door.");
-					currentFocus = FocusType.Door;
-				}
-			}
-			else if (other.CompareTag("Person")){
-				if (currentFocus!=FocusType.Person) {
-					Debug.Log("person.");
-					currentFocus = FocusType.Person;
-					focusTransform = other.transform;
-				}
-			}
-			else if (other.CompareTag("Movable")) {
-				if (currentFocus!=FocusType.Movable) {
-					Debug.Log("Movable.");
-					currentFocus = FocusType.Movable;
-					focusTransform = other.transform;
-				}
-			}
-			else if (other.CompareTag("Solid")) {
-				if (currentFocus!=FocusType.Solid) {
-					Debug.Log("Solid.");
-					currentFocus = FocusType.Solid;
-				}
-			}
-			else if (other==null) {
-				Debug.Log("None.");
-				currentFocus = FocusType.None;
-				focusTransform = null;
-			}
+	void GetDetected() {
+		Collider2D temp;
+		if (temp = Physics2D.OverlapCircle(transform.position,radius,1 << LayerMask.NameToLayer("Person"))){
+			focusTransform = temp.transform;
+			currentFocus = FocusType.Person;
+			return;
 		}
+		else if (temp = Physics2D.OverlapCircle(transform.position,radius,1 << LayerMask.NameToLayer("Door"))){
+			focusTransform = temp.transform;
+			currentFocus = FocusType.Door;
+			return;
+		}
+		else if (temp = Physics2D.OverlapCircle(transform.position,radius,1 << LayerMask.NameToLayer("Solid"))){
+			focusTransform = temp.transform;
+			currentFocus = FocusType.Solid;
+			return;
+		}
+		else if (isHolding) {
+			focusTransform = null;
+			currentFocus = FocusType.None;
+		}
+		else if (temp = Physics2D.OverlapCircle(transform.position,radius,1 << LayerMask.NameToLayer("Movable"))){
+			focusTransform = temp.transform;
+			currentFocus = FocusType.Movable;
+			return;
+		}
+		else {
+			focusTransform = null;
+			currentFocus = FocusType.None;
+		}
+
+
 	}
 
 

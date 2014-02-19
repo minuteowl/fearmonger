@@ -17,19 +17,28 @@ public class GameManager {
 	public View currentView;
 	Transform playerTransform;
 
+	public CameraObject cameraObject;
+	Camera mainCam;
+	Transform cameraMapPositionTransform;
+
 	// ROOMS
-	RoomObject currentRoom, lastRoom;
+	public RoomObject currentRoom, lastRoom;
 	Transform[,] squares;
 	RoomObject[,] roomObjects;
+	Transform selectedRoomMarker;
+	float selectedRoomMarkerZ;
 	int[,] PeoplePerRoom;
-	CameraObject cameraObject;// = Camera.main.transform.GetComponent<CameraObject>();
-	int i,j;
+	int i,j, row, col;
+	float upBound, leftBound, rightBound, downBound;
 	
 	void Start ()
 	{
-		cameraObject = GameObject.FindObjectOfType<CameraObject>();
+		mainCam = Camera.main;
+		selectedRoomMarker = GameObject.Find("CurrentRoomMarker").transform;
+		selectedRoomMarkerZ = selectedRoomMarker.position.z;
+		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
+			//7mainCam.transform.GetComponent<CameraObject>();
 		playerTransform  = GameObject.FindGameObjectWithTag("Player").transform;
-		//cameraObject = Camera.main.transform.GetComponent<CameraObject>();
 		squares = new Transform[4,4];
 		roomObjects = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
@@ -49,13 +58,16 @@ public class GameManager {
 		squares[3,1] = GameObject.Find("Room 402").transform;
 		squares[3,2] = GameObject.Find("Room 403").transform;
 		squares[3,3] = GameObject.Find("Room 404").transform;
+		row = 0;
+		col = 0;
+		currentRoom = roomObjects[0,0].GetComponent<RoomObject>();
 		for (i=0; i<4; i++) {
 			for (j=0; j<4; j++) {
 				roomObjects[i,j] = (RoomObject)squares[i,j].GetComponent<RoomObject>();
 			}
 		}
 	}
-
+	
 	public void GoToRoom(RoomObject room)
 	{
 		cameraObject.ZoomIn(room);
@@ -65,20 +77,52 @@ public class GameManager {
 
 	public void GoToMap() {
 		Debug.Log("Go to map");
-		lastRoom = cameraObject.currentRoom;
-		cameraObject.ZoomOut();
+		lastRoom = currentRoom;
+		cameraObject.Foo();
+		//cameraObject.Update();
 		//currentView = View.Map;
 		//cameraObject.ZoomOut();
 	}
 
+	void MoveMarker()
+	{
+		currentRoom = roomObjects[row,col];
+		selectedRoomMarker.position = new Vector3(currentRoom.transform.position.x,
+		                                          currentRoom.transform.position.y,
+		                                          selectedRoomMarkerZ);
+	}
+
 	void Update() {
-		for (i=0; i<4; i++) {
-			for (j=0; j<4; j++) {
-				PeoplePerRoom[i,j] = roomObjects[i,j].numberOccupants;
+
+		if (currentView==View.Map) {
+			for (i=0; i<4; i++) {
+				for (j=0; j<4; j++) {
+					PeoplePerRoom[i,j] = roomObjects[i,j].numberOccupants;
+				}
+			}
+			if (!currentRoom) {
+				currentRoom = roomObjects[row,col];
+			}
+
+			if (PlayerInput.InputLeft() && col>0) {
+				col++; MoveMarker();
+			}
+			else if (PlayerInput.InputRight() && col<3) {
+				col--; MoveMarker();
+			}
+			else if (PlayerInput.InputUp() && row<3) {
+				row--; MoveMarker();
+			}
+			else if (PlayerInput.InputDown() && row>0){
+				row++; MoveMarker();
+			}
+			else if (PlayerInput.InputAction())
+			{
+				cameraObject.ZoomIn(currentRoom);
+				lastRoom = currentRoom;
+				currentView = View.Game;
 			}
 		}
-		currentRoom = cameraObject.currentRoom;
-
 		
 	}
 
