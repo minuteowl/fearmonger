@@ -13,28 +13,32 @@ public class RoomObject : MonoBehaviour {
 	public bool IsInFocus = false;
 	public int numberOccupants;
 
+	public int lampsOn;
+
+	public Transform personPrefab1;
+
 	public string RoomName;
 
-	private ArrayList members = new ArrayList();
-	[HideInInspector]
+	public PersonObject[] members;
+	GameManager game;
+
 	public Vector3 spawnLoc1, spawnLoc2, spawnLoc3, bedLoc1, bedLoc2, bedLoc3,
 		DoorLocation, lampLoc1, lampLoc2, entryLoc;
 	public Transform bed1, bed2, bed3, lamp1, lamp2;
 
-	static float Tick  = 5f; // tick = countdown rate
+	static float Tick; // tick = countdown rate
 	private float MaxStayDuration = 20f; // later on we can make this vary
-	private float StayDuration;
+	public float StayDuration;
 
-	// Pretend that these are read-only
-	//public int RoomNumber;
-	public bool IsVacant;
+	private float MaxDelayTime = 8f; // time in between empty rooms
+	public float DelayTime;
+	public bool Ready=true;
+	public bool HasCheckedOut=false;
+
 	public Vector3 CameraPosition;
 
 	/*======== FUNCTIONS ========*/
 
-	//public RoomObject(int roomNumber){
-	//	this.RoomNumber = roomNumber;
-	//}
 	void ResetFurniture()
 	{
 		bed1.position = bedLoc1;
@@ -42,17 +46,15 @@ public class RoomObject : MonoBehaviour {
 		bed3.position = bedLoc3;
 		lamp1.position = lampLoc1;
 		lamp2.position = lampLoc2;
+		lampsOn = 2;
 	}
-
-
+	
 	// Use this for initialization
 	void Start () {
-	//	plevel = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerLevel>();
-		IsVacant = true;
+		game = GameObject.Find("GameManager").GetComponent<GameManager>();
+		Tick=game.Tick;
+		StayDuration=0;
 		DoorLocation = transform.FindChild ("Entry").position;
-		spawnLoc1 = new Vector3(0,0,0);
-		spawnLoc2 = new Vector3(2,3,0);
-		spawnLoc3 = new Vector3(2,-3,0);
 		spawnLoc1 = transform.FindChild("Spawn 1").position;
 		spawnLoc2 = transform.FindChild("Spawn 2").position;
 		spawnLoc3 = transform.FindChild("Spawn 3").position;
@@ -60,19 +62,31 @@ public class RoomObject : MonoBehaviour {
 		bedLoc2 = bed2.position;
 		bedLoc3 = bed3.position;
 		entryLoc = transform.FindChild("Entry").position;
-		//lampLoc1 = lamp1.position;
-		//lampLoc2 = lamp2.position;
+		lampLoc1 = lamp1.position;
+		lampLoc2 = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
+		RoomName = transform.name;
+		lampsOn = 2;
+		members = new PersonObject[3];
+		if (RoomName.Equals("Room 101")){ // start game with a person in room 101
+			CheckIn();
+		}
 	}
 
-	void CheckIn(){
-		// person object constructor gets 1. pointer to this, 2. a spawn location,
-		// and 3. the value of the player's level.
-		PersonObject p = new PersonObject(this, spawnLoc1);
-		members.Add (p);
-		IsVacant = false;
+	public void CheckIn(){
+		// Prepare the room
+		Debug.Log("Checking in to room "+RoomName);
+		ResetFurniture ();
 		StayDuration = MaxStayDuration;
+		game.NumOccupiedRooms++;
+
+		// Add people
 		numberOccupants = 1;
+		GameObject t = Instantiate(personPrefab1,spawnLoc1,Quaternion.identity) as GameObject;
+		PersonObject p = t.GetComponent<PersonObject>();
+		p.AssignRoom(this);
+		members[0]=p;
+
 	}
 
 	public int GetDuration()
@@ -80,37 +94,39 @@ public class RoomObject : MonoBehaviour {
 		return (int)Mathf.RoundToInt(StayDuration);
 	}
 
-	void CheckOut(){
-		foreach (PersonObject m in members){
-			members.Remove(m);
-			m.Leave();
-		}
-		IsVacant = true;
-		numberOccupants = 0;
-		if (!IsInFocus) {
-			ResetFurniture ();
+	public void CheckOut(){
+		// Each person will call this when they leave,
+		// so make sure that it is only called once.
+		if (numberOccupants!=0) {
+			numberOccupants=0;
+			StayDuration = 0;
+			DelayTime = MaxDelayTime;
+			for (int i=members.Length-1; i>=0; i--){
+				if (members[i]!=null) {
+					members[i]=null;
+				}
+			}
+			game.NumOccupiedRooms--;
+			HasCheckedOut=true;
+			Ready = false;
+			Debug.Log("Checked out.");
 		}
 	}
 	
 	// Update is called once per frame
 	public void Update () {
-		//Debug.Log ("Updating room number "+RoomNumber);
-		if (IsVacant) {
-			;; // do something here when room is vacant
-		}
-		else if (StayDuration>0){
-			// count down
-			StayDuration -= Tick*Time.deltaTime;
-			foreach (PersonObject m in members){
-				if (!IsInFocus && m.Sanity<1){
-					CheckOut();
-				}
+		if (game.currentRoom!=this && HasCheckedOut && numberOccupants==0) {
+			if (DelayTime>0) {
+				DelayTime -= Tick*Time.deltaTime;
+			}
+			else
+			{
+				Debug.Log("room "+RoomName+" is ready.");
+				Ready=true;
+				HasCheckedOut=false;
 			}
 		}
-		else if (!IsInFocus){
-			// Stay duration has ended
-			CheckOut();
-		}
+
 	}
 
 

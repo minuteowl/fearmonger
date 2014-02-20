@@ -16,7 +16,6 @@ public class CameraObject : MonoBehaviour {
 		mapPosition = MapPositionTransform.position;
 		cam = (Camera)transform.GetComponent("Camera");
 		SetSize(sizeSmall);
-		Debug.Log("Camera set up.");
 	}
 
 	// Update is called once per frame
@@ -24,26 +23,17 @@ public class CameraObject : MonoBehaviour {
 		reference = game.cameraObject;
 	}
 
-	public void Foo()
-	{
-	}
-
 	void SetSize(float newsize) {
 		cam.orthographicSize = newsize;
 	}
 
 	public void ZoomIn(RoomObject room) {
-		Debug.Log("Zoom in"+room.transform.position);
-		transform.position = room.transform.position+(new Vector3(0,0,-6));//room.transform.FindChild("CameraPosition").position;
-		//room.IsInFocus = true;
-		//game.currentRoom = room;
+		transform.position = room.CameraPosition;//transform.position+(new Vector3(0,0,-6));//room.transform.FindChild("CameraPosition").position;
 		SetSize(sizeSmall);
 	}
 
 	public void ZoomOut() {
-		Debug.Log("Zoom out.");
 		transform.position = mapPosition;
-		game.currentRoom.IsInFocus = false;
 		SetSize(sizeLarge);
 	}
 }

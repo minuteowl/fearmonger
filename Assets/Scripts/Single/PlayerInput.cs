@@ -49,9 +49,9 @@ public static class PlayerInput {
 		return (Input.GetKeyDown ("space"));
 	}
 
-	public static bool InputCancel()
+	public static bool InputGrab()
 	{
-		return (Input.GetKeyDown ("shift"));
+		return (Input.GetKeyDown ("x"));
 	}
 
 	public static bool InputInvisible()

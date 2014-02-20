@@ -44,6 +44,11 @@ public class Selector : MonoBehaviour {
 		else {
 			isHolding = true;
 			heldObject.IsBeingHeld = true;
+			LampObject lamp = heldObject.transform.GetComponent<LampObject>();
+			if (lamp){
+				Debug.Log("Switching lamp");
+				lamp.Switch();
+			}
 		}
 	}
 

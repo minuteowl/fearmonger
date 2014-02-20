@@ -11,6 +11,10 @@ public class PlayerActivity : MonoBehaviour {
 	public Vector3 zDistanceVector = Vector3.zero;//new Vector3(0,0,-2);
 
 	GameManager game;
+	PlayerLevel leveling;
+	Ability currentAbility;
+	public bool UsingAbility=false;
+
 
 	// Motion
 	private Vector3 facingDirection;
@@ -36,10 +40,12 @@ public class PlayerActivity : MonoBehaviour {
 		facingDirection = yAxis;
 		grabTransform = transform.FindChild("Selector");
 		grab = grabTransform.GetComponent<Selector>();
+		leveling = GameObject.Find("GameManager").GetComponent<PlayerLevel>();
 		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 		game.currentView = GameManager.View.Game;
-		Debug.Log("Begin.");
+		game.SetUpAbilities();
 		grabDistance = bodyCollider.size.x/2 + grab.box.size.x/2;
+		currentAbility = game.listAbilities[0];
 	}
 
 	void EnterRoom()
@@ -97,15 +103,19 @@ public class PlayerActivity : MonoBehaviour {
 				}
 				else { // Is not holding anything
 					if (grab.currentFocus==Selector.FocusType.Door) {
-						Debug.Log("Exit room, go to map.");
 						game.GoToMap();
 					}
 					else if (grab.currentFocus==Selector.FocusType.Movable) {
-						Debug.Log ("Pick up object");
 						grab.Pickup();
 					}
-					else if (grab.currentFocus==Selector.FocusType.Person) {
-						Debug.Log("Activate Person");
+					else if (!UsingAbility && grab.currentFocus==Selector.FocusType.Person) {
+						UsingAbility=true; // make sure that the ability is only called once at a time
+						PersonObject p = grab.focusTransform.GetComponent<PersonObject>();
+						leveling.UseAbility(p,currentAbility);
+					}
+					else if (UsingAbility)
+					{
+						UsingAbility = false;
 					}
 				}
 			}
@@ -115,7 +125,6 @@ public class PlayerActivity : MonoBehaviour {
 			}
 			else if (PlayerInput.InputStatMenu()){
 				Debug.Log("Open stats menu");
-				//currentView=View.StatMenu;
 			}
 			else
 			{
@@ -123,6 +132,4 @@ public class PlayerActivity : MonoBehaviour {
 			}
 		}
 	}
-	
 }
-

@@ -46,9 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AbilityObject.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
-     <Compile Include="Assets\Scripts\FlashAbility.cs" />
+     <Compile Include="Assets\Scripts\Player\Ability.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerActivity.cs" />
      <Compile Include="Assets\Scripts\Player\Selector.cs" />
      <Compile Include="Assets\Scripts\Rooms\LampObject.cs" />
