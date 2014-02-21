@@ -34,7 +34,7 @@ public class PlayerLevel : MonoBehaviour  {
 	public void UseAbility(PersonObject victim, Ability ability) {
 		int x = victim.DecreaseSanity(ability.Damage);
 		AddExperience(x*ability.Multiplier);
-		Debug.Log("Used "+ability.Name+" ("+ability.Description+") and gained "+(x*ability.Multiplier)+"experience");
+		Debug.Log("Used "+ability.Name+" ("+ability.Description+") and gained "+(x*ability.Multiplier)+" experience");
 	}
 
 	// Update is called once per frame

@@ -14,6 +14,7 @@ public class PlayerActivity : MonoBehaviour {
 	PlayerLevel leveling;
 	Ability currentAbility;
 	public bool UsingAbility=false;
+	int curr = 0;
 
 
 	// Motion
@@ -124,7 +125,14 @@ public class PlayerActivity : MonoBehaviour {
 				ToggleInvisible();
 			}
 			else if (PlayerInput.InputStatMenu()){
-				Debug.Log("Open stats menu");
+				curr++;
+				if(curr > game.listAbilities.Count)
+				{
+					curr = 0;
+				}
+				currentAbility = game.listAbilities[curr];
+				Debug.Log ("Current Ability is: "+ game.listAbilities[curr].Name);
+				//Debug.Log("Open stats menu");
 			}
 			else
 			{
