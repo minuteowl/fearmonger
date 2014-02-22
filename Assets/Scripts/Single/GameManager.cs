@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour {
 		if (listAbilities==null) {
 			listAbilities = new List<Ability>();
 			listAbilities.Add (new Ability("Tentacle","Extend a tentacle",1,1));
+			listAbilities.Add (new Ability("Flash", "The lights flash", 1, 1));
 			//currentAbility = listAbilities[0];
 		}
 	}
