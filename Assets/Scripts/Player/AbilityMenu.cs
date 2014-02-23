@@ -7,7 +7,7 @@ public class AbilityMenu: MonoBehaviour
 {
 	GameManager game;
 	Rect menuBackground;
-	int menux=155, menuy=100, menuw=520, menuh=410;
+	int menux=250, menuy=100, menuw=520, menuh=410;
 	Color menuBackgroundColor;
 	PlayerActivity player;
 	Transform camTransform;
@@ -72,6 +72,7 @@ public class AbilityMenu: MonoBehaviour
 		if (game.currentView==GameManager.View.Stats)
 		{
 			GUI.color = Color.green;
+			GUI.Box (menuBackground,""); GUI.Box (menuBackground,"");
 			GUI.Box (menuBackground, "Ability Menu");
 			left = menux+50; width = 130; GUI.color = Color.green; // column 1
 			GUI.Box (new Rect(left,menuy+rowHeight,width,rowHeight),"Ability");
@@ -93,7 +94,7 @@ public class AbilityMenu: MonoBehaviour
 				}
 				else if (listAbilities[i].Locked) {
 					GUI.color = Color.red;
-					GUI.Box(new Rect(left, menuy+(i+2)*rowHeight, width, rowHeight),"(Locked)");
+					GUI.Box(new Rect(left, menuy+(i+2)*rowHeight, width, rowHeight),"(Requires level "+listAbilities[i].Level+")");
 				}
 			}
 			GUI.color=Color.white;

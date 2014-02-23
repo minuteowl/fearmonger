@@ -97,6 +97,7 @@ public class Selector : MonoBehaviour {
 			UpdateAppearance();
 			GetDetected();
 			if (isHolding) {
+				//heldTransform.rotation = transform.rotation;
 				heldTransform.position = new Vector3 (transform.position.x,
 				                                      transform.position.y, heldTransform.position.z);
 			}

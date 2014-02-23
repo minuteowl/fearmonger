@@ -56,6 +56,7 @@ public class Leveling : MonoBehaviour {
 		}
 		else return true;
 	}
+
 	/*
 	public void UseAbility(Ability ability, int xp) {
 		if (CanUse (ability)){
