@@ -88,6 +88,8 @@ public class Leveling : MonoBehaviour {
 
 	void OnGUI()
 	{
-
+		GUI.Box (new Rect (100, 70, 100, 25), "Player Level: " + Level);
+		GUI.Box (new Rect (100, 100, 75, 25), "EXP: " + ExpCurrent + "/" + ExpToNextLevel);
+		GUI.Box (new Rect (100, 130, 75, 25), "Energy: " + energyCurrent + "/" + energyMax);
 	}
 }
