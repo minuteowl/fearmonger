@@ -14,7 +14,7 @@ public class PlayerActivity : MonoBehaviour {
 	PlayerLevel leveling;
 	Ability currentAbility;
 	public bool UsingAbility=false;
-	int curr = 0;
+	AbilityMenu menu;
 
 
 	// Motion
@@ -47,6 +47,7 @@ public class PlayerActivity : MonoBehaviour {
 		game.SetUpAbilities();
 		grabDistance = bodyCollider.size.x/2 + grab.box.size.x/2;
 		currentAbility = game.listAbilities[0];
+		menu = gameObject.AddComponent<AbilityMenu>();
 	}
 
 	void EnterRoom()
@@ -125,7 +126,6 @@ public class PlayerActivity : MonoBehaviour {
 				ToggleInvisible();
 			}
 			else if (PlayerInput.InputStatMenu()){
-				AbilityMenu menu = new AbilityMenu();
 				menu.togglePause();
 				currentAbility = game.listAbilities[menu.selected];
 
