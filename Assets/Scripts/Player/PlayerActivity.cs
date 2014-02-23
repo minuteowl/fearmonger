@@ -4,66 +4,103 @@ using System.Collections;
 [RequireComponent(typeof(Selector))]
 public class PlayerActivity : MonoBehaviour {
 
-	// Attached scripts
-	private Selector grab;
-	private Transform grabTransform;
-	private float grabDistance;
-	public Vector3 zDistanceVector = Vector3.zero;//new Vector3(0,0,-2);
-
 	GameManager game;
-	PlayerLevel leveling;
-	Ability currentAbility;
-	public bool UsingAbility=false;
-	AbilityMenu menu;
+	Leveling level;
 
+	// Attached scripts
+	[HideInInspector] public Selector grab;
+	private Transform grabTransform;
+
+	// Actions
+	MonoBehaviour[] args = new MonoBehaviour[10];
+	[HideInInspector] public Ability currentAbility;
+	//int currentAblilityIndex = 0;
+	AbilityMenu abilityMenu;
+
+	// Sprites
+	Sprite[] sprites;
+	int spriteIndex=0;
+	public bool IsInvisible = false;
 
 	// Motion
-	private Vector3 facingDirection;
-	public BoxCollider2D bodyCollider;
+	[HideInInspector] public BoxCollider2D bodyCollider;
 	private Vector3 xAxis = new Vector3(1,0,0);
 	private Vector3 yAxis = new Vector3(0,1,0);
-	public float Speed = 10f;
-	public Vector3 FacingDirection {
+	float Speed = 900f;
+	private Vector3 facingDirection;
+	[HideInInspector] public Vector3 FacingDirection {
 		get { return facingDirection;}
 	}
 
-	public bool IsInvisible = true;
-
+	public void SetAbility(Ability a) {
+		currentAbility = a;
+	}
 
 	public void FaceUp()
 	{
-		facingDirection = new Vector3(0,1,0);
+		Debug.Log("Facing up.");
+		game.currentView = GameManager.View.Game;
+		SetSprite();
+		facingDirection = Vector3.up;
+	}
+
+
+	public void MoveTo(Vector3 pos) {
+		Debug.Log("Move to ("+pos.x+", "+pos.y+")");
+		transform.position = new Vector3(pos.x,pos.y,transform.position.z);
 	}
 
 	// Use this for initialization
 	void Start () {
+		facingDirection = Vector3.up;
 		bodyCollider = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
-		facingDirection = yAxis;
 		grabTransform = transform.FindChild("Selector");
 		grab = grabTransform.GetComponent<Selector>();
-		leveling = GameObject.Find("GameManager").GetComponent<PlayerLevel>();
-		game = GameObject.Find("GameManager").GetComponent<GameManager>();
+		game = GameObject.Find ("GameManager").GetComponent<GameManager>();
+		level = transform.GetComponent<Leveling>();
+		abilityMenu = transform.GetComponent<AbilityMenu>();
 		game.currentView = GameManager.View.Game;
-		game.SetUpAbilities();
-		grabDistance = bodyCollider.size.x/2 + grab.box.size.x/2;
-		currentAbility = game.listAbilities[0];
-		menu = gameObject.AddComponent<AbilityMenu>();
+		sprites = Resources.LoadAll<Sprite>("Sprites/Player");
 	}
 
 	void EnterRoom()
 	{
-		IsInvisible = true;
+		Statics.LockInput=true;
 		facingDirection = yAxis;
+	}
+
+	void SetSprite(){
+		if (game.currentView==GameManager.View.Map) {
+			spriteIndex=8; // giant sprite
+		}
+		else if (facingDirection==Vector3.down) {
+			spriteIndex = 0;
+		}
+		else if (facingDirection==Vector3.up) {
+			spriteIndex=1;
+		}
+		else if (facingDirection==Vector3.right) {
+			spriteIndex=2;
+		}
+		else {
+			spriteIndex=3;
+		}
+		if (IsInvisible) {
+			spriteIndex += 4;
+		}
+		transform.GetComponent<SpriteRenderer>().sprite=sprites[spriteIndex];
 	}
 
 	void ToggleInvisible()
 	{
 		IsInvisible = !IsInvisible;
+		SetSprite();
 	}
 
 	void Move()
 	{
-		this.transform.position += facingDirection*Speed*Time.deltaTime;
+		rigidbody2D.velocity = facingDirection*Speed*Time.deltaTime;
+		SetSprite();
 	}
 
 	void GetMovementInput() {
@@ -71,30 +108,76 @@ public class PlayerActivity : MonoBehaviour {
 		{
 			facingDirection = xAxis;
 			Move ();
+			Statics.LockInput=true;
 		}
 		else if (PlayerInput.InputLeft())
 		{
 			facingDirection = -xAxis;
 			Move ();
+			Statics.LockInput=true;
 		}
 		if (PlayerInput.InputUp())
 		{
 			facingDirection = yAxis;
 			Move ();	
+			Statics.LockInput=true;
+			
 		}
 		else if (PlayerInput.InputDown())
 		{
 			facingDirection = -yAxis;
 			Move ();
+			Statics.LockInput=true;
 		}
 
 	}
+
+	void Update() {
+		if (!Statics.LockInput) {
+			UpdateInput();
+		}
+	}
+
+
+
+	//void UpdateSelector() {
+	//	grabTransform.position = transform.position + (grabDistance*facingDirection) + grab.zOffset;
+	//	grabTransform.rotation = Quaternion.LookRotation(Vector3.back, facingDirection);
+	//}
+
+	void UpdateAbilities() {
+		Statics.LockInput=true; // make sure that the ability is only called once at a time
+		if (level.CanUse(currentAbility)) {
+			grab.SetWait(currentAbility.Duration);
+			if (currentAbility is Ability_Push)
+			{
+				args[0]=grab;
+				currentAbility.UseAbility (level, args);
+			}
+			else if (currentAbility is Ability_Flash)
+			{
+				args[0] = game.currentRoom;
+				currentAbility.UseAbility (level, args);
+			}
+			else if (currentAbility is Ability_Tentacle)
+			{
+				// set args
+				currentAbility.UseAbility(level,args);
+			}
+			else if (currentAbility is Ability_ShadowStorm)
+			{
+				// set args
+				currentAbility.UseAbility(level,args);
+			}
+		}
+	}
 	
 	// Update is called once per frame
-	void Update () {
+	void UpdateInput () {
 		if (game.currentView==GameManager.View.Game){
-			grabTransform.position = transform.position + (grabDistance*facingDirection) + zDistanceVector;
+			//UpdateSelector();
 			if (PlayerInput.InputAction()) {
+				Statics.LockInput=true;
 				if (grab.isHolding) {
 					if (grab.currentFocus==Selector.FocusType.None) {
 						grab.Drop();
@@ -106,36 +189,37 @@ public class PlayerActivity : MonoBehaviour {
 				else { // Is not holding anything
 					if (grab.currentFocus==Selector.FocusType.Door) {
 						game.GoToMap();
+						SetSprite();
 					}
 					else if (grab.currentFocus==Selector.FocusType.Movable) {
 						grab.Pickup();
 					}
-					else if (!UsingAbility && grab.currentFocus==Selector.FocusType.Person) {
-						UsingAbility=true; // make sure that the ability is only called once at a time
-						PersonObject p = grab.focusTransform.GetComponent<PersonObject>();
-						leveling.UseAbility(p,currentAbility);
-					}
-					else if (UsingAbility)
-					{
-						UsingAbility = false;
+					else {
+						UpdateAbilities();
 					}
 				}
 			}
 			else if (PlayerInput.InputInvisible()) {
-				Debug.Log("toggle invisible");
+				Statics.LockInput=true;
 				ToggleInvisible();
 			}
 			else if (PlayerInput.InputStatMenu()){
-				menu.togglePause();
-				currentAbility = game.listAbilities[menu.selected];
-
-				//Debug.Log ("Selected Ability is: " + currentAbility.Name);
-				//Debug.Log("Open stats menu");
+				Statics.LockInput=true;
+				game.Pause ();
+				abilityMenu.Prepare();
+				game.currentView=GameManager.View.Stats;
+				//currentAblilityIndex = (currentAblilityIndex+1)%game.listAbilities.Count;
+				//currentAbility = game.listAbilities[currentAblilityIndex];
+				//Debug.Log ("Current Ability is: "+ game.listAbilities[currentAblilityIndex].Name);
 			}
 			else
 			{
+				Statics.LockInput=true;
 				GetMovementInput();
 			}
+		}
+		else if (game.currentView==GameManager.View.Stats) {
+			// this will go in the AbilityMenu class
 		}
 	}
 }

@@ -49,11 +49,6 @@ public static class PlayerInput {
 		return (Input.GetKeyDown ("space"));
 	}
 
-	public static bool InputGrab()
-	{
-		return (Input.GetKeyDown ("x"));
-	}
-
 	public static bool InputInvisible()
 	{
 		return (Input.GetKeyDown("c"));
@@ -61,11 +56,11 @@ public static class PlayerInput {
 
 	public static bool InputMapMenu()
 	{
-		return (Input.GetKeyDown("x") && !Input.GetKeyDown("z") && !Input.GetKeyDown ("enter"));
+		return (Input.GetKeyDown("x") && !Input.GetKeyDown("z"));
 	}
 
 	public static bool InputStatMenu()
 	{
-		return ((Input.GetKeyDown("z")||Input.GetKeyDown("enter")) && !Input.GetKeyDown("x"));
+		return (Input.GetKeyDown("z"));
 	}
 }
