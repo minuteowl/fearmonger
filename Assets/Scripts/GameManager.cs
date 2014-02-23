@@ -31,17 +31,28 @@ public class GameManager : MonoBehaviour {
 
 	// USING ABILITIES
 	public List<Ability> listAbilities;
+	public int max;
 	//Ability currentAbility;
 
 	public void SetUpAbilities()
 	{
 		if (listAbilities==null) {
 			listAbilities = new List<Ability>();
+<<<<<<< HEAD:Assets/Scripts/GameManager.cs
 			listAbilities.Add (new Ability_Tentacle());
 			listAbilities.Add (new Ability_Flash());
+=======
+			listAbilities.Add (new Ability("Tentacle","Extend a tentacle",1,1));
+			listAbilities.Add (new Ability("Flash", "The lights flash", 1, 1));
+			max = 2;
+>>>>>>> 78dd48aa47a8cb9ba9c1b31557600e23afde81f2:Assets/Scripts/Single/GameManager.cs
 			//currentAbility = listAbilities[0];
 		}
 	}
+	public int getMaxAbility()
+	{
+				return max;
+		}
 
 	void Start ()
 	{
