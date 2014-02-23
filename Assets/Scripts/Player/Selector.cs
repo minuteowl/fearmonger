@@ -75,11 +75,8 @@ public class Selector : MonoBehaviour {
 			else if (currentFocus==FocusType.Solid) {
 				transform.GetComponent<SpriteRenderer>().color = Color.grey;
 			}
-			else if (currentFocus==FocusType.Person){
-				transform.GetComponent<SpriteRenderer>().color = Color.green;
-			}
 			else {
-				transform.GetComponent<SpriteRenderer>().color = Color.red;
+				transform.GetComponent<SpriteRenderer>().color = Color.green;
 			}
 		}
 	}
@@ -100,7 +97,8 @@ public class Selector : MonoBehaviour {
 			UpdateAppearance();
 			GetDetected();
 			if (isHolding) {
-				heldTransform.position = transform.position + zOffset;
+				heldTransform.position = new Vector3 (transform.position.x,
+				                                      transform.position.y, heldTransform.position.z);
 			}
 		}
 	}
