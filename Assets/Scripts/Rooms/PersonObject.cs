@@ -7,39 +7,29 @@ using System.Collections;
 public class PersonObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-
-	private int TempInt;
-
-	int playerlevel;  // this is a pointer to the level object
+	// Refs
 	RoomObject myRoom;
-	public int MaxSanity = 10;
-	public Vector3 destination;
-	public Vector3 velocity;
-
 	GameManager game;
-	public bool seesPlayer=false;
-
-	LampObject lamp1, lamp2;
-	float lamp_epsilon=1.6f;
-
-	private float walkCountdownBase, walkCountdown;
-	public float sanityRegenCountdown, sanityRegenCountdownMax;
-	static float Tick;
-
-	float sightRadius;
 	Transform playerTransform;
 	PlayerActivity player;
-
+	LampObject lamp1, lamp2;
+	// Behavior
+	float sightRadius;
 	public bool isDead = false;
 	public bool isFleeing = false;
-
-	float StepDistance; // how far player walks in each update
-
-	public int currentSanity; // This is how you make a variable ead-only
+	public int currentSanity;
+	public int MaxSanity = 10;
+	float lamp_epsilon=2f;
+	// Movement
+	Vector3 destination;
+	Vector3 velocity;
+	bool seesPlayer=false;
+	float walkCountdownBase, walkCountdown;
+	float sanityRegenCountdown, sanityRegenCountdownMax;
+	float StepDistance;
 
 	/*======== FUNCTIONS ========*/
 
-	// Constructor is not the initializer; see Start() method
 	public void AssignRoom(RoomObject r)
 	{
 		this.myRoom = r;
@@ -52,7 +42,6 @@ public class PersonObject : MonoBehaviour {
 		walkCountdownBase = 0.7f;
 		walkCountdown=0;
 		currentSanity = MaxSanity;
-		Tick = GameObject.Find("GameManager").GetComponent<GameManager>().Tick;
 		lamp1=myRoom.lamp1.GetComponent<LampObject>();
 		lamp2=myRoom.lamp2.GetComponent<LampObject>();
 		playerTransform = GameObject.Find("Player").transform;
@@ -63,8 +52,6 @@ public class PersonObject : MonoBehaviour {
 		GUI.Label(new Rect(transform.position.x-0.2f,transform.position.y+1,2,2),currentSanity+"/"+MaxSanity);
 
 	}
-
-
 
 	// Update is called once per frame
 	void Update () {
@@ -96,9 +83,10 @@ public class PersonObject : MonoBehaviour {
 	void UpdateAlive() {
 		StepDistance = 1.2f*MaxSanity/(currentSanity+1);
 		if (!isFleeing && currentSanity<MaxSanity) {
+			StepDistance *= 1.05f;
 			// Regen sanity
 			if (sanityRegenCountdown>0) {
-				sanityRegenCountdown -= Tick*Time.deltaTime;
+				sanityRegenCountdown -= Statics.Tick*Time.deltaTime;
 			}
 			else {
 				sanityRegenCountdown = sanityRegenCountdownMax;
@@ -108,6 +96,7 @@ public class PersonObject : MonoBehaviour {
 		// AI if still sane
 		if (!isFleeing && myRoom.StayDuration>0 && currentSanity>0) {
 			if (!lamp1.LightOn){
+				StepDistance *= 1.1f;
 				Debug.Log("a light is off");
 				destination = lamp1.transform.position;
 				if ((lamp1.transform.position-transform.position).magnitude<lamp_epsilon){
@@ -115,25 +104,28 @@ public class PersonObject : MonoBehaviour {
 				}
 			}
 			else if (!lamp2.LightOn) {
+				StepDistance *= 1.1f;
 				destination = lamp2.transform.position;
 				if ((lamp2.transform.position-transform.position).magnitude<lamp_epsilon){
 					lamp2.TurnOn();
 				}
 			}
 			else if (walkCountdown>0) {
-				walkCountdown -= Tick*Time.deltaTime;
+				walkCountdown -= Statics.Tick*Time.deltaTime;
 			}
 			else if (currentSanity>0) {
 				walkCountdown = walkCountdownBase + Random.Range(0,currentSanity-1);
 				destination = transform.position + GetVelocity();
 			}
 		}
-		else if (!isFleeing) // zero sanity -> flee, exit through wall
+		else if (!isFleeing) // zero sanity -> flee, runs to door
 		{
+			StepDistance *= 1.5f;
 			isFleeing = true;
 			currentSanity=0;
 			myRoom.StayDuration=0;
 			destination = myRoom.transform.FindChild("Exit").position;
+			destination = new Vector3(destination.x, destination.y, transform.position.z);
 			transform.rigidbody2D.Sleep();
 			transform.collider2D.enabled=false;
 		}

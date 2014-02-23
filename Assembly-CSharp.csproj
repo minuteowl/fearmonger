@@ -46,31 +46,24 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
      <Compile Include="Assets\Scripts\Ability\Ability.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Flash.cs" />
+     <Compile Include="Assets\Scripts\Ability\Ability_Push.cs" />
+     <Compile Include="Assets\Scripts\Ability\Ability_ShadowStorm.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Tentacle.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Leveling.cs" />
-=======
-     <Compile Include="Assets\Scripts\CameraObject.cs" />
-     <Compile Include="Assets\Scripts\Player\Ability.cs" />
->>>>>>> 1f858c59cbb69d7ee9bb14b275e0413e62908c04
+     <Compile Include="Assets\Scripts\Player\AbilityMenu.cs" />
+     <Compile Include="Assets\Scripts\Player\Leveling.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerActivity.cs" />
      <Compile Include="Assets\Scripts\Player\Selector.cs" />
+     <Compile Include="Assets\Scripts\Projectiles\PushTentacle.cs" />
      <Compile Include="Assets\Scripts\Rooms\LampObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\MovableObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\PersonObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\RoomObject.cs" />
-     <Compile Include="Assets\Scripts\Single\AbilityMenu.cs" />
-<<<<<<< HEAD
      <Compile Include="Assets\Scripts\Static\PlayerInput.cs" />
-=======
-     <Compile Include="Assets\Scripts\Single\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Single\PlayerInput.cs" />
-     <Compile Include="Assets\Scripts\Single\PlayerLevel.cs" />
->>>>>>> 1f858c59cbb69d7ee9bb14b275e0413e62908c04
+     <Compile Include="Assets\Scripts\Static\Statics.cs" />
      <Compile Include="Assets\Scripts\mainmenu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

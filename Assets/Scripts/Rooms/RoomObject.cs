@@ -1,90 +1,99 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-/*
- * This class is both the "physical" room in the hotel and
- * also the "family" of the 1-3 people. In general, we will
- * only access people PersonObjects through this class.
- */
+
 public class RoomObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-
-	public bool IsInFocus = false;
-	public int numberOccupants;
-
-	public int lampsOn;
-
-	public Transform personPrefab1;
-
 	public string RoomName;
-
-	public PersonObject[] members;
-	public GameManager game;
-
-	public Vector3 spawnLoc1, spawnLoc2, spawnLoc3, bedLoc1, bedLoc2, bedLoc3,
-		DoorLocation, lampLoc1, lampLoc2, entryLoc;
-	public Transform bed1, bed2, bed3, lamp1, lamp2;
-
-	static float Tick; // tick = countdown rate
-	private float MaxStayDuration = 20f; // later on we can make this vary
-	public float StayDuration;
-
-	private float MaxDelayTime = 8f; // time in between empty rooms
-	public float DelayTime;
-	public bool Ready=true;
-	public bool HasCheckedOut=false;
-
-	public Vector3 CameraPosition;
+	[HideInInspector] public PersonObject[] members;
+	private GameObject[] memberObjects;
+	GameObject[] memberTypes;
+	[HideInInspector] public GameManager game;
+	Leveling level;
+	//public Transform personPrefab1;
+	[HideInInspector] public Transform bed1, bed2, bed3, lamp1, lamp2;
+	// Physical
+	public Vector3 CameraPosition, entryLoc; // PersonObjects need to read this
+	[HideInInspector] public Vector3 spawn1Pos, spawn2Pos, spawn3Pos,
+		bed1StartPos, bed2StartPos, bed3StartPos,
+		DoorLocation, lamp1StartPos, lamp2StartPos;
+	// AI stuff
+	float MaxStayDuration = 20f; // later on we can make this vary
+	[HideInInspector] public float StayDuration=0;
+	float MaxDelayTime = 8f; // time in between empty rooms
+	float DelayTime=0;
+	[HideInInspector] public bool Ready=true;
+	bool HasCheckedOut=false;
+	[HideInInspector] public int lampsOn=2;
+	public int numberOccupants=0;
 
 	/*======== FUNCTIONS ========*/
 
 	void ResetFurniture()
 	{
-		bed1.position = bedLoc1;
-		bed2.position = bedLoc2;
-		bed3.position = bedLoc3;
-		lamp1.position = lampLoc1;
-		lamp2.position = lampLoc2;
+		bed1.position = bed1StartPos;
+		bed2.position = bed2StartPos;
+		bed3.position = bed3StartPos;
+		lamp1.position = lamp1StartPos;
+		lamp2.position = lamp2StartPos;
 		lampsOn = 2;
 	}
 	
 	// Use this for initialization
 	void Start () {
 		game=GameObject.Find("GameManager").GetComponent<GameManager>();
-		StayDuration=0;
+		level=GameObject.Find("Player").GetComponent<Leveling>();
 		DoorLocation = transform.FindChild ("Entry").position;
-		spawnLoc1 = transform.FindChild("Spawn 1").position;
-		spawnLoc2 = transform.FindChild("Spawn 2").position;
-		spawnLoc3 = transform.FindChild("Spawn 3").position;
-		bedLoc1 = bed1.position;
-		bedLoc2 = bed2.position;
-		bedLoc3 = bed3.position;
+		spawn1Pos = transform.FindChild("Spawn 1").position;
+		spawn2Pos = transform.FindChild("Spawn 2").position;
+		spawn3Pos = transform.FindChild("Spawn 3").position;
+		bed1 = transform.FindChild("Bed 1");
+		bed2 = transform.FindChild("Bed 2");
+		bed3 = transform.FindChild("Bed 3");
+		lamp1 = transform.FindChild("Lamp 1");
+		lamp2 = transform.FindChild("Lamp 2");
+		bed1StartPos = bed1.position;
+		bed2StartPos = bed2.position;
+		bed3StartPos = bed3.position;
 		entryLoc = transform.FindChild("Entry").position;
-		lampLoc1 = lamp1.position;
-		lampLoc2 = lamp2.position;
+		lamp1StartPos = lamp1.position;
+		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
 		RoomName = transform.name;
-		lampsOn = 2;
 		members = new PersonObject[3];
+		memberObjects = new GameObject[3];
+		memberTypes= new GameObject[3];
+		memberTypes[0] = Resources.Load<GameObject>("Generated/People/Person1");
 		if (RoomName.Equals("Room 101")){ // start game with a person in room 101
 			CheckIn();
 		}
+
 	}
 
 	public void CheckIn(){
 		// Prepare the room
-		Debug.Log("Checking in to room "+RoomName);
 		ResetFurniture ();
 		StayDuration = MaxStayDuration;
 		game.NumOccupiedRooms++;
-
 		// Add people
-		numberOccupants = 1;
-		GameObject t = Instantiate(personPrefab1,spawnLoc1,Quaternion.identity) as GameObject;
-		PersonObject p = t.GetComponent<PersonObject>();
-		p.AssignRoom(this);
-		members[0]=p;
+		memberObjects[0] = Instantiate(memberTypes[0],spawn1Pos,Quaternion.identity) as GameObject;
+		members[0] = memberObjects[0].GetComponent<PersonObject>();
+		members[0].AssignRoom(this);
+		numberOccupants=1;
+		if (UnityEngine.Random.Range(0,level.Level)>2) { // succeds at 3
+			numberOccupants++;
+			memberObjects[1] = Instantiate(memberTypes[0],spawn2Pos,Quaternion.identity) as GameObject;
+			members[1] = memberObjects[1].GetComponent<PersonObject>();
+			members[1].AssignRoom(this);
+		}
+		if (UnityEngine.Random.Range(0,level.Level)>5) { // succeeds at 6
+			numberOccupants++;
+			memberObjects[2] = Instantiate(memberTypes[0],spawn3Pos,Quaternion.identity) as GameObject;
+			members[2] = memberObjects[2].GetComponent<PersonObject>();
+			members[2].AssignRoom(this);
+		}
+		Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
 
 	}
 
@@ -101,14 +110,13 @@ public class RoomObject : MonoBehaviour {
 			StayDuration = 0;
 			DelayTime = MaxDelayTime;
 			for (int i=members.Length-1; i>=0; i--){
-				if (members[i]!=null) {
-					members[i]=null;
-				}
+				members[i]=null;
+				memberObjects[i]=null;
 			}
 			game.NumOccupiedRooms--;
 			HasCheckedOut=true;
 			Ready = false;
-			Debug.Log("Checked out.");
+			Debug.Log("Checked out from room "+RoomName);
 		}
 	}
 	
@@ -116,7 +124,7 @@ public class RoomObject : MonoBehaviour {
 	public void Update () {
 		if (game.currentRoom!=this && HasCheckedOut && numberOccupants==0) {
 			if (DelayTime>0) {
-				DelayTime -= game.Tick*Time.deltaTime;
+				DelayTime -= Statics.Tick*Time.deltaTime;
 			}
 			else
 			{
@@ -125,8 +133,5 @@ public class RoomObject : MonoBehaviour {
 				HasCheckedOut=false;
 			}
 		}
-
 	}
-
-
 }

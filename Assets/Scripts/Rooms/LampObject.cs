@@ -6,8 +6,6 @@ public class LampObject : MovableObject {
 	public bool LightOn;
 	public Light lightSource;
 	public RoomObject room;
-	GameManager game;
-
 	public float flickerCountdown = 0f;
 	float flickerCountdownMax = 0.1f;
 	public int flickersRemaining=0;
@@ -18,7 +16,6 @@ public class LampObject : MovableObject {
 		LightOn = true;
 		lightSource = (Light)transform.GetComponent("Light");
 		room = transform.parent.GetComponent<RoomObject>();
-		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
 	public void FlickerTimer(int flickers)
@@ -71,7 +68,7 @@ public class LampObject : MovableObject {
 				else TurnOn();
 			}
 			else {
-				flickerCountdown -= game.Tick*Time.deltaTime;
+				flickerCountdown -= Statics.Tick*Time.deltaTime;
 			}
 		}
 		else

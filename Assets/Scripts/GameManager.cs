@@ -8,153 +8,138 @@ public class GameManager : MonoBehaviour {
 	public View currentView;
 	PlayerActivity player;
 	public int NumOccupiedRooms=0;
+	public bool IsPaused=false;
 
 	// CAMERA LOGIC
-	public CameraObject cameraObject;
-	Camera mainCam;
+	[HideInInspector] public CameraObject cameraObject;
 	Transform cameraMapPositionTransform;
-	bool JustPressed;
 
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
 	Transform[,] squares;
 	RoomObject[,] roomObjects;
-	Transform selectedRoomMarker;
 	float selectedRoomMarkerZ;
 	int[,] PeoplePerRoom;
 	int i,j;
-	public int row, col;
+	[HideInInspector] public int row=0, col=0;
 	float upBound, leftBound, rightBound, downBound;
 
-	public float countdown, countdownMax;
-	public float Tick = 1f;
+	public bool locked;
 
-	// USING ABILITIES
-	public List<Ability> listAbilities;
-	public int max;
-	//Ability currentAbility;
+	float countdown, countdownMax=5f;
 
-	public void SetUpAbilities()
-	{
-		if (listAbilities==null) {
-			listAbilities = new List<Ability>();
-<<<<<<< HEAD:Assets/Scripts/GameManager.cs
-			listAbilities.Add (new Ability_Tentacle());
-			listAbilities.Add (new Ability_Flash());
-=======
-			listAbilities.Add (new Ability("Tentacle","Extend a tentacle",1,1));
-			listAbilities.Add (new Ability("Flash", "The lights flash", 1, 1));
-			max = 2;
->>>>>>> 78dd48aa47a8cb9ba9c1b31557600e23afde81f2:Assets/Scripts/Single/GameManager.cs
-			//currentAbility = listAbilities[0];
-		}
+	public void Pause(){
+		Time.timeScale=0f;
+		IsPaused=true;
 	}
-	public int getMaxAbility()
-	{
-				return max;
-		}
+	public void Unpause(){
+		Time.timeScale=1f;
+		IsPaused=false;
+	}
 
 	void Start ()
 	{
-		countdownMax = 5f;
 		countdown = countdownMax; // Initial countdown is shorter than others
-		JustPressed = false;
-		mainCam = Camera.main.GetComponent<Camera>();
-		selectedRoomMarker = GameObject.Find("CurrentRoomMarker").transform;
-		selectedRoomMarkerZ = selectedRoomMarker.position.z;
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 		player  = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerActivity>();
 		squares = new Transform[4,4];
 		roomObjects = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
-		row = 0;
-		col = 0;
 		for (i=0; i<4; i++)  for (j=0; j<4; j++) {
 			squares[i,j] = GameObject.Find("Room "+(i+1)+"0"+(j+1)).transform;
 			roomObjects[i,j] = (RoomObject)squares[i,j].GetComponent<RoomObject>();
 		}
 		currentRoom = roomObjects[0,0];
-		SetUpAbilities();
+		//GoToRoom(currentRoom);
 	}
 	
 	public void GoToRoom(RoomObject room)
 	{
+		Unpause();
 		if (currentView==View.Map) {
+			Debug.Log("Go to room "+room.RoomName);
 			player.FaceUp();
-			player.transform.position = room.entryLoc;
-			currentView = View.Game;
+			player.MoveTo(room.entryLoc);
+			//currentView = View.Game;
 			cameraObject.ZoomIn(room);
 		}
 	}
 
 	public void GoToMap() {
+		Pause ();
 		if (currentView==View.Game) {
 			player.FaceUp();
 			lastRoom = currentRoom;
 			cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 			currentView = View.Map;
 			cameraObject.ZoomOut();
-			JustPressed = true;
 		}
 	}
 
 	void MoveMarker()
 	{
+		Statics.LockInput = true;
 		currentRoom = roomObjects[row,col];
-		selectedRoomMarker.position = new Vector3(currentRoom.transform.position.x,
-		                                          currentRoom.transform.position.y,
-		                                          selectedRoomMarkerZ);
+		player.transform.position = new Vector3(currentRoom.entryLoc.x,
+		                                          currentRoom.entryLoc.y,
+		                                          player.transform.position.z);
 	}
 
-	// This is called from the PlayerActivity Update()
-	public void Update() {
-		if (NumOccupiedRooms<4) {
+	void UpdateInput() {
+
+	}
+
+	void Update() {
+		if (!IsPaused && NumOccupiedRooms<4) {
 			if (countdown > 0f) {
-				countdown -= Tick*Time.deltaTime;
+				countdown -= Statics.Tick*Time.deltaTime;
 			}
 			else {
 				for (i=0;i<4;i++) for (j=0;j<4;j++) {
 					if (roomObjects[i,j]!=currentRoom && roomObjects[i,j].numberOccupants==0 && roomObjects[i,j].Ready)
 					{
 						roomObjects[i,j].CheckIn();
-						i=4; j=4;
+						i=5; j=5;
 						countdown = countdownMax;
 					}
-
 				}
 			}
 		}
-
 		if (currentView==View.Map) {
 			for (i=0; i<4; i++)  for (j=0; j<4; j++) {
 				PeoplePerRoom[i,j] = roomObjects[i,j].numberOccupants;
-
 			}
 			if (!currentRoom) {
 				currentRoom = roomObjects[row,col];
 			}
-
-			if (PlayerInput.InputLeftOnce() && col>0) {
-				col--; MoveMarker();
-			}
-			else if (PlayerInput.InputRightOnce() && col<3) {
-				col++; MoveMarker();
-			}
-			else if (PlayerInput.InputUpOnce() && row<3) {
-				row++; MoveMarker();
-			}
-			else if (PlayerInput.InputDownOnce() && row>0){
-				row--; MoveMarker();
-			}
-			if (JustPressed) {
-				JustPressed = false;
-			}
-			else if (!JustPressed && PlayerInput.InputAction())
-			{
-				GoToRoom(currentRoom);
-				lastRoom = currentRoom;
-				currentView = View.Game;
+			if (!Statics.LockInput) {
+				if (PlayerInput.InputLeftOnce() && col>0) {
+					col--; MoveMarker(); Statics.LockInput=true;
+				}
+				else if (PlayerInput.InputRightOnce() && col<3) {
+					col++; MoveMarker(); Statics.LockInput=true;
+				}
+				else if (PlayerInput.InputUpOnce() && row<3) {
+					row++; MoveMarker(); Statics.LockInput=true;
+				}
+				else if (PlayerInput.InputDownOnce() && row>0){
+					row--; MoveMarker(); Statics.LockInput=true;
+				}
+				else if (PlayerInput.InputAction())
+				{
+					Debug.Log("Going to room "+currentRoom.RoomName);
+					Statics.LockInput=false;
+					GoToRoom(currentRoom);
+					lastRoom = currentRoom;
+					currentView = View.Game;
+				}
 			}
 		}
+		if (Statics.LockInput) {
+			Statics.LockInput = false;
+		}
+		locked=Statics.LockInput;
+
 	}
+
 }
