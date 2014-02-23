@@ -17,11 +17,11 @@ public class GameManager : MonoBehaviour {
 
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
-	static Transform[,] squares;
-	static RoomObject[,] roomObjects;
-	static Transform selectedRoomMarker;
-	static float selectedRoomMarkerZ;
-	static int[,] PeoplePerRoom;
+	Transform[,] squares;
+	RoomObject[,] roomObjects;
+	Transform selectedRoomMarker;
+	float selectedRoomMarkerZ;
+	int[,] PeoplePerRoom;
 	int i,j;
 	public int row, col;
 	float upBound, leftBound, rightBound, downBound;
@@ -37,8 +37,8 @@ public class GameManager : MonoBehaviour {
 	{
 		if (listAbilities==null) {
 			listAbilities = new List<Ability>();
-			listAbilities.Add (new Ability("Tentacle","Extend a tentacle",1,1));
-			listAbilities.Add (new Ability("Flash", "The lights flash", 1, 1));
+			listAbilities.Add (new Ability_Tentacle());
+			listAbilities.Add (new Ability_Flash());
 			//currentAbility = listAbilities[0];
 		}
 	}
@@ -78,7 +78,6 @@ public class GameManager : MonoBehaviour {
 
 	public void GoToMap() {
 		if (currentView==View.Game) {
-			Debug.Log("Go to map");
 			player.FaceUp();
 			lastRoom = currentRoom;
 			cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
@@ -96,7 +95,8 @@ public class GameManager : MonoBehaviour {
 		                                          selectedRoomMarkerZ);
 	}
 
-	void Update() {
+	// This is called from the PlayerActivity Update()
+	public void Update() {
 		if (NumOccupiedRooms<4) {
 			if (countdown > 0f) {
 				countdown -= Tick*Time.deltaTime;

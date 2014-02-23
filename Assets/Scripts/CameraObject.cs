@@ -7,15 +7,15 @@ public class CameraObject : MonoBehaviour {
 	public float sizeSmall, sizeLarge;
 	Vector3 mapPosition;
 	Camera cam;
-	GameManager game;
 	public CameraObject reference;
+	GameManager game;
 
 	// Use this for initialization
 	void Start () {
-		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 		mapPosition = MapPositionTransform.position;
 		cam = (Camera)transform.GetComponent("Camera");
 		SetSize(sizeSmall);
+		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
 	// Update is called once per frame

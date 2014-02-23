@@ -4,18 +4,24 @@ using System.Collections;
 [RequireComponent(typeof(Selector))]
 public class PlayerActivity : MonoBehaviour {
 
+	GameManager game;
+	Leveling level;
+
 	// Attached scripts
-	private Selector grab;
+	public Selector grab;
 	private Transform grabTransform;
 	private float grabDistance;
 	public Vector3 zDistanceVector = Vector3.zero;//new Vector3(0,0,-2);
 
-	GameManager game;
-	PlayerLevel leveling;
+	// Actions
+	MonoBehaviour[] args = new MonoBehaviour[10];
 	Ability currentAbility;
 	public bool UsingAbility=false;
-	int curr = 0;
+	int currentAblilityIndex = 0;
 
+	// Sprites
+	Sprite[] sprites;
+	public bool IsInvisible = true;
 
 	// Motion
 	private Vector3 facingDirection;
@@ -27,7 +33,7 @@ public class PlayerActivity : MonoBehaviour {
 		get { return facingDirection;}
 	}
 
-	public bool IsInvisible = true;
+
 
 
 	public void FaceUp()
@@ -41,12 +47,13 @@ public class PlayerActivity : MonoBehaviour {
 		facingDirection = yAxis;
 		grabTransform = transform.FindChild("Selector");
 		grab = grabTransform.GetComponent<Selector>();
-		leveling = GameObject.Find("GameManager").GetComponent<PlayerLevel>();
-		game = GameObject.Find("GameManager").GetComponent<GameManager>();
+		game = GameObject.Find ("GameManager").GetComponent<GameManager>();
+		level = GameObject.Find("GameManager").GetComponent<Leveling>();
 		game.currentView = GameManager.View.Game;
 		game.SetUpAbilities();
 		grabDistance = bodyCollider.size.x/2 + grab.box.size.x/2;
 		currentAbility = game.listAbilities[0];
+		sprites = Resources.LoadAll<Sprite>("Sprites/Player");
 	}
 
 	void EnterRoom()
@@ -55,9 +62,17 @@ public class PlayerActivity : MonoBehaviour {
 		facingDirection = yAxis;
 	}
 
+	//int spriteIndex=0;
 	void ToggleInvisible()
 	{
-		IsInvisible = !IsInvisible;
+		if (IsInvisible){
+			IsInvisible=false;
+			transform.GetComponent<SpriteRenderer>().sprite=sprites[1];
+		}
+		else {
+			IsInvisible = true;
+			transform.GetComponent<SpriteRenderer>().sprite=sprites[2];
+		}
 	}
 
 	void Move()
@@ -93,6 +108,10 @@ public class PlayerActivity : MonoBehaviour {
 	void Update () {
 		if (game.currentView==GameManager.View.Game){
 			grabTransform.position = transform.position + (grabDistance*facingDirection) + zDistanceVector;
+			if (UsingAbility)
+			{
+				UsingAbility=false;
+			}
 			if (PlayerInput.InputAction()) {
 				if (grab.isHolding) {
 					if (grab.currentFocus==Selector.FocusType.None) {
@@ -103,35 +122,40 @@ public class PlayerActivity : MonoBehaviour {
 					}
 				}
 				else { // Is not holding anything
-					if (grab.currentFocus==Selector.FocusType.Door) {
+					if (UsingAbility)
+					{
+						UsingAbility = false;
+					}
+					else if (grab.currentFocus==Selector.FocusType.Door) {
 						game.GoToMap();
 					}
 					else if (grab.currentFocus==Selector.FocusType.Movable) {
 						grab.Pickup();
 					}
-					else if (!UsingAbility && grab.currentFocus==Selector.FocusType.Person) {
+					else if (!UsingAbility) {
 						UsingAbility=true; // make sure that the ability is only called once at a time
-						PersonObject p = grab.focusTransform.GetComponent<PersonObject>();
-						leveling.UseAbility(p,currentAbility);
-					}
-					else if (UsingAbility)
-					{
-						UsingAbility = false;
+						if (currentAbility is Ability_Tentacle)
+						{
+							if (grab.currentFocus==Selector.FocusType.Person) {
+								args[0] = grab.focusTransform.GetComponent<PersonObject>();
+								currentAbility.Use (level, args);
+							}
+						}
+						else if (currentAbility is Ability_Flash)
+						{
+							args[0] = game.currentRoom;
+							currentAbility.Use (level, args);
+						}
 					}
 				}
 			}
 			else if (PlayerInput.InputInvisible()) {
-				Debug.Log("toggle invisible");
 				ToggleInvisible();
 			}
 			else if (PlayerInput.InputStatMenu()){
-				curr++;
-				if(curr > game.listAbilities.Count)
-				{
-					curr = 0;
-				}
-				currentAbility = game.listAbilities[curr];
-				Debug.Log ("Current Ability is: "+ game.listAbilities[curr].Name);
+				currentAblilityIndex = (currentAblilityIndex+1)%game.listAbilities.Count;
+				currentAbility = game.listAbilities[currentAblilityIndex];
+				Debug.Log ("Current Ability is: "+ game.listAbilities[currentAblilityIndex].Name);
 				//Debug.Log("Open stats menu");
 			}
 			else

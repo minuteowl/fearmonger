@@ -20,7 +20,7 @@ public class RoomObject : MonoBehaviour {
 	public string RoomName;
 
 	public PersonObject[] members;
-	GameManager game;
+	public GameManager game;
 
 	public Vector3 spawnLoc1, spawnLoc2, spawnLoc3, bedLoc1, bedLoc2, bedLoc3,
 		DoorLocation, lampLoc1, lampLoc2, entryLoc;
@@ -51,8 +51,7 @@ public class RoomObject : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		game = GameObject.Find("GameManager").GetComponent<GameManager>();
-		Tick=game.Tick;
+		game=GameObject.Find("GameManager").GetComponent<GameManager>();
 		StayDuration=0;
 		DoorLocation = transform.FindChild ("Entry").position;
 		spawnLoc1 = transform.FindChild("Spawn 1").position;
@@ -97,7 +96,7 @@ public class RoomObject : MonoBehaviour {
 	public void CheckOut(){
 		// Each person will call this when they leave,
 		// so make sure that it is only called once.
-		if (numberOccupants!=0) {
+		if (numberOccupants>0) {
 			numberOccupants=0;
 			StayDuration = 0;
 			DelayTime = MaxDelayTime;
@@ -117,7 +116,7 @@ public class RoomObject : MonoBehaviour {
 	public void Update () {
 		if (game.currentRoom!=this && HasCheckedOut && numberOccupants==0) {
 			if (DelayTime>0) {
-				DelayTime -= Tick*Time.deltaTime;
+				DelayTime -= game.Tick*Time.deltaTime;
 			}
 			else
 			{
