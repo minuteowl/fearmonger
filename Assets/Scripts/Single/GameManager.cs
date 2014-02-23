@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 
 	// USING ABILITIES
 	public List<Ability> listAbilities;
+	public int max;
 	//Ability currentAbility;
 
 	public void SetUpAbilities()
@@ -39,9 +40,14 @@ public class GameManager : MonoBehaviour {
 			listAbilities = new List<Ability>();
 			listAbilities.Add (new Ability("Tentacle","Extend a tentacle",1,1));
 			listAbilities.Add (new Ability("Flash", "The lights flash", 1, 1));
+			max = 2;
 			//currentAbility = listAbilities[0];
 		}
 	}
+	public int getMaxAbility()
+	{
+				return max;
+		}
 
 	void Start ()
 	{

@@ -125,13 +125,11 @@ public class PlayerActivity : MonoBehaviour {
 				ToggleInvisible();
 			}
 			else if (PlayerInput.InputStatMenu()){
-				curr++;
-				if(curr > game.listAbilities.Count)
-				{
-					curr = 0;
-				}
-				currentAbility = game.listAbilities[curr];
-				Debug.Log ("Current Ability is: "+ game.listAbilities[curr].Name);
+				AbilityMenu menu = new AbilityMenu();
+				menu.togglePause();
+				currentAbility = game.listAbilities[menu.selected];
+
+				//Debug.Log ("Selected Ability is: " + currentAbility.Name);
 				//Debug.Log("Open stats menu");
 			}
 			else
