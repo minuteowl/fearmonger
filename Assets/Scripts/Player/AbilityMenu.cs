@@ -7,10 +7,9 @@ public class AbilityMenu: MonoBehaviour
 {
 	GameManager game;
 	Rect menuBackground;
-	int menux=250, menuy=100, menuw=520, menuh=410;
+	int menux=80, menuy=100, menuw=520, menuh=410;
 	Color menuBackgroundColor;
 	PlayerActivity player;
-	Transform camTransform;
 
 	int selectedIndex = 0, scrollIndex;
 
@@ -21,6 +20,7 @@ public class AbilityMenu: MonoBehaviour
 		listAbilities = new List<Ability>();
 		listAbilities.Add(new Ability_Push());
 		listAbilities.Add(new Ability_Flash());
+		listAbilities.Add(new Ability_Tentacle());
 		listAbilities.Add(new Ability_ShadowStorm());
 	}
 
@@ -28,7 +28,6 @@ public class AbilityMenu: MonoBehaviour
 	{
 		game = GameObject.Find("GameManager").GetComponent<GameManager>();
 		player = transform.GetComponent<PlayerActivity>();
-		camTransform  = GameObject.Find("MainCamera").transform;
 		menuBackground = new Rect(menux,menuy, menuw, menuh);
 		selectedIndex=0;
 		player.SetAbility(listAbilities[selectedIndex]);
@@ -48,7 +47,11 @@ public class AbilityMenu: MonoBehaviour
 	void UpdateInput()
 	{
 		if (game.currentView==GameManager.View.Stats) {
-			if (PlayerInput.InputStatMenu()) {
+			if (PlayerInput.InputQuit()) {
+				Debug.Log("quit");
+				Application.Quit();
+			}
+			else if (PlayerInput.InputStatMenu()) {
 				Statics.LockInput=true;
 				game.currentView=GameManager.View.Game;
 				game.Unpause();

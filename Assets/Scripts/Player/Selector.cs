@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Selector : MonoBehaviour {
 
-	[HideInInspector] public BoxCollider2D box;
+	[HideInInspector] public CircleCollider2D circle;
 	[HideInInspector] public Transform heldTransform, focusTransform;
 	[HideInInspector] public MovableObject heldObject;
 	[HideInInspector] public bool isHolding = false;
@@ -16,11 +16,10 @@ public class Selector : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		box = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
+		circle = transform.GetComponent<CircleCollider2D>();// = (BoxCollider2D)transform.GetComponent("BoxCollider2D");
 		player = transform.parent.GetComponent<PlayerActivity>();
 		currentFocus = FocusType.None;
 		heldObject = null;
-		grabDistance = (box.size.x + player.bodyCollider.size.x)/2;
 		zOffset = new Vector3(0,0,transform.position.z+1); // counting up from negative
 	}
 
@@ -83,6 +82,7 @@ public class Selector : MonoBehaviour {
 		
 		// Update is called once per frame
 	void Update () {
+		grabDistance = (transform.GetComponent<SpriteRenderer>().bounds.size.x+ player.bodyCollider.size.x*1.5f)/2;
 		transform.position = player.transform.position + (grabDistance*player.FacingDirection) + zOffset;
 		transform.rotation = Quaternion.LookRotation(Vector3.forward,player.FacingDirection);
 		if (waitCountdown>0)
@@ -144,17 +144,17 @@ public class Selector : MonoBehaviour {
 
 	void GetDetected() {
 		Collider2D temp;
-		if (temp = Physics2D.OverlapCircle(transform.position,box.size.x/2,1 << LayerMask.NameToLayer("Person"))){
+		if (temp = Physics2D.OverlapCircle(transform.position,circle.radius,1 << LayerMask.NameToLayer("Person"))){
 			focusTransform = temp.transform;
 			currentFocus = FocusType.Person;
 			return;
 		}
-		else if (temp = Physics2D.OverlapCircle(transform.position,box.size.x/2,1 << LayerMask.NameToLayer("Door"))){
+		else if (temp = Physics2D.OverlapCircle(transform.position,circle.radius,1 << LayerMask.NameToLayer("Door"))){
 			focusTransform = temp.transform;
 			currentFocus = FocusType.Door;
 			return;
 		}
-		else if (temp = Physics2D.OverlapCircle(transform.position,box.size.x/2,1 << LayerMask.NameToLayer("Solid"))){
+		else if (temp = Physics2D.OverlapCircle(transform.position,circle.radius,1 << LayerMask.NameToLayer("Solid"))){
 			focusTransform = temp.transform;
 			currentFocus = FocusType.Solid;
 			return;
@@ -163,7 +163,7 @@ public class Selector : MonoBehaviour {
 			focusTransform = null;
 			currentFocus = FocusType.None;
 		}
-		else if (temp = Physics2D.OverlapCircle(transform.position,box.size.x/2,1 << LayerMask.NameToLayer("Movable"))){
+		else if (temp = Physics2D.OverlapCircle(transform.position,circle.radius,1 << LayerMask.NameToLayer("Movable"))){
 			focusTransform = temp.transform;
 			currentFocus = FocusType.Movable;
 			return;

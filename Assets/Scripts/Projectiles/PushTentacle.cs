@@ -15,6 +15,8 @@ public class PushTentacle : MonoBehaviour {
 		selectorTransform = GameObject.Find("Selector").GetComponent<Selector>().transform;
 		level = GameObject.Find ("Player").GetComponent<Leveling>();
 		countdown = 1f;
+		transform.position = selectorTransform.position;
+		transform.rotation = selectorTransform.rotation;
 	}
 	
 	void Update()
@@ -31,12 +33,15 @@ public class PushTentacle : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D other)  {
+	void OnTriggerEnter2D(Collider2D other)  {
 		if (isactive) {
 			if (p=other.transform.GetComponent<PersonObject>()) {
-			xp = p.DecreaseSanity(1);
-			level.AddExperience(xp);
-			isactive=false;
-		}}
+				p.rigidbody2D.velocity = level.transform.GetComponent<PlayerActivity>().FacingDirection*10;
+				xp = p.DecreaseSanity(1);
+				level.AddExperience(xp);
+				if (countdown>0.25f) { countdown = 0.25f; }
+				isactive=false;
+			}
+		}
 	}
 }

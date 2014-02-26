@@ -11,7 +11,6 @@ public class Leveling : MonoBehaviour {
 
 	public int Level, ExpCurrent, ExpToNextLevel;
 
-//	GameManager game;
 	AbilityMenu abilities;
 	List<Ability> listAbilities;
 
@@ -57,14 +56,10 @@ public class Leveling : MonoBehaviour {
 		else return true;
 	}
 
-	/*
-	public void UseAbility(Ability ability, int xp) {
-		if (CanUse (ability)){
-			energyCurrent -= ability.Cost;
-			AddExperience(xp);
-			Debug.Log("Used "+ability.Name+" ("+ability.Description+") and gained "+xp+" experience and cost "+ability.Cost);
-		}
-	}*/
+	public void UseAbility(Ability ability) {
+		energyCurrent -= ability.Cost;
+		energyCountdown = energyCountdownMax;
+	}
 
 	void Update() {
 		if (ExpCurrent >= ExpToNextLevel){
@@ -88,6 +83,8 @@ public class Leveling : MonoBehaviour {
 
 	void OnGUI()
 	{
-
+		GUI.Box (new Rect (150, 38, 100, 25), "Player Level: " + Level);
+		GUI.Box (new Rect (300, 38, 100, 25), "EXP: " + ExpCurrent + "/" + ExpToNextLevel);
+		GUI.Box (new Rect (450, 38, 100, 25), "Energy: " + energyCurrent + "/" + energyMax);
 	}
 }

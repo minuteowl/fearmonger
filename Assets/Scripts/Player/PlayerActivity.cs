@@ -14,7 +14,6 @@ public class PlayerActivity : MonoBehaviour {
 	// Actions
 	MonoBehaviour[] args = new MonoBehaviour[10];
 	[HideInInspector] public Ability currentAbility;
-	//int currentAblilityIndex = 0;
 	AbilityMenu abilityMenu;
 
 	// Sprites
@@ -138,16 +137,10 @@ public class PlayerActivity : MonoBehaviour {
 		}
 	}
 
-
-
-	//void UpdateSelector() {
-	//	grabTransform.position = transform.position + (grabDistance*facingDirection) + grab.zOffset;
-	//	grabTransform.rotation = Quaternion.LookRotation(Vector3.back, facingDirection);
-	//}
-
 	void UpdateAbilities() {
 		Statics.LockInput=true; // make sure that the ability is only called once at a time
 		if (level.CanUse(currentAbility)) {
+			level.UseAbility(currentAbility);
 			grab.SetWait(currentAbility.Duration);
 			if (currentAbility is Ability_Push)
 			{
@@ -208,9 +201,6 @@ public class PlayerActivity : MonoBehaviour {
 				game.Pause ();
 				abilityMenu.Prepare();
 				game.currentView=GameManager.View.Stats;
-				//currentAblilityIndex = (currentAblilityIndex+1)%game.listAbilities.Count;
-				//currentAbility = game.listAbilities[currentAblilityIndex];
-				//Debug.Log ("Current Ability is: "+ game.listAbilities[currentAblilityIndex].Name);
 			}
 			else
 			{

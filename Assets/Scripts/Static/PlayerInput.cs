@@ -14,6 +14,11 @@ public static class PlayerInput {
 		return (Input.GetKeyDown("right") && !Input.GetKey("left"));
 	}
 
+	public static bool InputQuit()
+	{
+		return (Input.GetKeyDown("escape"));
+	}
+
 	public static bool InputLeft()
 	{
 		return (Input.GetKey("left") && !Input.GetKey("right"));
