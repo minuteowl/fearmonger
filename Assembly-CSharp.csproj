@@ -47,24 +47,19 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Ability\Ability.cs" />
-     <Compile Include="Assets\Scripts\Ability\Ability_Flash.cs" />
-     <Compile Include="Assets\Scripts\Ability\Ability_Push.cs" />
-     <Compile Include="Assets\Scripts\Ability\Ability_ShadowStorm.cs" />
-     <Compile Include="Assets\Scripts\Ability\Ability_Tentacle.cs" />
+     <Compile Include="Assets\Scripts\Ability\Ability_SpawnTentacles.cs" />
+     <Compile Include="Assets\Scripts\AbilityMenu.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Player\AbilityMenu.cs" />
-     <Compile Include="Assets\Scripts\Player\Leveling.cs" />
-     <Compile Include="Assets\Scripts\Player\PlayerActivity.cs" />
-     <Compile Include="Assets\Scripts\Player\Selector.cs" />
-     <Compile Include="Assets\Scripts\Projectiles\PushTentacle.cs" />
+     <Compile Include="Assets\Scripts\People\Person.cs" />
+     <Compile Include="Assets\Scripts\People\Person_Basic.cs" />
+     <Compile Include="Assets\Scripts\PlayerLevel.cs" />
      <Compile Include="Assets\Scripts\Rooms\LampObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\MovableObject.cs" />
-     <Compile Include="Assets\Scripts\Rooms\PersonObject.cs" />
      <Compile Include="Assets\Scripts\Rooms\RoomObject.cs" />
-     <Compile Include="Assets\Scripts\Static\PlayerInput.cs" />
-     <Compile Include="Assets\Scripts\Static\Statics.cs" />
-     <Compile Include="Assets\Scripts\mainmenu.cs" />
+     <Compile Include="Assets\Scripts\Selector.cs" />
+     <Compile Include="Assets\Scripts\Static\GameInput.cs" />
+     <Compile Include="Assets\Scripts\Static\GameVars.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

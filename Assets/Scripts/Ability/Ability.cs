@@ -4,21 +4,21 @@ using System;
 
 public abstract class Ability {
 
-	public string Name;
-	public string Description;
-	public int Cost;
+	public string Name, Description;
 	public bool Locked=true;
-	public int Level;
-	public float Duration;
+	public int MinLevel; // we might not use this
+	public int BuyCost, EnergyCost;
+	public float Duration; // in seconds
+	public int DarkBias=0; // 0=none, 1=dark, 2=light
 
-	// Animation info
+	// Animation and sound?
 
 	public void Unlock()
 	{
 		Locked = false;
-		Debug.Log("LEVEL UP TO "+Level+"! New ability: "+this.Name);
+		Debug.Log("Unlocked ability: "+this.Name);
 	}
 
-	public abstract void UseAbility(Leveling lvl, MonoBehaviour[] args);
+	public abstract void UseAbility(PlayerLevel lvl, MonoBehaviour[] args);
 
 }
