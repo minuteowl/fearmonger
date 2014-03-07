@@ -3,6 +3,24 @@ using System.Collections;
 
 public static class GameInput {
 
+	// Functions with input
+	public static Vector3 Mouse2D(Vector3 v) {
+		Camera cam = Camera.main;
+		Vector3 u = cam.ScreenToWorldPoint(Input.mousePosition);
+		return new Vector3(u.x,u.y,v.z);
+	}
+
+
+	public static bool IsInViewport(Vector3 v) {
+		Camera cam = Camera.main;
+		v = cam.WorldToScreenPoint(v);
+		if (v.x < cam.pixelRect.xMin) return false;
+		else if (v.x > cam.pixelRect.xMax) return false;
+		else if (v.y < cam.pixelRect.yMin) return false;
+		else if (v.y > cam.pixelRect.yMax) return false;
+		else return true;
+	}
+
 	// Functions to normalize keyboard input
 	public static bool Right()
 	{

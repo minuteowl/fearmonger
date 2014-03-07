@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour {
 	public View currentView;
 	public int NumOccupiedRooms=0;
 
-	// CAMERA LOGIC
+	// INTERFACE LOGIC
 	CameraObject cameraObject;
 	Transform cameraMapPositionTransform;
+	//public Cursor gameCursor;
 
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
