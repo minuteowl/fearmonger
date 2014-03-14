@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+
 public class GameManager : MonoBehaviour {
 
 	// GLOBAL VARIABLES GO HERE:
@@ -15,7 +16,7 @@ public class GameManager : MonoBehaviour {
 
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
-	int floorsUnlocked=1;
+	public int floorsUnlocked=1;
 	Transform[,] squares;
 	RoomObject[,] roomObjects;
 	int[,] PeoplePerRoom;
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour {
 	// By convention, timers start at zero and increment to max
 	// this counts the time, in seconds, between check-ins.
 	// the timer max will change randomly
-	float checkInTimer=0, checkInTimerMax=5f;
+	public float checkInTimer=0, checkInTimerMax=5f;
 
 	public void Pause(){
 		Time.timeScale=0f;
@@ -48,16 +49,23 @@ public class GameManager : MonoBehaviour {
 				roomObjects[i,j] = (RoomObject)squares[i,j].GetComponent<RoomObject>();
 			}
 		}
+		// Initialize room 101
 		currentRoom = roomObjects[0,0];
+		roomObjects[0,0].Unlock(5f);
+		roomObjects[0,1].Unlock(15f);
+		roomObjects[0,2].Unlock(30f);
+		roomObjects[0,3].Unlock(45f);
 	}
 	
 	public void GoToRoom(RoomObject room)
 	{
-		Unpause();
-		if (currentView==View.Map) {
-			Debug.Log("Go to room "+room.RoomName);
-			cameraObject.ZoomIn(room);
-			currentView = View.Game;
+		if (room.isUnlocked) {
+			Unpause();
+			if (currentView==View.Map) {
+				Debug.Log("Go to room "+room.RoomName);
+				cameraObject.ZoomIn(room);
+				currentView = View.Game;
+			}
 		}
 	}
 
@@ -81,7 +89,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Update() {
-		if (GameVars.IsPaused && NumOccupiedRooms<floorsUnlocked*4) {
+		if (NumOccupiedRooms<floorsUnlocked*4) {
 			if (checkInTimer < checkInTimerMax) {
 				checkInTimer += GameVars.Tick*Time.deltaTime;
 			}
@@ -89,7 +97,7 @@ public class GameManager : MonoBehaviour {
 				// check into a new vacant room, if able room
 				for (int i=0; i<floorsUnlocked; i++){
 					for (int j=0; j<4; j++){
-						if (roomObjects[i,j]!=currentRoom && !roomObjects[i,j].isOccupied)
+						if (!roomObjects[i,j].isOccupied)
 						{
 							roomObjects[i,j].CheckIn();
 							i=5; j=5;
@@ -107,7 +115,7 @@ public class GameManager : MonoBehaviour {
 			if (!currentRoom) {
 				currentRoom = roomObjects[row,col];
 			}
-			if (GameVars.InputLock) {
+			if (GameVars.InputLock) {/*
 				if (GameInput.LeftOnce() && col>0) {
 					col--; MoveMarker(); GameVars.InputLock=true;
 				}
@@ -126,7 +134,7 @@ public class GameManager : MonoBehaviour {
 					GoToRoom(currentRoom);
 					lastRoom = currentRoom;
 					GameVars.InputLock=false;
-				}
+				}*/
 			}
 		}
 		if (GameVars.InputLock) {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Person_Basic : Person {
+public class Person_Candle : Person {
 
 	// Use this for initialization
 	void Start () {
@@ -9,7 +9,7 @@ public class Person_Basic : Person {
 	}
 	
 	// Update is called once per frame
-	public override void Update () {
-		base.Update();
+	protected override void Update () {
+	
 	}
 }

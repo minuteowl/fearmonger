@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ability_SpawnTentacles : Ability {
+public class Ability_Example : Ability {
 	
 	// Use this for initialization
-	public Ability_SpawnTentacles () {
-		Name="Spawn Tentacles";
-		Description = "Tentacles come out of the ground at a specific point.";
+	public Ability_Example () {
+		Name="Example Ability";
+		Description = "Describe what this ability does.";
 		MinLevel=1;
-		Duration = 2.5f;
+		Duration = 2.0f;
 		EnergyCost = 2;
 		BuyCost = 1;
 	}
 	
 	public override void UseAbility (PlayerLevel level, MonoBehaviour[] args) {
-		Debug.Log("used tentacle");
+		Debug.Log("Used this ability");
 		// create a tentacles object - to be implemented later
 	}
 }

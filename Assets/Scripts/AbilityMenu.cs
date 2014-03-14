@@ -16,8 +16,7 @@ public class AbilityMenu: MonoBehaviour
 	AbilityMenu()
 	{
 		listAbilities = new List<Ability>();
-		listAbilities.Add(new Ability_SpawnTentacles());
-		// listAbilities.Add(new Ability_...()); for all abilities
+		// listAbilities.Add(new AbilityExample...()); for all abilities
 	}
 
 	void Start()

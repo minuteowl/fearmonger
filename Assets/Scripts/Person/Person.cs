@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// This is probably going to be one of the most complex classes
+// Base class for all Person AI
 public abstract class Person : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
@@ -11,8 +11,10 @@ public abstract class Person : MonoBehaviour {
 	// Behavior
 	protected float sightRadius;
 	protected int sanityCurrent, sanityMax;
+	protected int sanityDefense;
+	public bool isAdult;
 
-	protected Ability abilityWeak, abilityResist;
+	//protected Ability abilityWeak, abilityResist;
 
 	LampObject targetLamp=null;
 	float lamp_epsilon=2f; // minimum distance to activate lamp
@@ -30,21 +32,21 @@ public abstract class Person : MonoBehaviour {
 	{
 		this.myRoom = r;
 	}
-
+	/*
 	public void SetAbilityWeak(Ability a){
 		this.abilityWeak = a;
 	}
 
 	public void SetAbilityResist(Ability a){
 		this.abilityResist = a;
-	}
+	}*/
 
 	protected void OnGUI(){
 		// show health bar above head
 	}
 
 	// Update is called once per frame
-	public virtual void Update () {
+	protected virtual void Update () {
 		if (sanityCurrent>0) {
 			if (myRoom.lampsOn==2) {
 				sightRadius = 8f;
@@ -55,14 +57,14 @@ public abstract class Person : MonoBehaviour {
 			else {
 				sightRadius = 0.5f;
 			}
-			UpdateSane();
+			UpdateMove();
 		}
 		else {
-			UpdateInsane();
+			UpdateFlee();
 		}
 	}
 
-	void UpdateInsane(){
+	void UpdateFlee(){
 		// run toward door, assume that desination is the exit position
 		if ((destination-transform.position).magnitude<1.5f) // fleeing and reached destination
 		{
@@ -80,7 +82,7 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	// update when sanity>0
-	void UpdateSane() {
+	void UpdateMove() {
 		walkSpeed = 1.2f*sanityMax/(sanityCurrent+1); // less sane = faster
 		if (myRoom.isOccupied) {
 			if (targetLamp!=null){ // I have been assigned to turn on a lamp

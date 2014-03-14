@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class RoomObject : MonoBehaviour {
 
@@ -11,22 +12,21 @@ public class RoomObject : MonoBehaviour {
 	PlayerLevel playerLevel;
 
 	// Physical
-	public Vector3 CameraPosition, entryLoc; // Persons need to read this
+	[HideInInspector] public Vector3 CameraPosition, entryLoc; // Persons need to read this
 	[HideInInspector] public Transform bed1, bed2, bed3, lamp1, lamp2;
-
 	[HideInInspector] public Vector3 spawn1Pos, spawn2Pos, spawn3Pos,
 		bed1StartPos, bed2StartPos, bed3StartPos,
 		DoorLocation, lamp1StartPos, lamp2StartPos;
 	// AI stuff
 
-	public bool isOccupied=false;
+	public bool isOccupied=false, isUnlocked=false;
 	public float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	public float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
 	
 	[HideInInspector] public int lampsOn=2; // accessible to occupants
 	public int numberOccupants=0;
 
-	/*======== FUNCTIONS ========*/
+	/*======== ROOM MANAGEMENT ========*/
 
 	void ResetFurniture()
 	{
@@ -62,9 +62,11 @@ public class RoomObject : MonoBehaviour {
 		//memberObjects = new GameObject[3];
 		//memberTypes= new GameObject[3];
 		//memberTypes[0] = Resources.Load<GameObject>("Generated/People/Person1");
-		if (RoomName.Equals("Room 101")){ // start game with a person in room 101
-			CheckIn();
-		}
+	}
+
+	public void Unlock(float fInitial) {
+		isUnlocked = true;
+		vacantTimerMax = fInitial;
 	}
 
 	//Person[] GeneratePeople() {
@@ -72,11 +74,11 @@ public class RoomObject : MonoBehaviour {
 
 	public void CheckIn(){
 		// Prepare the room
+		Debug.Log("Checked into room "+RoomName);
 		ResetFurniture ();
 		isOccupied = true;
-		stayTimer = 0;
+		stayTimer = 0; vacantTimer = 0;
 		stayTimerMax = UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
-		Debug.Log("Checked into room "+RoomName);
 		/*
 		game.NumOccupiedRooms++;
 		// Add people
@@ -108,31 +110,29 @@ public class RoomObject : MonoBehaviour {
 	public void CheckOut(){
 		// Each person will call this when they leave,
 		// so make sure that it is only called once.
-		if (numberOccupants>0) {
-			numberOccupants=0;
-			isOccupied=false;
-			vacantTimer=0;
-			vacantTimerMax = UnityEngine.Random.Range(7f,12f); // delay to next check-in
-			/*
-			for (int i=members.Length-1; i>=0; i--){
-				members[i]=null;
-				memberObjects[i]=null;
-			}
-			*/
-			game.NumOccupiedRooms--;
-			Debug.Log("Checked out from room "+RoomName);
+		numberOccupants=0;
+		isOccupied=false;
+		vacantTimer=0; stayTimer = 0;
+		vacantTimerMax = UnityEngine.Random.Range(7f,12f); // delay to next check-in
+		/*
+		for (int i=members.Length-1; i>=0; i--){
+			members[i]=null;
+			memberObjects[i]=null;
 		}
+		*/
+		game.NumOccupiedRooms--;
+		Debug.Log("Checked out from room "+RoomName);
 	}
 	
 	// Update is called once per frame
 	public void Update () {
 		// don't check out the room while the player is still looking at it
-		if (game.currentRoom!=this) {
+		if (isUnlocked) {
 			if (isOccupied) {
 				if (stayTimer<stayTimerMax) {
 					stayTimer += GameVars.Tick*Time.deltaTime;
 				}
-				else {
+				else {// if (game.currentRoom!=this){
 					CheckOut();
 				}
 			}
