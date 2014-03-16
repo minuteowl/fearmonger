@@ -9,7 +9,7 @@ public class CameraObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		sizeSmall=12f; // for some reason I have to call this twice
+		sizeSmall=9.6f; // for some reason I have to call this twice
 		sizeLarge=90f;
 		mapPosition = GameObject.Find("GameManager").transform.position;
 		SetCameraSize(sizeSmall);

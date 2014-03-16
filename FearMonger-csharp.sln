@@ -17,7 +17,40 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																																																																																																																																																																																GlobalSection(MonoDevelopProperties) = preSolution
+																																																																																																																																																																																																																																																		GlobalSection(MonoDevelopProperties) = preSolution
+=======
+																																																																																																																				GlobalSection(MonoDevelopProperties) = preSolution
+>>>>>>> a0708b986c4136fcfc910cee0ddf0b0ba35d96eb
+=======
+																																																																																																																										GlobalSection(MonoDevelopProperties) = preSolution
+>>>>>>> 78dd48aa47a8cb9ba9c1b31557600e23afde81f2
+=======
+																																																																																																																											GlobalSection(MonoDevelopProperties) = preSolution
+>>>>>>> 1f858c59cbb69d7ee9bb14b275e0413e62908c04
+=======
+																																																																																																									GlobalSection(MonoDevelopProperties) = preSolution
+>>>>>>> 0993973fdbaa049d8879311095c47fe0b6984cc8
+=======
+																																																													GlobalSection(MonoDevelopProperties) = preSolution
+>>>>>>> 70e29920fa68ae5fd77d0517e394c7bed7162832
+		StartupItem = Assembly-CSharp.csproj
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.inheritsSet = null
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+		$0.TextStylePolicy = $3
+		$3.FileWidth = 120
+		$3.TabWidth = 4
+		$3.EolMarker = Unix
+		$3.inheritsSet = Mono
+		$3.inheritsScope = text/plain
+		$3.scope = text/plain
+	EndGlobalSection
+																																																																																																																																																																																																																																																				GlobalSection(MonoDevelopProperties) = preSolution
 =======
 																																																																																																																				GlobalSection(MonoDevelopProperties) = preSolution
 >>>>>>> a0708b986c4136fcfc910cee0ddf0b0ba35d96eb
