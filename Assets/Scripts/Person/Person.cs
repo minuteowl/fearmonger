@@ -7,6 +7,7 @@ public abstract class Person : MonoBehaviour {
 	/*======== VARIABLES ========*/
 	RoomObject myRoom;
 	GameManager game;
+	PlayerLevel leveling;
 
 	// Behavior
 	protected float sightRadius;
@@ -21,8 +22,9 @@ public abstract class Person : MonoBehaviour {
 
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
-	bool isWalking=false;
+	bool isWalking=false, isHurt=false;
 	float waitTimer=0.1f, waitTimerMax; // initially the person is waiting, so quickly have them start moving
+	float hurtTimer, hurtTimerMax=0.25f;//
 	Vector3 destination;
 	float walkSpeed;
 
@@ -31,6 +33,8 @@ public abstract class Person : MonoBehaviour {
 	public void SetRoom(RoomObject r)
 	{
 		this.myRoom = r;
+		transform.parent = myRoom.transform;
+		leveling = myRoom.game.playerLevel;
 	}
 	/*
 	public void SetAbilityWeak(Ability a){
@@ -84,6 +88,15 @@ public abstract class Person : MonoBehaviour {
 	// update when sanity>0
 	void UpdateMove() {
 		walkSpeed = 1.2f*sanityMax/(sanityCurrent+1); // less sane = faster
+		if (isHurt) {
+			if (hurtTimer<hurtTimerMax) {
+				hurtTimer += GameVars.Tick;
+			}
+			else {
+				hurtTimer = 0f;
+				isHurt=false;
+			}
+		}
 		if (myRoom.isOccupied) {
 			if (targetLamp!=null){ // I have been assigned to turn on a lamp
 				if (targetLamp.IsOn) {
@@ -149,6 +162,7 @@ public abstract class Person : MonoBehaviour {
 	// also, if sanity <=0, set insane behavior
 	public int Damage(int delta)
 	{
+		isHurt=true;
 		sanityCurrent -= delta;
 		if (sanityCurrent <= 0){
 			delta += sanityCurrent;

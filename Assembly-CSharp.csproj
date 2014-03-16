@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Ability\Ability.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Example.cs" />
+     <Compile Include="Assets\Scripts\Ability\Ability_Spiders.cs" />
      <Compile Include="Assets\Scripts\AbilityMenu.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />

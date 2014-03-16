@@ -20,7 +20,6 @@ public class CameraObject : MonoBehaviour {
 	}
 
 	void SetCameraSize(float newsize) {
-		Debug.Log("set camera size.");
 		Camera.main.orthographicSize = newsize;
 	}
 

@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour {
 	// INTERFACE LOGIC
 	CameraObject cameraObject;
 	Transform cameraMapPositionTransform;
-	//public Cursor gameCursor;
+
+	// we also need to keep track of this
+	[HideInInspector] public PlayerLevel playerLevel;
 
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
@@ -40,6 +42,7 @@ public class GameManager : MonoBehaviour {
 	void Start ()
 	{
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
+		playerLevel = transform.GetComponent<PlayerLevel>();
 		squares = new Transform[4,4];
 		roomObjects = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
@@ -51,10 +54,10 @@ public class GameManager : MonoBehaviour {
 		}
 		// Initialize room 101
 		currentRoom = roomObjects[0,0];
-		roomObjects[0,0].Unlock(5f);
-		roomObjects[0,1].Unlock(15f);
-		roomObjects[0,2].Unlock(30f);
-		roomObjects[0,3].Unlock(45f);
+		roomObjects[0,0].Unlock(2f);
+		roomObjects[0,1].Unlock(8f);
+		roomObjects[0,2].Unlock(14f);
+		roomObjects[0,3].Unlock(20f);
 	}
 	
 	public void GoToRoom(RoomObject room)

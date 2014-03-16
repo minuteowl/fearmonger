@@ -10,11 +10,11 @@ public class RoomObject : MonoBehaviour {
 	Person[] occupants;
 	[HideInInspector] public GameManager game; // accessible to occupants
 	PlayerLevel playerLevel;
-
+	
 	// Physical
 	[HideInInspector] public Vector3 CameraPosition, entryLoc; // Persons need to read this
 	[HideInInspector] public Transform bed1, bed2, bed3, lamp1, lamp2;
-	[HideInInspector] public Vector3 spawn1Pos, spawn2Pos, spawn3Pos,
+	[HideInInspector] public Vector3
 		bed1StartPos, bed2StartPos, bed3StartPos,
 		DoorLocation, lamp1StartPos, lamp2StartPos;
 	// AI stuff
@@ -25,6 +25,11 @@ public class RoomObject : MonoBehaviour {
 	
 	[HideInInspector] public int lampsOn=2; // accessible to occupants
 	public int numberOccupants=0;
+	public Transform[] peoplePrefabTypes;
+	Vector3[] spawnPositions;
+	public Transform prefab_child_m, prefab_child_f,
+		prefab_adult_m, prefab_adult_f, prefab_candle_m,
+		prefab_candle_f, prefab_priest;
 
 	/*======== ROOM MANAGEMENT ========*/
 
@@ -42,9 +47,11 @@ public class RoomObject : MonoBehaviour {
 	void Start () {
 		game=GameObject.Find("GameManager").GetComponent<GameManager>();
 		DoorLocation = transform.FindChild ("Entry").position;
-		spawn1Pos = transform.FindChild("Spawn 1").position;
-		spawn2Pos = transform.FindChild("Spawn 2").position;
-		spawn3Pos = transform.FindChild("Spawn 3").position;
+		spawnPositions = new Vector3[]{
+			transform.FindChild("Spawn 1").position,
+			transform.FindChild("Spawn 2").position,
+			transform.FindChild("Spawn 3").position
+		};
 		bed1 = transform.FindChild("Bed 1");
 		bed2 = transform.FindChild("Bed 2");
 		bed3 = transform.FindChild("Bed 3");
@@ -58,10 +65,21 @@ public class RoomObject : MonoBehaviour {
 		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
 		RoomName = transform.name;
-		occupants = new Person[3];
-		//memberObjects = new GameObject[3];
-		//memberTypes= new GameObject[3];
-		//memberTypes[0] = Resources.Load<GameObject>("Generated/People/Person1");
+		peoplePrefabTypes = new Transform[]{prefab_child_m,prefab_child_f,prefab_adult_m,prefab_adult_f,prefab_candle_m,prefab_candle_f,prefab_priest};
+	}
+
+	Transform[] getNewCombo() {
+		int i = UnityEngine.Random.Range(0,100)%(PersonLists.Combinations.Count);
+		print ("Picked "+i+" of "+PersonLists.Combinations.Count+" combinations.");
+		int[] array = PersonLists.Combinations[i];
+		Transform[] t = new Transform[array.Length];
+		for(int j=0; j<array.Length; j++){
+			if (array[j]>-1) {
+				t[j] = peoplePrefabTypes[array[j]];
+			}
+			else t[j]=null;
+		}
+		return t;
 	}
 
 	public void Unlock(float fInitial) {
@@ -69,37 +87,23 @@ public class RoomObject : MonoBehaviour {
 		vacantTimerMax = fInitial;
 	}
 
-	//Person[] GeneratePeople() {
-	//}
-
 	public void CheckIn(){
 		// Prepare the room
-		Debug.Log("Checked into room "+RoomName);
 		ResetFurniture ();
 		isOccupied = true;
 		stayTimer = 0; vacantTimer = 0;
-		stayTimerMax = UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
-		/*
+		stayTimerMax = 20f;//UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
+		Transform[] combo = getNewCombo();
+		numberOccupants = combo.Length;
+		Transform temp;
+		occupants = new Person[numberOccupants];
+		for (int i=0; i<combo.Length; i++) {
+			temp = (Transform)Instantiate(combo[i],spawnPositions[i],Quaternion.identity);
+			occupants[i] = temp.GetComponent<Person>();
+			occupants[i].SetRoom(this);
+		}
 		game.NumOccupiedRooms++;
-		// Add people
-		memberObjects[0] = Instantiate(memberTypes[0],spawn1Pos,Quaternion.identity) as GameObject;
-		members[0] = memberObjects[0].GetComponent<Person>();
-		members[0].SetRoom(this);
-		numberOccupants=1;
-		if (UnityEngine.Random.Range(0,playerLevel.level)>2) { // succeds at 3
-			numberOccupants++;
-			memberObjects[1] = Instantiate(memberTypes[0],spawn2Pos,Quaternion.identity) as GameObject;
-			members[1] = memberObjects[1].GetComponent<Person>();
-			members[1].SetRoom(this);
-		}
-		if (UnityEngine.Random.Range(0,playerLevel.level)>5) { // succeeds at 6
-			numberOccupants++;
-			memberObjects[2] = Instantiate(memberTypes[0],spawn3Pos,Quaternion.identity) as GameObject;
-			members[2] = memberObjects[2].GetComponent<Person>();
-			members[2].SetRoom(this);
-		}
 		Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
-		*/
 	}
 
 	public float GetDuration()
@@ -110,16 +114,15 @@ public class RoomObject : MonoBehaviour {
 	public void CheckOut(){
 		// Each person will call this when they leave,
 		// so make sure that it is only called once.
-		numberOccupants=0;
 		isOccupied=false;
 		vacantTimer=0; stayTimer = 0;
-		vacantTimerMax = UnityEngine.Random.Range(7f,12f); // delay to next check-in
-		/*
-		for (int i=members.Length-1; i>=0; i--){
-			members[i]=null;
-			memberObjects[i]=null;
+		vacantTimerMax = 2f;//UnityEngine.Random.Range(7f,12f); // delay to next check-in
+		for (int i=numberOccupants-1; i>=0; i--) {
+			if (occupants[i]!=null) {
+				occupants[i].Leave ();
+			}
 		}
-		*/
+		numberOccupants=0;
 		game.NumOccupiedRooms--;
 		Debug.Log("Checked out from room "+RoomName);
 	}
