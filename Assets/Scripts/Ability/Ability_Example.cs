@@ -13,8 +13,9 @@ public class Ability_Example : Ability {
 		BuyCost = 1;
 	}
 	
-	public override void UseAbility (PlayerLevel level, MonoBehaviour[] args) {
+	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
 		Debug.Log("Used this ability");
-		// create a tentacles object - to be implemented later
+		// code for effects
+		base.UseAbility(room,args);
 	}
 }

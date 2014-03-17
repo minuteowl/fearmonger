@@ -13,8 +13,9 @@ public class Ability_Spiders : Ability {
 		BuyCost = 1;
 	}
 	
-	public override void UseAbility (PlayerLevel level, MonoBehaviour[] args) {
+	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
 		Debug.Log("spider spell");
 		// create a tentacles object - to be implemented later
+		base.UseAbility(room,args);
 	}
 }

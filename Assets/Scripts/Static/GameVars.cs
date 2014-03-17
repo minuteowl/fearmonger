@@ -2,15 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// GLOBAL VARIABLES
 public static class GameVars {
 
-	public static float Tick = 1f;
+	public const float Tick = 1f;
 
-	public static bool InputLock=false;
-	// can prevent multiple scripts from using the same input
+	// prevent multiple scripts from registering the same input simultaneously
+	public static bool JustClicked=false;
+	public static bool JustPressedKey=false;
 
 	public static bool IsPaused=false;
-
-	public static List<int[]> SpawnLists = new List<int[]>();
 	
 }

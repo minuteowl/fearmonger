@@ -5,28 +5,33 @@ using System.Collections;
 public abstract class Person : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-	RoomObject myRoom;
-	GameManager game;
-	PlayerLevel leveling;
+	int aicheck=0,aicheckmax=10;//reduce the # of times to check AI
+	protected RoomObject myRoom;
+	protected GameManager game;
+	protected PlayerLevel leveling;
+	[HideInInspector] public bool isAdult; // adults have different responsibilities
+	public float attentionRadius;
+	const float RADIUS_SMALL = 1.0f, RADIUS_MED = 1.75f, RADIUS_LARGE = 2.5f;
 
 	// Behavior
 	protected float sightRadius;
-	protected int sanityCurrent, sanityMax;
-	protected int sanityDefense;
-	public bool isAdult;
+	public int sanityCurrent, sanityMax=1;
+	public int defenseBase, defenseCurrent, defenseSupport;
+	public Person[] roommates;
 
 	//protected Ability abilityWeak, abilityResist;
-
-	LampObject targetLamp=null;
-	float lamp_epsilon=2f; // minimum distance to activate lamp
+	// turning on or off lamps
+	public LampObject targetLamp=null;
+	const float LAMP_EPSILON=2f; // minimum distance to activate lamp
 
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
-	bool isWalking=false, isHurt=false;
-	float waitTimer=0.1f, waitTimerMax; // initially the person is waiting, so quickly have them start moving
+	bool isWalking=false, isHurt=false, isLeaving=false;
+	float motionTimer=0f, motionTimerMax; // how long to walk or wait
 	float hurtTimer, hurtTimerMax=0.25f;//
 	Vector3 destination;
 	float walkSpeed;
+	Vector2 walkDirection;
 
 	/*======== FUNCTIONS ========*/
 
@@ -35,48 +40,56 @@ public abstract class Person : MonoBehaviour {
 		this.myRoom = r;
 		transform.parent = myRoom.transform;
 		leveling = myRoom.game.playerLevel;
-	}
-	/*
-	public void SetAbilityWeak(Ability a){
-		this.abilityWeak = a;
+		roommates = new Person[myRoom.numberOccupants-1];
+		int i=0;
+		foreach(Person p in myRoom.occupants){
+			if (p!=this) {
+				roommates[i]=p;
+				i++;
+			}
+		}
+		StopWalking();
 	}
 
-	public void SetAbilityResist(Ability a){
-		this.abilityResist = a;
-	}*/
-
-	protected void OnGUI(){
+	void OnGUI(){
 		// show health bar above head
 	}
 
 	// Update is called once per frame
 	protected virtual void Update () {
-		if (sanityCurrent>0) {
-			if (myRoom.lampsOn==2) {
-				sightRadius = 8f;
+		walkSpeed = 90f*(1.75f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
+		if (!isLeaving && sanityCurrent>0) {
+			// reduce # of times to update complex AI
+			aicheck = (aicheck+1)%aicheckmax;
+			if (aicheck==0){
+				UpdateStaying();
 			}
-			else if (myRoom.lampsOn==1) {
-				sightRadius = 4f;
-			}
-			else {
-				sightRadius = 0.5f;
-			}
-			UpdateMove();
 		}
 		else {
-			UpdateFlee();
+			UpdateLeaving();
 		}
 	}
 
-	void UpdateFlee(){
+	void UpdateLeaving(){
 		// run toward door, assume that desination is the exit position
-		if ((destination-transform.position).magnitude<1.5f) // fleeing and reached destination
+		print (flatvector(destination,transform.position).magnitude);
+		if (flatvector(destination,transform.position).magnitude<0.05f) // fleeing and reached destination
 		{
 			Leave ();
 		}
 		else {
-			transform.position += (destination-transform.position).normalized*walkSpeed*Time.deltaTime;
+			rigidbody2D.velocity = flatvector(destination,transform.position).normalized*walkSpeed*Time.deltaTime;
 		}
+	}
+
+	// Logic for comforting or being comforted
+	private void DefendOther(Person other){
+		other.SetDefense(defenseSupport);
+	}
+
+	// Other roommates are sources of external defense
+	public void SetDefense(int defSupport){
+		defenseCurrent+=defSupport;
 	}
 
 	// if the lamp is off, the room assigns me to turn the lamp on
@@ -85,55 +98,82 @@ public abstract class Person : MonoBehaviour {
 		destination = targetLamp.transform.position;
 	}
 
+	void StopWalking(){
+		isWalking=false;
+		motionTimer=0f;
+		motionTimerMax = Random.Range(0.05f, 0.5f);
+		rigidbody2D.velocity=Vector2.zero;
+		walkDirection=Vector2.zero;
+	}
+
+	void StartWalking(){
+		isWalking=true;
+		motionTimer=0f;
+		motionTimerMax = Random.Range(0.1f, 0.8f);
+		destination= new Vector3(
+			2*UnityEngine.Random.Range(-attentionRadius,attentionRadius),
+			2*UnityEngine.Random.Range(-attentionRadius,attentionRadius), 0f);
+		walkDirection = (Vector2)(destination-transform.position).normalized;
+	}
+
+	public void GoToDoor(){
+		destination = myRoom.ExitLocation;
+		sanityCurrent=0;
+		isHurt=true;
+		isLeaving = true;
+	}
+
+	Vector2 flatvector(Vector3 v1, Vector3 v2){
+		return new Vector2(v1.x-v2.x,v1.y-v2.y);
+	}
+
 	// update when sanity>0
-	void UpdateMove() {
-		walkSpeed = 1.2f*sanityMax/(sanityCurrent+1); // less sane = faster
+	void UpdateStaying() {
+		motionTimer += GameVars.Tick*Time.deltaTime;
+		// the # of lights in the room determine the attention radius
+		if (myRoom.lampsOn==2) { attentionRadius=RADIUS_LARGE; }
+		else if (myRoom.lampsOn==1){ attentionRadius=RADIUS_MED;}
+		else {attentionRadius = RADIUS_SMALL;}
+		// recalculate defense
+		defenseCurrent=defenseBase;
+		foreach(Person roomie in roommates){
+			if (flatvector(roomie.transform.position,transform.position).magnitude<attentionRadius){
+				DefendOther(roomie);
+			}
+		}
+		// recovering from an attack
 		if (isHurt) {
-			if (hurtTimer<hurtTimerMax) {
-				hurtTimer += GameVars.Tick;
+			if (hurtTimer<hurtTimerMax) { hurtTimer += GameVars.Tick; }
+			else { hurtTimer = 0f; isHurt=false; }
+		}
+		// has been assigned to turn on a lamp
+		if (targetLamp!=null){
+			if (targetLamp.IsOn) {
+				// lamp is already on --> don't have to turn it on anymore
+				targetLamp=null;
+				StopWalking();
 			}
-			else {
-				hurtTimer = 0f;
-				isHurt=false;
+			else if (flatvector(targetLamp.transform.position,transform.position).magnitude<LAMP_EPSILON){
+				// close enough to the lamp --> turn on the lamp
+				targetLamp.TurnOn();
+				targetLamp=null;
+				StopWalking();
+			}
+			else { // lamp is still off --> walk toward lamp
+				rigidbody2D.velocity = flatvector(destination,transform.position).normalized*walkSpeed*Time.deltaTime;
 			}
 		}
-		if (myRoom.isOccupied) {
-			if (targetLamp!=null){ // I have been assigned to turn on a lamp
-				if (targetLamp.IsOn) {
-					targetLamp=null; // the lamp is on, so I don't need to turn it on
-				}
-				else {
-					if ((destination-transform.position).magnitude<lamp_epsilon){
-						targetLamp.TurnOn();
-						// set random destination
-					}
-					else {
-						transform.position += (destination-transform.position).normalized*walkSpeed*Time.deltaTime;
-					}
-				}
-			}
-			else if (isWalking) {
-				if ((destination-transform.position).magnitude>0.005f) // Decide when to stop at a destination
-				{
-					transform.position += (destination-transform.position).normalized*walkSpeed*Time.deltaTime;
-				}
-				else {
-					waitTimer = 0;
-					isWalking = false;
-					waitTimerMax = Random.Range(0.3f, 1f);
-				}
-			}
-			else if (waitTimer < waitTimerMax){ // should keep waiting
-				waitTimer += GameVars.Tick*Time.deltaTime;
-			}
-			else { // done waiting
-				isWalking = true;
-				// set random destination
-			}
+		// otherwise it doesn't really matter where you end up
+		else if (isWalking){ // walking --> wait?
+			if (motionTimer<motionTimerMax)
+				rigidbody2D.velocity=walkDirection*walkSpeed*Time.deltaTime;
+			else
+				StopWalking();
 		}
-		else {
-			// check-out logic
-		}
+		else // waiting --> walk?
+			if (motionTimer>motionTimerMax){
+				StartWalking();
+			}
 	}
 
 
@@ -141,35 +181,38 @@ public abstract class Person : MonoBehaviour {
 	// use this to determine which sprite(s) to use
 	public int GetFacingDirection()
 	{
-		Vector3 velocity = destination-transform.position;
-		if (Mathf.Abs(velocity.y)>Mathf.Abs(velocity.x)){
-			if (velocity.y>0) return 0;
+		if (Mathf.Abs(rigidbody2D.velocity.y)>Mathf.Abs(rigidbody2D.velocity.x)){
+			if (rigidbody2D.velocity.y>0) return 0;
 			else return 1;
 		}
 		else {
-			if (velocity.x>0) return 2;
+			if (rigidbody2D.velocity.x>0) return 2;
 			else return 3;
 		}
 	}
 
+	// forces the person to leave, delete object
 	public void Leave(){
-		//myRoom.CheckOut();
+		myRoom.numberOccupants--;
 		Destroy(gameObject);
 		Destroy(this);
 	}
 
-	// returns the amount of sanity damage dealt
+	// returns the amount of sanity damage dealt, after defense calculation
 	// also, if sanity <=0, set insane behavior
 	public int Damage(int delta)
 	{
-		isHurt=true;
-		sanityCurrent -= delta;
-		if (sanityCurrent <= 0){
-			delta += sanityCurrent;
-			destination = myRoom.DoorLocation;
-			transform.rigidbody2D.Sleep();
-			transform.collider2D.enabled=false;
+		delta -= defenseCurrent;
+		if (!isHurt && delta > 0) {
+			isHurt=true;
+			if (delta>=sanityCurrent){
+				delta=sanityCurrent;
+				GoToDoor();
+			}
+			sanityCurrent -= delta;
+			return delta;
 		}
-		return delta;
+		else
+			return 0;
 	}
 }

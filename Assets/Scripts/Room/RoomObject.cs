@@ -7,7 +7,8 @@ public class RoomObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
 	public string RoomName;
-	Person[] occupants;
+	public Person[] occupants;
+	public List<Ability> ActiveAbilityEffects = new List<Ability>();
 	[HideInInspector] public GameManager game; // accessible to occupants
 	PlayerLevel playerLevel;
 	
@@ -16,7 +17,7 @@ public class RoomObject : MonoBehaviour {
 	[HideInInspector] public Transform bed1, bed2, bed3, lamp1, lamp2;
 	[HideInInspector] public Vector3
 		bed1StartPos, bed2StartPos, bed3StartPos,
-		DoorLocation, lamp1StartPos, lamp2StartPos;
+		ExitLocation, lamp1StartPos, lamp2StartPos;
 	// AI stuff
 
 	public bool isOccupied=false, isUnlocked=false;
@@ -46,7 +47,7 @@ public class RoomObject : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		game=GameObject.Find("GameManager").GetComponent<GameManager>();
-		DoorLocation = transform.FindChild ("Entry").position;
+		ExitLocation = transform.FindChild ("Entry").position - new Vector3(0f,0.5f,0f);
 		spawnPositions = new Vector3[]{
 			transform.FindChild("Spawn 1").position,
 			transform.FindChild("Spawn 2").position,
@@ -100,7 +101,10 @@ public class RoomObject : MonoBehaviour {
 		for (int i=0; i<combo.Length; i++) {
 			temp = (Transform)Instantiate(combo[i],spawnPositions[i],Quaternion.identity);
 			occupants[i] = temp.GetComponent<Person>();
-			occupants[i].SetRoom(this);
+		}
+		// this is called separately so occupants can set their roommates
+		foreach (Person p in occupants){
+			p.SetRoom(this);
 		}
 		game.NumOccupiedRooms++;
 		Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
@@ -112,8 +116,6 @@ public class RoomObject : MonoBehaviour {
 	}
 
 	public void CheckOut(){
-		// Each person will call this when they leave,
-		// so make sure that it is only called once.
 		isOccupied=false;
 		vacantTimer=0; stayTimer = 0;
 		vacantTimerMax = 2f;//UnityEngine.Random.Range(7f,12f); // delay to next check-in
@@ -135,7 +137,12 @@ public class RoomObject : MonoBehaviour {
 				if (stayTimer<stayTimerMax) {
 					stayTimer += GameVars.Tick*Time.deltaTime;
 				}
-				else {// if (game.currentRoom!=this){
+				else if (numberOccupants>0){
+					foreach(Person p in occupants){
+						p.GoToDoor();
+					}
+				}
+				else if (numberOccupants<1){// if (game.currentRoom!=this){
 					CheckOut();
 				}
 			}

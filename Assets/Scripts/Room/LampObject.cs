@@ -49,14 +49,11 @@ public class LampObject : MovableObject {
 		IsOn = false;
 		lightSource.enabled = false;
 		room.lampsOn--;
-		/*
-		foreach (PersonObject p in room.members) {
-			if (p!=null && p.currentSanity>p.MaxSanity/2)
-			{
-				p.currentSanity--;
+		foreach (Person p in room.occupants) {
+			if (p.isAdult && p.targetLamp!=null){
+				p.AssignLamp(this);
 			}
 		}
-		*/
 	}
 
 	// Update is called once per frame
