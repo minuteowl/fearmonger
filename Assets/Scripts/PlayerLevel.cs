@@ -12,8 +12,14 @@ public class PlayerLevel : MonoBehaviour {
 	public int level=1,
 		buyPoints=2,
 		energyMax=10, // energy to next level
-		energyMin=2;
+		energyMin=2,
+		currExp =0,
+		startExp = 10,	
+		needExp = 10;	
 	int energyCurrent;
+	bool secondFloor = false;
+	bool thirdFloor = false;
+	bool fourthFloor = false;
 	// when energy is below minimum energy, it regenerate
 	// By convention, timers start at zero and increment to max, then resets back to zero
 	float energyRegenTimer=0f, // timer, in seconds
@@ -33,6 +39,8 @@ public class PlayerLevel : MonoBehaviour {
 		energyMax = 10*level;
 		energyMin ++;
 		buyPoints +=2;
+		currExp = currExp - needExp;
+		needExp = level * startExp;
 		Debug.Log ("LEVELED UP TO "+level);
 	}
 
@@ -65,7 +73,16 @@ public class PlayerLevel : MonoBehaviour {
 		}
 		else return true;
 	}
+	public void checkFloors()
+	{
+		if (level >= 5)
+			secondFloor = true;
+		else if (level >= 10)
+			thirdFloor = true;
+		else if (level >= 15)
+			fourthFloor = true;
 
+		}
 	void Update() {
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {
@@ -76,6 +93,9 @@ public class PlayerLevel : MonoBehaviour {
 				energyRegenTimer=0f;
 			}
 		}
+		if (currExp == needExp)
+			LevelUp ();
+		checkFloors ();
 	}
 
 	/* void OnGUI()

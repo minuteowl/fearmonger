@@ -204,15 +204,18 @@ public abstract class Person : MonoBehaviour {
 	{
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
-			isHurt=true;
-			if (delta>=sanityCurrent){
-				delta=sanityCurrent;
-				GoToDoor();
+			isHurt = true;
+			if (delta >= sanityCurrent) {
+				delta = sanityCurrent;
+				GoToDoor ();
 			}
 			sanityCurrent -= delta;
+			leveling.currExp += delta;
 			return delta;
-		}
-		else
+		} 
+		else {
+			leveling.currExp += delta;
 			return 0;
+		}
 	}
 }
