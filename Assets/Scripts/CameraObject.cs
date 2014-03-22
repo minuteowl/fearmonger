@@ -3,12 +3,12 @@ using System.Collections;
 
 public class CameraObject : MonoBehaviour {
 
-	float sizeSmall, sizeLarge;
-	Vector3 mapPosition;
-	//GameManager game;
+	private float sizeSmall, sizeLarge;
+	private Vector3 mapPosition;
+	//private GameManager game;
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
 		sizeSmall=9.6f; // for some reason I have to call this twice
 		sizeLarge=90f;
 		mapPosition = GameObject.Find("GameManager").transform.position;
@@ -16,10 +16,10 @@ public class CameraObject : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	private void Update () {
 	}
 
-	void SetCameraSize(float newsize) {
+	private void SetCameraSize(float newsize) {
 		Camera.main.orthographicSize = newsize;
 	}
 

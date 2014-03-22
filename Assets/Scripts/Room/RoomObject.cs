@@ -10,7 +10,7 @@ public class RoomObject : MonoBehaviour {
 	public Person[] occupants;
 	public List<Ability> ActiveAbilityEffects = new List<Ability>();
 	[HideInInspector] public GameManager game; // accessible to occupants
-	PlayerLevel playerLevel;
+	protected PlayerLevel playerLevel;
 	
 	// Physical
 	[HideInInspector] public Vector3 CameraPosition, entryLoc; // Persons need to read this
@@ -27,14 +27,14 @@ public class RoomObject : MonoBehaviour {
 	[HideInInspector] public int lampsOn=2; // accessible to occupants
 	public int numberOccupants=0;
 	public Transform[] peoplePrefabTypes;
-	Vector3[] spawnPositions;
+	private Vector3[] spawnPositions;
 	public Transform prefab_child_m, prefab_child_f,
 		prefab_adult_m, prefab_adult_f, prefab_candle_m,
 		prefab_candle_f, prefab_priest;
 
 	/*======== ROOM MANAGEMENT ========*/
 
-	void ResetFurniture()
+	private void ResetFurniture()
 	{
 		bed1.position = bed1StartPos;
 		bed2.position = bed2StartPos;
@@ -45,7 +45,7 @@ public class RoomObject : MonoBehaviour {
 	}
 	
 	// Use this for initialization
-	void Start () {
+	private void Start () {
 		game=GameObject.Find("GameManager").GetComponent<GameManager>();
 		ExitLocation = transform.FindChild ("Entry").position - new Vector3(0f,0.5f,0f);
 		spawnPositions = new Vector3[]{
@@ -69,7 +69,7 @@ public class RoomObject : MonoBehaviour {
 		peoplePrefabTypes = new Transform[]{prefab_child_m,prefab_child_f,prefab_adult_m,prefab_adult_f,prefab_candle_m,prefab_candle_f,prefab_priest};
 	}
 
-	Transform[] getNewCombo() {
+	private Transform[] getNewCombo() {
 		int i = UnityEngine.Random.Range(0,100)%(PersonLists.Combinations.Count);
 		print ("Picked "+i+" of "+PersonLists.Combinations.Count+" combinations.");
 		int[] array = PersonLists.Combinations[i];
