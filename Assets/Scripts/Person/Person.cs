@@ -22,16 +22,16 @@ public abstract class Person : MonoBehaviour {
 	//protected Ability abilityWeak, abilityResist;
 	// turning on or off lamps
 	public LampObject targetLamp=null;
-	const float LAMP_EPSILON=2f; // minimum distance to activate lamp
+	private const float LAMP_EPSILON=2f; // minimum distance to activate lamp
 
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
-	bool isWalking=false, isHurt=false, isLeaving=false;
-	float motionTimer=0f, motionTimerMax; // how long to walk or wait
-	float hurtTimer, hurtTimerMax=0.25f;//
-	Vector3 destination;
-	float walkSpeed;
-	Vector2 walkDirection;
+	private bool isWalking=false, isHurt=false, isLeaving=false;
+	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
+	private float hurtTimer, hurtTimerMax=0.25f;//
+	private Vector3 destination;
+	private float walkSpeed;
+	private Vector2 walkDirection;
 
 	/*======== FUNCTIONS ========*/
 
