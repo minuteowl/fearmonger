@@ -5,7 +5,7 @@ using System.Collections;
 public abstract class Person : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-	int aicheck=0,aicheckmax=10;//reduce the # of times to check AI
+	private int aicheck=0,aicheckmax=10;//reduce the # of times to check AI
 	protected RoomObject myRoom;
 	protected GameManager game;
 	protected PlayerLevel leveling;
@@ -22,16 +22,16 @@ public abstract class Person : MonoBehaviour {
 	//protected Ability abilityWeak, abilityResist;
 	// turning on or off lamps
 	public LampObject targetLamp=null;
-	const float LAMP_EPSILON=2f; // minimum distance to activate lamp
+	private const float LAMP_EPSILON=2f; // minimum distance to activate lamp
 
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
-	bool isWalking=false, isHurt=false, isLeaving=false;
-	float motionTimer=0f, motionTimerMax; // how long to walk or wait
-	float hurtTimer, hurtTimerMax=0.25f;//
-	Vector3 destination;
-	float walkSpeed;
-	Vector2 walkDirection;
+	private bool isWalking=false, isHurt=false, isLeaving=false;
+	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
+	private float hurtTimer, hurtTimerMax=0.25f;//
+	private Vector3 destination;
+	private float walkSpeed;
+	private Vector2 walkDirection;
 
 	/*======== FUNCTIONS ========*/
 
@@ -200,7 +200,7 @@ public abstract class Person : MonoBehaviour {
 
 	// returns the amount of sanity damage dealt, after defense calculation
 	// also, if sanity <=0, set insane behavior
-	public int Damage(int delta)
+	public void Damage(int delta)
 	{
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
@@ -210,12 +210,16 @@ public abstract class Person : MonoBehaviour {
 				GoToDoor ();
 			}
 			sanityCurrent -= delta;
+<<<<<<< HEAD
 			leveling.currExp += delta;
 			return delta;
 		} 
 		else {
 			leveling.currExp += delta;
 			return 0;
+=======
+			leveling.AddExperience(delta);
+>>>>>>> bd79dff04f7fd27eba7f1484652bf97c714a8b58
 		}
 	}
 }

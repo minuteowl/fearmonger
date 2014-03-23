@@ -4,14 +4,14 @@ using System.Collections;
 public class LampObject : MovableObject {
 
 	public bool IsOn;
-	public Light lightSource;
-	public RoomObject room;
+	private Light lightSource;
+	protected RoomObject room;
 	// By convention, timers go from zero to max, then reset to zero
-	public float flickerTimer = 0f, flickerTimerMax = 0.1f;
-	public int flickersRemaining=0;
+	private float flickerTimer = 0f, flickerTimerMax = 0.1f;
+	private int flickersRemaining=0;
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
 		IsOn = true;
 		lightSource = (Light)transform.GetComponent("Light");
 		room = transform.parent.GetComponent<RoomObject>();
@@ -57,7 +57,7 @@ public class LampObject : MovableObject {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	private void Update () {
 		if (flickersRemaining>0) {
 			if (flickerTimer<flickerTimerMax)
 			{

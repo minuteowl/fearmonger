@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-
 public class GameManager : MonoBehaviour {
 
 	//bool CursorMode=true;
@@ -12,8 +11,8 @@ public class GameManager : MonoBehaviour {
 	public int NumOccupiedRooms=0;
 
 	// INTERFACE LOGIC
-	CameraObject cameraObject;
-	Transform cameraMapPositionTransform;
+	private CameraObject cameraObject;
+	private Transform cameraMapPositionTransform;
 
 	// we also need to keep track of this
 	[HideInInspector] public PlayerLevel playerLevel;
@@ -21,11 +20,11 @@ public class GameManager : MonoBehaviour {
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
 	public int floorsUnlocked=1;
-	Transform[,] squares;
-	RoomObject[,] roomObjects;
-	int[,] PeoplePerRoom;
-	[HideInInspector] public int row=0, col=0;
-	float upBound, leftBound, rightBound, downBound;
+	private Transform[,] squares;
+	private RoomObject[,] roomObjects;
+	private int[,] PeoplePerRoom;
+	private int row=0, col=0;
+	private float upBound, leftBound, rightBound, downBound;
 
 	public bool locked; // input lock
 
@@ -43,7 +42,7 @@ public class GameManager : MonoBehaviour {
 		GameVars.IsPaused=false;
 	}
 
-	void Start ()
+	private void Start ()
 	{
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 		playerLevel = transform.GetComponent<PlayerLevel>();
@@ -86,7 +85,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void OnGUI(){
+	private void OnGUI(){
 		if (currentView == View.Map) {
 			//Floor 1
 			if (GUI.Button (new Rect (Screen.width * .225f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R101")) {
@@ -169,7 +168,7 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	void Update() {
+	private void Update() {
 		if (NumOccupiedRooms<floorsUnlocked*4) {
 			if (checkInTimer < checkInTimerMax) {
 				checkInTimer += GameVars.Tick*Time.deltaTime;
