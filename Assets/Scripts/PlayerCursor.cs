@@ -12,6 +12,8 @@ public class PlayerCursor : MonoBehaviour {
 	PlayerLevel level;
 	Ability currentAbility;
 
+	// sound effect
+	AudioClip mouseClickSound;
 
 	// Use this for initialization
 	void Start () {
@@ -20,10 +22,12 @@ public class PlayerCursor : MonoBehaviour {
 
 	// An ability is selected and you click on some point in the room
 	void ClickOnEmpty() {
+		AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
 	}
 
 	// Clicked on a person
 	void ClickOnPerson() {
+		AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
 	}
 
 	// Based on what the mouse is hovering over, it changes appearance
