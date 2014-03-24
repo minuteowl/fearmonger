@@ -56,7 +56,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	public void AddExperience(int e){
 		expCurrent += e;
-		if (expCurrent>expToNextLevel){
+		if (expCurrent>=expToNextLevel){
 			expCurrent -= expToNextLevel; // to level up, energyCurrent >= energyMax,
 			//UseEnergy (0); // but to be safe, make sure energyCurrent >= 0.
 		}

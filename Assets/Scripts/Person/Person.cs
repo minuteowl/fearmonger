@@ -15,7 +15,7 @@ public abstract class Person : MonoBehaviour {
 
 	// Behavior
 	protected float sightRadius;
-	public int sanityCurrent, sanityMax=1;
+	protected int sanityCurrent, sanityMax=1;
 	public int defenseBase, defenseCurrent, defenseSupport;
 	public Person[] roommates;
 

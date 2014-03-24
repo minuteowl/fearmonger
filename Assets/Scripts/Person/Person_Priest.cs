@@ -6,12 +6,8 @@ public class Person_Priest : Person {
 
 	List<Ability> activeSpells;
 
-	// sound effect	
-	public AudioClip doorOpenSound;
-
 	// Use this for initialization
 	void Start () {
-		AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
 		isAdult=true;
 		defenseBase=4;
 		defenseSupport=2;

@@ -19,7 +19,7 @@ public class RoomObject : MonoBehaviour {
 		bed1StartPos, bed2StartPos, bed3StartPos,
 		ExitLocation, lamp1StartPos, lamp2StartPos;
 	// AI stuff
-
+	public AudioClip doorOpenSound;
 	public bool isOccupied=false, isUnlocked=false;
 	public float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	public float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
@@ -98,6 +98,7 @@ public class RoomObject : MonoBehaviour {
 		numberOccupants = combo.Length;
 		Transform temp;
 		occupants = new Person[numberOccupants];
+		AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
 		for (int i=0; i<combo.Length; i++) {
 			temp = (Transform)Instantiate(combo[i],spawnPositions[i],Quaternion.identity);
 			occupants[i] = temp.GetComponent<Person>();

@@ -3,12 +3,8 @@ using System.Collections;
 
 public class Person_Candle : Person {
 
-	// sound effect	
-	public AudioClip doorOpenSound;
-
 	// Use this for initialization
 	void Start () {
-		AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
 		isAdult=true;
 		defenseBase=1;
 		defenseSupport=3;
