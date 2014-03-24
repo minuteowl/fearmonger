@@ -20,6 +20,7 @@ public class RoomObject : MonoBehaviour {
 		ExitLocation, lamp1StartPos, lamp2StartPos;
 	// AI stuff
 	public AudioClip doorOpenSound;
+	public AudioClip screamSound;
 	public bool isOccupied=false, isUnlocked=false;
 	public float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	public float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
@@ -128,6 +129,7 @@ public class RoomObject : MonoBehaviour {
 		numberOccupants=0;
 		game.NumOccupiedRooms--;
 		Debug.Log("Checked out from room "+RoomName);
+		AudioSource.PlayClipAtPoint (screamSound, transform.position);
 	}
 	
 	// Update is called once per frame
