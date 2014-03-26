@@ -1,4 +1,5 @@
 ﻿#pragma strict
+//Steve Hart
 
 //ability variables
 static var ability_spider = true;
