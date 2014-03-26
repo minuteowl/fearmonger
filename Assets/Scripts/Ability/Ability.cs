@@ -25,7 +25,7 @@ public abstract class Ability {
 		room.ActiveAbilityEffects.Add (this);
 	}
 
-	public void EndAbility(){
+	private void EndAbility(){
 		CurrentRoom.ActiveAbilityEffects.Remove (this);
 	}
 	

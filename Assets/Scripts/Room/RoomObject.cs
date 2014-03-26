@@ -21,8 +21,8 @@ public class RoomObject : MonoBehaviour {
 	// AI stuff
 	public AudioClip doorOpenSound;
 	public bool isOccupied=false, isUnlocked=false;
-	public float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
-	public float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
+	private float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
+	private float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
 	
 	[HideInInspector] public int lampsOn=2; // accessible to occupants
 	public int numberOccupants=0;
@@ -131,7 +131,7 @@ public class RoomObject : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	public void Update () {
+	private void Update () {
 		// don't check out the room while the player is still looking at it
 		if (isUnlocked) {
 			if (isOccupied) {

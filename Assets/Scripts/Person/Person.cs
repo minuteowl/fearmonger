@@ -16,7 +16,7 @@ public abstract class Person : MonoBehaviour {
 	// Behavior
 	protected float sightRadius;
 	protected int sanityCurrent, sanityMax=1;
-	public int defenseBase, defenseCurrent, defenseSupport;
+	protected int defenseBase, defenseCurrent, defenseSupport;
 	public Person[] roommates;
 
 	//protected Ability abilityWeak, abilityResist;
@@ -70,7 +70,7 @@ public abstract class Person : MonoBehaviour {
 		}
 	}
 
-	void UpdateLeaving(){
+	private void UpdateLeaving(){
 		// run toward door, assume that desination is the exit position
 		print (flatvector(destination,transform.position).magnitude);
 		if (flatvector(destination,transform.position).magnitude<0.05f) // fleeing and reached destination
@@ -84,11 +84,11 @@ public abstract class Person : MonoBehaviour {
 
 	// Logic for comforting or being comforted
 	private void DefendOther(Person other){
-		other.SetDefense(defenseSupport);
+		other.AddDefense(defenseSupport);
 	}
 
 	// Other roommates are sources of external defense
-	public void SetDefense(int defSupport){
+	public void AddDefense(int defSupport){
 		defenseCurrent+=defSupport;
 	}
 
@@ -98,7 +98,7 @@ public abstract class Person : MonoBehaviour {
 		destination = targetLamp.transform.position;
 	}
 
-	void StopWalking(){
+	private void StopWalking(){
 		isWalking=false;
 		motionTimer=0f;
 		motionTimerMax = Random.Range(0.05f, 0.5f);
@@ -106,7 +106,7 @@ public abstract class Person : MonoBehaviour {
 		walkDirection=Vector2.zero;
 	}
 
-	void StartWalking(){
+	private void StartWalking(){
 		isWalking=true;
 		motionTimer=0f;
 		motionTimerMax = Random.Range(0.1f, 0.8f);
@@ -123,12 +123,12 @@ public abstract class Person : MonoBehaviour {
 		isLeaving = true;
 	}
 
-	Vector2 flatvector(Vector3 v1, Vector3 v2){
+	private Vector2 flatvector(Vector3 v1, Vector3 v2){
 		return new Vector2(v1.x-v2.x,v1.y-v2.y);
 	}
 
 	// update when sanity>0
-	void UpdateStaying() {
+	private void UpdateStaying() {
 		motionTimer += GameVars.Tick*Time.deltaTime;
 		// the # of lights in the room determine the attention radius
 		if (myRoom.lampsOn==2) { attentionRadius=RADIUS_LARGE; }

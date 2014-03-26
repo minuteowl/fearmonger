@@ -76,7 +76,7 @@ public class PlayerLevel : MonoBehaviour {
 	}
 	
 	public bool CanUseAbility(Ability ability) {
-		if (energyCurrent<ability.EnergyCost) {
+		if (!ability.Locked && energyCurrent<ability.EnergyCost) {
 			Debug.Log("Not enough energy to use "+ability.Name+", which requires "+ability.EnergyCost+" energy.");
 			return false;
 		}

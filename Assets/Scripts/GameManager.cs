@@ -26,12 +26,10 @@ public class GameManager : MonoBehaviour {
 	private int row=0, col=0;
 	private float upBound, leftBound, rightBound, downBound;
 
-	public bool locked; // input lock
-
 	// By convention, timers start at zero and increment to max
 	// this counts the time, in seconds, between check-ins.
 	// the timer max will change randomly
-	public float checkInTimer=0, checkInTimerMax=5f;
+	private float checkInTimer=0, checkInTimerMax=5f;
 
 	public void Pause(){
 		Time.timeScale=0f;
