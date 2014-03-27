@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour {
 
 	//bool CursorMode=true;
 
+	public static bool atMap = false;
+
 	// GLOBAL VARIABLES GO HERE:
 	public enum View { Start, Game, Map, Menu, Stats}
 	public View currentView;
@@ -71,75 +73,76 @@ public class GameManager : MonoBehaviour {
 				Debug.Log("Go to room "+room.RoomName);
 				cameraObject.ZoomIn(room);
 				//currentView = View.Game;
+				atMap = false;
 			}
 		}
 	}
 
 	public void GoToMap() {
 		Pause ();
-		if (currentView==View.Game) {
+		//if (currentView==View.Game) {
 			lastRoom = currentRoom;
 			cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 			currentView = View.Map;
 			cameraObject.ZoomOut();
-		}
+		//}
 	}
 
 	private void OnGUI(){
 		if (currentView == View.Map) {
 			//Floor 1
-			if (GUI.Button (new Rect (Screen.width * .225f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R101")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R101")) {
 				buttonInteract(0,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .32f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R102")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R102")) {
 				buttonInteract(0,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .413f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R103")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R103")) {
 				buttonInteract(0,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .508f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R104")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R104")) {
 				buttonInteract(0,3);
 			}
 			
 			//Floor 2
-			if (GUI.Button (new Rect (Screen.width * .225f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R201")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R201")) {
 				if (floorsUnlocked>1) buttonInteract(1,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .32f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R202")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R202")) {
 				if (floorsUnlocked>1) buttonInteract(1,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .413f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R203")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R203")) {
 				if (floorsUnlocked>1) buttonInteract(1,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .508f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R204")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R204")) {
 				if (floorsUnlocked>1) buttonInteract(1,3);
 			}
 			
 			//Floor 3
-			if (GUI.Button (new Rect (Screen.width * .225f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R301")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R301")) {
 				if (floorsUnlocked>2) buttonInteract(2,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .32f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R302")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R302")) {
 				if (floorsUnlocked>2) buttonInteract(2,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .413f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R303")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R303")) {
 				if (floorsUnlocked>2) buttonInteract(2,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .508f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R304")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R304")) {
 				if (floorsUnlocked>2) buttonInteract(2,3);
 			}
 			
 			//Floor 4
-			if (GUI.Button (new Rect (Screen.width * .225f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R401")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R401")) {
 				if (floorsUnlocked>3) buttonInteract(3,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .32f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R402")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R402")) {
 				if (floorsUnlocked>3) buttonInteract(3,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .413f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R403")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R403")) {
 				if (floorsUnlocked>3) buttonInteract(3,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .508f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R404")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R404")) {
 				if (floorsUnlocked>3) buttonInteract(3,3);
 			}
 		}
