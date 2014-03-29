@@ -95,9 +95,10 @@ public class PlayerLevel : MonoBehaviour {
 		}
 	}
 	
-	/* void OnGUI()
+	void OnGUI()
 	{
-		GUI.Box (new Rect (150, 38, 100, 25), "Player Level: " + Level);
-		GUI.Box (new Rect (450, 38, 100, 25), "Energy: " + energyCurrent + "/" + energyMax);
-	}*/
+		GUI.Box (new Rect (1, 1, 100, 60), "Player Level: " + Level + "\n" + 
+		         "Energy: " + energyCurrent + "/" + energyMax + "\n" +
+		         "Ability Points: " + buyPoints);
+	}
 }
