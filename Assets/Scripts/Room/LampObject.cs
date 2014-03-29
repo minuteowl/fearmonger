@@ -33,7 +33,7 @@ public class LampObject : MovableObject {
 	{
 		IsOn = true;
 		lightSource.enabled = true;
-		room.lampsOn++;
+		room.TurnLightOn();
 		/*
 		foreach (PersonObject p in room.members) {
 			if (p!=null && p.currentSanity<p.MaxSanity)
@@ -48,7 +48,7 @@ public class LampObject : MovableObject {
 	{
 		IsOn = false;
 		lightSource.enabled = false;
-		room.lampsOn--;
+		room.TurnLightOff();
 		foreach (Person p in room.occupants) {
 			if (p.isAdult && p.targetLamp!=null){
 				p.AssignLamp(this);

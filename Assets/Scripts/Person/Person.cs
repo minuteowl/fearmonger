@@ -18,6 +18,7 @@ public abstract class Person : MonoBehaviour {
 	protected int sanityCurrent, sanityMax=1;
 	protected int defenseBase, defenseCurrent, defenseSupport;
 	public Person[] roommates;
+	[HideInInspector] public bool canMove=true;
 
 	//protected Ability abilityWeak, abilityResist;
 	// turning on or off lamps
@@ -131,8 +132,8 @@ public abstract class Person : MonoBehaviour {
 	private void UpdateStaying() {
 		motionTimer += GameVars.Tick*Time.deltaTime;
 		// the # of lights in the room determine the attention radius
-		if (myRoom.lampsOn==2) { attentionRadius=RADIUS_LARGE; }
-		else if (myRoom.lampsOn==1){ attentionRadius=RADIUS_MED;}
+		if (myRoom.LampsOn==2) { attentionRadius=RADIUS_LARGE; }
+		else if (myRoom.LampsOn==1){ attentionRadius=RADIUS_MED;}
 		else {attentionRadius = RADIUS_SMALL;}
 		// recalculate defense
 		defenseCurrent=defenseBase;
@@ -147,6 +148,7 @@ public abstract class Person : MonoBehaviour {
 			else { hurtTimer = 0f; isHurt=false; }
 		}
 		// has been assigned to turn on a lamp
+		if(canMove){
 		if (targetLamp!=null){
 			if (targetLamp.IsOn) {
 				// lamp is already on --> don't have to turn it on anymore
@@ -174,6 +176,7 @@ public abstract class Person : MonoBehaviour {
 			if (motionTimer>motionTimerMax){
 				StartWalking();
 			}
+		}// only do the above if canMove
 	}
 
 

@@ -2,20 +2,19 @@
 using System.Collections;
 
 public class Ability_Spiders : Ability {
-	
-	// Use this for initialization
+
 	public Ability_Spiders () {
-		Name="Spawn Spiders";
-		Description = "Spiders come out of the ground at a specific point.";
+		Name="Spiders";
+		Description = "Spiders come out of the ground and walk around the room.";
 		MinLevel=1;
 		Duration = 2.5f;
 		EnergyCost = 2;
 		BuyCost = 1;
+		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Spiders").transform;
 	}
 	
 	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
 		Debug.Log("spider spell");
-		// create a tentacles object - to be implemented later
 		base.UseAbility(room,args);
 	}
 }

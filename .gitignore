@@ -2,3 +2,5 @@
 /Library/metadata/*/*
 *.userprefs
 *.meta
+*.dwlt
+/Library/guidmapper

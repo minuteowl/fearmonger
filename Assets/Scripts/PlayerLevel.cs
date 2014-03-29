@@ -10,10 +10,10 @@ public class PlayerLevel : MonoBehaviour {
 	private List<Ability> listAbilities;
 	
 	private int level=1,
-	buyPoints=2,
-	// when energy is below minimum energy, it regenerates
-	energyMax=10,
-	energyMin=2;
+		buyPoints=2,
+		// when energy is below minimum energy, it regenerates
+		energyMax=10,
+		energyMin=2;
 	private int energyCurrent;
 	private int expCurrent;
 	private int expToNextLevel;

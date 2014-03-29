@@ -17,17 +17,19 @@ public class PlayerCursor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Texture2D[] t = Resources.LoadAll<Texture2D>("TEMP-cursorhand");
+		cursorTextures = Resources.LoadAll<Texture2D>("TEMP-cursorhand");
 	}
 
 	// An ability is selected and you click on some point in the room
 	void ClickOnEmpty() {
-		AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
+		if (mouseClickSound)
+			AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
 	}
 
 	// Clicked on a person
 	void ClickOnPerson() {
-		AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
+		if (mouseClickSound)
+			AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
 	}
 
 	// Based on what the mouse is hovering over, it changes appearance
@@ -45,7 +47,7 @@ public class PlayerCursor : MonoBehaviour {
 	}
 	
 	void Update () {
-		transform.position = MouseInput.To2D(transform.position, zDepth);
+		transform.position = GameInput.To2D(transform.position, zDepth);
 		if (Input.GetMouseButtonDown(0)) {
 			GetClicked();
 		}

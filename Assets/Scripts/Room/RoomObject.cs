@@ -13,25 +13,21 @@ public class RoomObject : MonoBehaviour {
 	protected PlayerLevel playerLevel;
 	
 	// Physical
-	[HideInInspector] public Vector3 CameraPosition, entryLoc; // Persons need to read this
-	[HideInInspector] public Transform bed1, bed2, bed3, lamp1, lamp2;
-	[HideInInspector] public Vector3
-		bed1StartPos, bed2StartPos, bed3StartPos,
-		ExitLocation, lamp1StartPos, lamp2StartPos;
+	[HideInInspector] public Vector3 CameraPosition, ExitLocation;//, EntryLocation; 
+	private Vector3 bed1StartPos, bed2StartPos, bed3StartPos, lamp1StartPos, lamp2StartPos;
+	private Transform bed1, bed2, bed3, lamp1, lamp2;
+
 	// AI stuff
-	public AudioClip doorOpenSound;
-	public AudioClip screamSound;
-	public bool isOccupied=false, isUnlocked=false;
+	public AudioClip doorOpenSound, screamSound;
+	[HideInInspector] public bool isOccupied=false, isUnlocked=false;
 	private float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	private float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
 	
-	[HideInInspector] public int lampsOn=2; // accessible to occupants
-	public int numberOccupants=0;
-	public Transform[] peoplePrefabTypes;
+	[HideInInspector] public int LampsOn=2; // accessible to lamps and occupants
+	private int maxLampsOn=2;
+	[HideInInspector] public int numberOccupants=0;
+	private GameObject[] peoplePrefabTypes;
 	private Vector3[] spawnPositions;
-	public Transform prefab_child_m, prefab_child_f,
-		prefab_adult_m, prefab_adult_f, prefab_candle_m,
-		prefab_candle_f, prefab_priest;
 
 	/*======== ROOM MANAGEMENT ========*/
 
@@ -42,7 +38,7 @@ public class RoomObject : MonoBehaviour {
 		bed3.position = bed3StartPos;
 		lamp1.position = lamp1StartPos;
 		lamp2.position = lamp2StartPos;
-		lampsOn = 2;
+		LampsOn = 2;
 	}
 	
 	// Use this for initialization
@@ -54,6 +50,10 @@ public class RoomObject : MonoBehaviour {
 			transform.FindChild("Spawn 2").position,
 			transform.FindChild("Spawn 3").position
 		};
+		// Normalize to proper Z-depth
+		spawnPositions[0] = new Vector3(spawnPositions[0].x, spawnPositions[0].y, GameVars.DepthPeopleHazards);
+		spawnPositions[1] = new Vector3(spawnPositions[1].x, spawnPositions[1].y, GameVars.DepthPeopleHazards);
+		spawnPositions[2] = new Vector3(spawnPositions[2].x, spawnPositions[2].y, GameVars.DepthPeopleHazards);
 		bed1 = transform.FindChild("Bed 1");
 		bed2 = transform.FindChild("Bed 2");
 		bed3 = transform.FindChild("Bed 3");
@@ -62,22 +62,21 @@ public class RoomObject : MonoBehaviour {
 		bed1StartPos = bed1.position;
 		bed2StartPos = bed2.position;
 		bed3StartPos = bed3.position;
-		entryLoc = transform.FindChild("Entry").position;
+		//EntryLocation = transform.FindChild("Entry").position;
 		lamp1StartPos = lamp1.position;
 		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
 		RoomName = transform.name;
-		peoplePrefabTypes = new Transform[]{prefab_child_m,prefab_child_f,prefab_adult_m,prefab_adult_f,prefab_candle_m,prefab_candle_f,prefab_priest};
+		peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
 	}
 
 	private Transform[] getNewCombo() {
 		int i = UnityEngine.Random.Range(0,100)%(PersonLists.Combinations.Count);
-		print ("Picked "+i+" of "+PersonLists.Combinations.Count+" combinations.");
 		int[] array = PersonLists.Combinations[i];
 		Transform[] t = new Transform[array.Length];
 		for(int j=0; j<array.Length; j++){
 			if (array[j]>-1) {
-				t[j] = peoplePrefabTypes[array[j]];
+				t[j] = peoplePrefabTypes[array[j]].transform;
 			}
 			else t[j]=null;
 		}
@@ -130,6 +129,18 @@ public class RoomObject : MonoBehaviour {
 		game.NumOccupiedRooms--;
 		Debug.Log("Checked out from room "+RoomName);
 		AudioSource.PlayClipAtPoint (screamSound, transform.position);
+	}
+
+	public void TurnLightOn(){
+		if (LampsOn<maxLampsOn){
+			LampsOn++;
+		}
+	}
+
+	public void TurnLightOff(){
+		if (LampsOn>0){
+			LampsOn--;
+		}
 	}
 	
 	// Update is called once per frame
