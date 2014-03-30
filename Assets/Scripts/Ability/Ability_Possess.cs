@@ -13,8 +13,7 @@ public class Ability_Possess : Ability {
 		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Possession").transform;
 	}
 	
-	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
-		Debug.Log("possession spell");
-		base.UseAbility(room,args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
+		base.UseAbility(room, clickLocation, args);
 	}
 }

@@ -46,8 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AbilityManager.js" />
-     <Compile Include="Assets\Scripts\Hazards\SpiderGUI.js" />
+     <Compile Include="Assets\Scripts\Clicking.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

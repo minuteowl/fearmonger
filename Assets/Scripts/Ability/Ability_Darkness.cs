@@ -4,7 +4,7 @@ using System.Collections;
 public class Ability_Darkness : Ability {
 	
 	public Ability_Darkness () {
-		Name="Orb of Darkness";
+		Name="Dark Orb";
 		Description = "The air turns dark and cold, and nearby lights go out.";
 		MinLevel=2;
 		Duration = 1.75f;
@@ -13,8 +13,7 @@ public class Ability_Darkness : Ability {
 		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Darkness").transform;
 	}
 	
-	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
-		Debug.Log("darkness spell");
-		base.UseAbility(room,args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
+		base.UseAbility(room, clickLocation, args);
 	}
 }

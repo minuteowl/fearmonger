@@ -108,7 +108,7 @@ public class RoomObject : MonoBehaviour {
 			p.SetRoom(this);
 		}
 		game.NumOccupiedRooms++;
-		Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
+		//Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
 	}
 
 	public float GetDuration()

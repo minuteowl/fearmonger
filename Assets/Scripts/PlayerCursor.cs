@@ -1,17 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-// Cursor logic
+// This code manages what the cursor looks like. NOT INPUT.
+// Clicking ingame for abilities is in AbilityManager
 public class PlayerCursor : MonoBehaviour {
 
 	Transform targetTransform;
-	[HideInInspector] public enum FocusType {None, Movable, Person, Solid, Door};
+	//[HideInInspector] public enum FocusType {None, Movable, Person, Solid, Door};
 	public Texture2D[] cursorTextures;
-	float zDepth= -15f;
-
-	PlayerLevel level;
-	Ability currentAbility;
-
+	//float zDepth= -15f;
+	Vector2 clickPosition;
 	// sound effect
 	AudioClip mouseClickSound;
 
@@ -21,6 +19,7 @@ public class PlayerCursor : MonoBehaviour {
 	}
 
 	// An ability is selected and you click on some point in the room
+	/*
 	void ClickOnEmpty() {
 		if (mouseClickSound)
 			AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
@@ -32,33 +31,16 @@ public class PlayerCursor : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (mouseClickSound, transform.position); // play the mouseClickSound when clicked
 	}
 
+
 	// Based on what the mouse is hovering over, it changes appearance
 	// we'll have preloaded sprites and then switch between them
 	void UpdateAppearance(){
+	}
+	*/
 
+	private void Update () {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    
+		Vector2 mouse2d = (Vector2)(ray.origin + ray.direction);
+		transform.position = new Vector3(mouse2d.x, mouse2d.y, GameVars.DepthCursor);
 	}
-
-	void GetClicked(){
-		Ray ray = Camera.main.ScreenPointToRay(transform.position);
-		RaycastHit hit;
-		if (Physics.Raycast(ray,out hit)) {
-			Debug.Log( hit.transform.gameObject.name );
-		}
-	}
-	
-	void Update () {
-		transform.position = GameInput.To2D(transform.position, zDepth);
-		if (Input.GetMouseButtonDown(0)) {
-			GetClicked();
-		}
-	}
-/*
-	void OnMouseEnter () {
-		Cursor.SetCursor(cursorTextures[0], Vector2.zero, CursorMode.Auto);
-	}
-
-	void OnMouseExit () {
-		Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-	}
-*/
 }
