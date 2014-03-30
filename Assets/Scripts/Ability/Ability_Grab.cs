@@ -10,11 +10,10 @@ public class Ability_Grab : Ability {
 		Duration = 0f; // instant
 		EnergyCost = 6;
 		BuyCost = 3;
-		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Arm").transform;
+		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/ReachHand").transform;
 	}
 	
-	public override void UseAbility (RoomObject room, MonoBehaviour[] args) {
-		Debug.Log("grab spell");
-		base.UseAbility(room,args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
+		base.UseAbility(room, clickLocation, args);
 	}
 }

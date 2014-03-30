@@ -5,10 +5,6 @@ using System.Collections.Generic;
 public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
-	
-	private AbilityMenu abilityMenu;
-	private List<Ability> listAbilities;
-	
 	private int level=1,
 		buyPoints=2,
 		// when energy is below minimum energy, it regenerates
@@ -39,8 +35,6 @@ public class PlayerLevel : MonoBehaviour {
 	private void Start () {
 		energyCurrent=energyMax;
 		expToNextLevel=10;
-		abilityMenu = transform.GetComponent<AbilityMenu>();
-		listAbilities = abilityMenu.listAbilities;
 	}
 	
 	private void LevelUp(){
@@ -62,7 +56,6 @@ public class PlayerLevel : MonoBehaviour {
 		}
 	}
 	
-	// call UseEnergy(0) to make sure energyCurrent >= 0
 	// generally this is called from using an ability
 	public void UseEnergy(int e){
 		energyCurrent -= e;
@@ -95,9 +88,10 @@ public class PlayerLevel : MonoBehaviour {
 		}
 	}
 	
-	/* void OnGUI()
+	private void OnGUI()
 	{
-		GUI.Box (new Rect (150, 38, 100, 25), "Player Level: " + Level);
-		GUI.Box (new Rect (450, 38, 100, 25), "Energy: " + energyCurrent + "/" + energyMax);
-	}*/
+		GUI.Box (new Rect (1, 1, 100, 60), "Player Level: " + Level + "\n" + 
+		         "Energy: " + energyCurrent + "/" + energyMax + "\n" +
+		         "Ability Points: " + buyPoints);
+	}
 }

@@ -2,20 +2,12 @@
 using System.Collections;
 
 public static class GameInput {
-	
-	// Functions with input
-	public static Vector3 To2D(Vector3 v, float z) {
-		Camera cam = Camera.main;
-		Vector3 u = cam.ScreenToWorldPoint(Input.mousePosition);
-		return new Vector3(u.x,u.y,z);
-	}
 
-	// Functions with input
-	public static Vector2 GetMouse2D() {
-		Camera cam = Camera.main;
-		Vector3 u = cam.ScreenToWorldPoint(Input.mousePosition);
-		return new Vector2(u.x,u.y);
-	}
+
+
+	// Removed. It works better in individual scripts.
+	//public static Vector2 GetMouse2D() {
+	//}
 	
 	public static bool IsInViewport(Vector3 v) {
 		Camera cam = Camera.main;
@@ -71,12 +63,6 @@ public static class GameInput {
 	public static bool DownOnce()
 	{
 		return (Input.GetKeyDown("down") && !Input.GetKey("up"));
-	}
-	
-	public static bool Action()
-	{
-		//return (Input.GetKeyDown ("space"));// || Input.GetMouseButtonDown(0));
-		return (Input.GetMouseButtonDown (0));
 	}
 	
 	public static bool Invisible()

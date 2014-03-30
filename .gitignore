@@ -3,4 +3,5 @@
 *.userprefs
 *.meta
 *.dwlt
+/Library/*.dwlt
 /Library/guidmapper

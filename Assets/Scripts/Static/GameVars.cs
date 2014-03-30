@@ -5,6 +5,7 @@ using System.Collections.Generic;
 // GLOBAL VARIABLES
 public static class GameVars {
 
+	public const float DepthCursor = -8f;
 	public const float DepthPeopleHazards=-1f;
 
 	public const float Tick = 1f;
