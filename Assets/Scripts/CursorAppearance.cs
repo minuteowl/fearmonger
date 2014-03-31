@@ -3,19 +3,21 @@ using System.Collections;
 
 // This code manages what the cursor looks like. NOT INPUT.
 // Clicking ingame for abilities is in AbilityManager
-public class PlayerCursor : MonoBehaviour {
+public class CursorAppearance : MonoBehaviour {
 
-	Transform targetTransform;
-	//[HideInInspector] public enum FocusType {None, Movable, Person, Solid, Door};
-	public Texture2D[] cursorTextures;
-	//float zDepth= -15f;
-	Vector2 clickPosition;
+	//Transform targetTransform;
+	private Sprite[] cursorSprites;
+	SpriteRenderer spriteRenderer;
+	RaycastHit2D hit;
+	Ray ray;
+	Vector2 mouse2d;
 	// sound effect
 	AudioClip mouseClickSound;
 
 	// Use this for initialization
 	void Start () {
-		cursorTextures = Resources.LoadAll<Texture2D>("TEMP-cursorhand");
+		cursorSprites = Resources.LoadAll<Sprite>("Sprites/Cursors");
+		spriteRenderer = transform.GetComponent<SpriteRenderer>();
 	}
 
 	// An ability is selected and you click on some point in the room
@@ -39,8 +41,16 @@ public class PlayerCursor : MonoBehaviour {
 	*/
 
 	private void Update () {
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    
-		Vector2 mouse2d = (Vector2)(ray.origin + ray.direction);
+		ray = Camera.main.ScreenPointToRay(Input.mousePosition);    
+		mouse2d = (Vector2)(ray.origin + ray.direction);
+		hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 		transform.position = new Vector3(mouse2d.x, mouse2d.y, GameVars.DepthCursor);
+		if (hit && hit.collider.gameObject.CompareTag("Door")){
+			spriteRenderer.sprite = cursorSprites[1];
+		}
+		else {
+			spriteRenderer.sprite = cursorSprites[0];
+		}
+
 	}
 }

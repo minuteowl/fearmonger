@@ -11,7 +11,7 @@ public class Ability {
 	public int BuyCost, EnergyCost;
 	protected float Duration; // in seconds
 	protected Transform HazardTransform;
-	protected GameManager gameManager;
+	protected Game game;
 	
 	// Animation and sound?
 	
@@ -32,7 +32,7 @@ public class Ability {
 	}
 
 	private void EndAbility(){
-		gameManager.currentRoom.ActiveAbilityEffects.Remove (this);
+		game.currentRoom.ActiveAbilityEffects.Remove (this);
 	}
 	
 }

@@ -7,7 +7,7 @@ public abstract class Person : MonoBehaviour {
 	/*======== VARIABLES ========*/
 	private int aicheck=0,aicheckmax=10;//reduce the # of times to check AI
 	protected RoomObject myRoom;
-	protected GameManager game;
+	protected Game game;
 	protected PlayerLevel leveling;
 	[HideInInspector] public bool isAdult; // adults have different responsibilities
 	public float attentionRadius;

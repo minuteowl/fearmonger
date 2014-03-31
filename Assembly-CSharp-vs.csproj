@@ -53,9 +53,8 @@
      <Compile Include="Assets\Scripts\Ability\Ability_Possess.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Spiders.cs" />
      <Compile Include="Assets\Scripts\CameraObject.cs" />
-     <Compile Include="Assets\Scripts\Game manager\AbilityManager.cs" />
-     <Compile Include="Assets\Scripts\Game manager\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Game manager\PlayerLevel.cs" />
+     <Compile Include="Assets\Scripts\CursorAppearance.cs" />
+     <Compile Include="Assets\Scripts\Game.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Darkness.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Grab.cs" />
@@ -67,7 +66,7 @@
      <Compile Include="Assets\Scripts\Person\Person_Candle.cs" />
      <Compile Include="Assets\Scripts\Person\Person_Child.cs" />
      <Compile Include="Assets\Scripts\Person\Person_Priest.cs" />
-     <Compile Include="Assets\Scripts\PlayerCursor.cs" />
+     <Compile Include="Assets\Scripts\PlayerLevel.cs" />
      <Compile Include="Assets\Scripts\Room\DoorObject.cs" />
      <Compile Include="Assets\Scripts\Room\LampObject.cs" />
      <Compile Include="Assets\Scripts\Room\MovableObject.cs" />

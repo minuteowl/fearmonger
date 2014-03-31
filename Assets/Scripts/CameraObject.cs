@@ -24,7 +24,7 @@ public class CameraObject : MonoBehaviour {
 	}
 
 	public void ZoomIn(RoomObject room) {
-		Debug.Log("zooming in to "+room.CameraPosition+" at room "+room.RoomName);
+		//Debug.Log("zooming in to "+room.CameraPosition+" at room "+room.RoomName);
 		transform.position = room.CameraPosition;
 		SetCameraSize(sizeSmall);
 	}

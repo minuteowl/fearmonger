@@ -9,7 +9,7 @@ public class RoomObject : MonoBehaviour {
 	public string RoomName;
 	public Person[] occupants;
 	public List<Ability> ActiveAbilityEffects = new List<Ability>();
-	[HideInInspector] public GameManager game; // accessible to occupants
+	[HideInInspector] public Game game; // accessible to occupants
 	protected PlayerLevel playerLevel;
 	
 	// Physical
@@ -43,8 +43,8 @@ public class RoomObject : MonoBehaviour {
 	
 	// Use this for initialization
 	private void Start () {
-		game=GameObject.Find("GameManager").GetComponent<GameManager>();
-		ExitLocation = transform.FindChild ("Entry").position - new Vector3(0f,0.5f,0f);
+		game=GameObject.Find("GameManager").GetComponent<Game>();
+		ExitLocation = transform.FindChild ("Door").position - new Vector3(0f,0.5f,0f);
 		spawnPositions = new Vector3[]{
 			transform.FindChild("Spawn 1").position,
 			transform.FindChild("Spawn 2").position,
@@ -128,7 +128,7 @@ public class RoomObject : MonoBehaviour {
 		numberOccupants=0;
 		game.NumOccupiedRooms--;
 		Debug.Log("Checked out from room "+RoomName);
-		AudioSource.PlayClipAtPoint (screamSound, transform.position);
+		AudioSource.PlayClipAtPoint (screamSound, transform.position); // wrong sound!
 	}
 
 	public void TurnLightOn(){
