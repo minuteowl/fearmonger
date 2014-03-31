@@ -10,7 +10,7 @@ public class Ability_Spiders : Ability {
 		Duration = 2.5f;
 		EnergyCost = 2;
 		BuyCost = 1;
-		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Spiders").transform;
+		HazardTransform=Resources.Load<GameObject>("Sprites/Abilities/SpiderParticles").transform;
 	}
 	
 	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){

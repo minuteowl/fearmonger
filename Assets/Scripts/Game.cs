@@ -115,11 +115,7 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (hit){
-				if(hit.collider.gameObject.CompareTag("Door")){
-				}
-			}
-			else if (GUI.Button (new Rect (1, 61, 125, 30), listAbilities [0].Name)) {
+			if (GUI.Button (new Rect (1, 61, 125, 30), listAbilities [0].Name)) {
 				SelectAbility(0);
 			}
 			else if (GUI.Button (new Rect (1, 91, 125, 30), listAbilities [1].Name)) {
@@ -234,7 +230,7 @@ public class Game : MonoBehaviour {
 					// clicked on the door -> go to the map
 					GoToMap ();
 				}
-				else if (currentAbility!=null){
+				else if (currentAbility!=null && !hit.collider.gameObject.CompareTag("Background") && !hit.collider.gameObject.CompareTag("Solid")){
 					// assume 3rd arguments are the same for now
 					currentAbility.UseAbility(currentRoom, clickLocation2D, null);
 				}
