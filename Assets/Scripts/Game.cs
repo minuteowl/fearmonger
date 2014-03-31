@@ -14,6 +14,7 @@ public class Game : MonoBehaviour {
 	private Vector2 clickLocation2D;
 	private RaycastHit2D hit;
 	private Ray2D ray;
+	private int selectedIndex;
 	
 	// INTERFACE LOGIC
 	private CameraObject cameraObject;
@@ -117,18 +118,34 @@ public class Game : MonoBehaviour {
 		if (currentView == View.Room){
 			if (GUI.Button (new Rect (1, 61, 125, 30), listAbilities [0].Name)) {
 				SelectAbility(0);
+				selectedIndex = 0;
+				
 			}
 			else if (GUI.Button (new Rect (1, 91, 125, 30), listAbilities [1].Name)) {
 				SelectAbility(1);
+				selectedIndex = 1;
 			}
 			else if (GUI.Button (new Rect (1, 121, 125, 30), listAbilities [2].Name)) {
 				SelectAbility(2);
+				selectedIndex =2;
 			}
 			else if (GUI.Button (new Rect (1, 151, 125, 30), listAbilities [3].Name)) {
 				SelectAbility(3);
+				selectedIndex = 3;
 			}
-			else if (GUI.Button (new Rect (1, 181, 125, 30), listAbilities [4].Name)) {
+			if (GUI.Button (new Rect (1, 181, 125, 30), listAbilities [4].Name)) {
 				SelectAbility(4);
+				selectedIndex = 4;
+			}
+			for (int i=0; i<5 ; i++) {
+				if (i==selectedIndex && selectedIndex != 10) {
+					GUI.color = Color.cyan;
+					GUI.Box(new Rect(105, (61 + (i * 30)), 20, 20),"E");
+				}
+				else if (listAbilities[i].Locked) {
+					GUI.color = Color.red;
+					GUI.Box(new Rect(105, (61 + (i * 30)), 20, 20),"L");
+				}
 			}
 		}
 		// MAP = ROOM SELECTION
