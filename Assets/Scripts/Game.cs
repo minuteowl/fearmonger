@@ -116,24 +116,24 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (GUI.Button (new Rect (1, 61, 125, 30), listAbilities [0].Name)) {
+			if (GUI.Button (new Rect (1, 61, 100, 30), listAbilities [0].Name)) {
 				SelectAbility(0);
 				selectedIndex = 0;
 				
 			}
-			else if (GUI.Button (new Rect (1, 91, 125, 30), listAbilities [1].Name)) {
+			else if (GUI.Button (new Rect (1, 91, 100, 30), listAbilities [1].Name)) {
 				SelectAbility(1);
 				selectedIndex = 1;
 			}
-			else if (GUI.Button (new Rect (1, 121, 125, 30), listAbilities [2].Name)) {
+			else if (GUI.Button (new Rect (1, 121, 100, 30), listAbilities [2].Name)) {
 				SelectAbility(2);
 				selectedIndex =2;
 			}
-			else if (GUI.Button (new Rect (1, 151, 125, 30), listAbilities [3].Name)) {
+			else if (GUI.Button (new Rect (1, 151, 115, 30), listAbilities [3].Name)) {
 				SelectAbility(3);
 				selectedIndex = 3;
 			}
-			if (GUI.Button (new Rect (1, 181, 125, 30), listAbilities [4].Name)) {
+			if (GUI.Button (new Rect (1, 181, 100, 30), listAbilities [4].Name)) {
 				SelectAbility(4);
 				selectedIndex = 4;
 			}
