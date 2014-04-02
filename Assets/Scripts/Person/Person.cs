@@ -187,12 +187,18 @@ public abstract class Person : MonoBehaviour {
 	public int GetFacingDirection()
 	{
 		if (Mathf.Abs(rigidbody2D.velocity.y)>Mathf.Abs(rigidbody2D.velocity.x)){
-			if (rigidbody2D.velocity.y>0) return 0;
-			else return 1;
+			if (rigidbody2D.velocity.y>0){ 
+				return 0;
+			}else{ 
+				return 1;
+			}
 		}
 		else {
-			if (rigidbody2D.velocity.x>0) return 2;
-			else return 3;
+			if (rigidbody2D.velocity.x>0){
+				return 2;
+			}else{
+				return 3;
+			}
 		}
 	}
 

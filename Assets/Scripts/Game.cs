@@ -72,6 +72,22 @@ public class Game : MonoBehaviour {
 		roomObjects[0,2].Unlock(14f);
 		roomObjects[0,3].Unlock(20f);
 		currentView = View.Room;
+
+		/*
+		//only for testing animations
+		roomObjects[1,0].Unlock(2f);
+		roomObjects[1,1].Unlock(2f);
+		roomObjects[1,2].Unlock(2f);
+		roomObjects[1,3].Unlock(2f);
+		roomObjects[2,0].Unlock(2f);
+		roomObjects[2,1].Unlock(2f);
+		roomObjects[2,2].Unlock(2f);
+		roomObjects[2,3].Unlock(2f);
+		roomObjects[3,0].Unlock(2f);
+		roomObjects[3,1].Unlock(2f);
+		roomObjects[3,2].Unlock(2f);
+		roomObjects[3,3].Unlock(2f);
+		*/
 	}
 	
 	public void GoToRoom(RoomObject room)
@@ -116,16 +132,16 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (GUI.Button (new Rect (1, 61, 100, 30), listAbilities [0].Name)) {
+			if (GUI.Button (new Rect (1, 61, 115, 30), listAbilities [0].Name)) {
 				SelectAbility(0);
 				selectedIndex = 0;
 				
 			}
-			else if (GUI.Button (new Rect (1, 91, 100, 30), listAbilities [1].Name)) {
+			else if (GUI.Button (new Rect (1, 91, 115, 30), listAbilities [1].Name)) {
 				SelectAbility(1);
 				selectedIndex = 1;
 			}
-			else if (GUI.Button (new Rect (1, 121, 100, 30), listAbilities [2].Name)) {
+			else if (GUI.Button (new Rect (1, 121, 115, 30), listAbilities [2].Name)) {
 				SelectAbility(2);
 				selectedIndex =2;
 			}
@@ -133,7 +149,7 @@ public class Game : MonoBehaviour {
 				SelectAbility(3);
 				selectedIndex = 3;
 			}
-			if (GUI.Button (new Rect (1, 181, 100, 30), listAbilities [4].Name)) {
+			if (GUI.Button (new Rect (1, 181, 115, 30), listAbilities [4].Name)) {
 				SelectAbility(4);
 				selectedIndex = 4;
 			}
