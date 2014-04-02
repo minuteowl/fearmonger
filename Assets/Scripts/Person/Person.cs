@@ -34,6 +34,8 @@ public abstract class Person : MonoBehaviour {
 	private float walkSpeed;
 	private Vector2 walkDirection;
 
+	public AudioClip screamSound;
+
 	/*======== FUNCTIONS ========*/
 
 	public void SetRoom(RoomObject r)
@@ -207,6 +209,8 @@ public abstract class Person : MonoBehaviour {
 	{
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
+			//scream must be added
+			AudioSource.PlayClipAtPoint(screamSound, transform.position);
 			isHurt=true;
 			if (delta>=sanityCurrent){
 				delta=sanityCurrent;
