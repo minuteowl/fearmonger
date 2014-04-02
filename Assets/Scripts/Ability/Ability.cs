@@ -12,6 +12,7 @@ public class Ability {
 	protected float Duration; // in seconds
 	protected Transform HazardTransform;
 	protected Game game;
+	public AudioClip spiderSound;
 	
 	// Animation and sound?
 	
@@ -29,6 +30,7 @@ public class Ability {
 		Debug.Log("Used ability "+ this.Name);
 		Vector3 clickLocation3d = new Vector3(clickLocation.x, clickLocation.y, GameVars.DepthPeopleHazards);
 		GameObject.Instantiate(HazardTransform,clickLocation3d,Quaternion.identity);
+		AudioSource.PlayClipAtPoint (spiderSound, HazardTransform.position);
 	}
 
 	private void EndAbility(){
