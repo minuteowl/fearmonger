@@ -89,6 +89,14 @@ public class Game : MonoBehaviour {
 		roomObjects[3,3].Unlock(2f);
 		*/
 	}
+
+	public bool isAtMap(){
+		if (currentView == View.Map) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public void GoToRoom(RoomObject room)
 	{

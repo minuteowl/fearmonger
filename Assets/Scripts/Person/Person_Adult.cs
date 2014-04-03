@@ -14,9 +14,13 @@ public class Person_Adult : Person {
 	public float maxHealth = 100.00f;
 	public float currentHealth = 100.00f;
 
+	private Game viewChecker;
+
 	// Use this for initialization
 	void Start () {
-		anim = GetComponent<Animator> ();		
+		anim = GetComponent<Animator> ();
+
+		viewChecker = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<Game>();
 
 		isAdult=true;
 		defenseBase=1;
@@ -29,14 +33,19 @@ public class Person_Adult : Person {
 	protected override void Update () {
 		base.Update ();
 
-		/*
+		if (viewChecker.isAtMap()) {
+			healthBar.enabled = false;
+		} else {
+			healthBar.enabled = true;
+		}
+
 		if (currentHealth > 0) {
 			float healthRemPercent = currentHealth/maxHealth;
-			float healthBarLen = healthRemPercent * 100.00f;
 
-			//healthBar.guiTexture.pixelInset.width = healthBarLen;
+			//divide width by for because pixelinset width is set to 25
+			float healthBarLen = (healthRemPercent * 100.00f)/4;
+			healthBar.guiTexture.pixelInset = new Rect(healthBar.guiTexture.pixelInset.x,healthBar.guiTexture.pixelInset.y, healthBarLen,healthBar.guiTexture.pixelInset.height);
 		}
-		*/
 
 		if (Mathf.Abs (rigidbody2D.velocity.y) > Mathf.Abs (rigidbody2D.velocity.x)) {
 			if (rigidbody2D.velocity.y > 0) { 

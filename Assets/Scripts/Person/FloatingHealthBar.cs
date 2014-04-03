@@ -17,12 +17,12 @@ public class FloatingHealthBar : MonoBehaviour {
 	
 	private Camera displayCamera;
 	private Transform displayhealthBarTransform;  
-	private Transform displayCameraTransform;   
-	
+	private Transform displayCameraTransform;  
+
 	void Start()
 	{
 		displayhealthBarTransform = transform;
-		
+
 		if (useMainCamera)
 			displayCamera = Camera.main;
 		else
@@ -35,7 +35,7 @@ public class FloatingHealthBar : MonoBehaviour {
 	{
 		SetHealthBarPositionRespectCamera();
 	}
-	
+
 	//set health bar to the position of character based on camera position
 	void SetHealthBarPositionRespectCamera()
 	{
