@@ -10,6 +10,10 @@ public class Person_Priest : Person {
 	bool facingUp = false;
 	bool facingDown = true;
 
+	public GUITexture healthBar;
+	public float maxHealth = 100.00f;
+	public float currentHealth = 100.00f;
+
 	List<Ability> activeSpells;
 
 	// Use this for initialization
@@ -38,6 +42,14 @@ public class Person_Priest : Person {
 		}
 		base.Update ();
 
+		/*
+		if (currentHealth > 0) {
+			float healthRemPercent = currentHealth/maxHealth;
+			float healthBarLen = healthRemPercent * 100.00f;
+
+			//healthBar.guiTexture.pixelInset.width = healthBarLen;
+		}
+		*/
 
 		if (Mathf.Abs (rigidbody2D.velocity.y) > Mathf.Abs (rigidbody2D.velocity.x)) {
 			if (rigidbody2D.velocity.y > 0) { 

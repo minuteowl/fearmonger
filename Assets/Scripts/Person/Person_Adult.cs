@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Person_Adult : Person {
 
 	Animator anim;
@@ -9,9 +10,9 @@ public class Person_Adult : Person {
 	bool facingUp = false;
 	bool facingDown = true;
 
-	GUITexture healthBar;
-	float maxHealth = 100.00f;
-	float currentHealth = 100.00f;
+	public GUITexture healthBar;
+	public float maxHealth = 100.00f;
+	public float currentHealth = 100.00f;
 
 	// Use this for initialization
 	void Start () {
