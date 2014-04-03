@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\Hazards\Hazard_Monster.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Possess.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Spiders.cs" />
+     <Compile Include="Assets\Scripts\Person\FloatingHealthBar.cs" />
      <Compile Include="Assets\Scripts\Person\Person.cs" />
      <Compile Include="Assets\Scripts\Person\Person_Adult.cs" />
      <Compile Include="Assets\Scripts\Person\Person_Candle.cs" />
