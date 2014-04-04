@@ -54,9 +54,11 @@ public class Game : MonoBehaviour {
 		listAbilities[2] = new Ability_Grab();
 		listAbilities[3] = new Ability_Monster();
 		listAbilities[4] = new Ability_Possess();
+
+		selectedIndex = 10;
 		
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
-		transform.GetComponent<PlayerLevel>();
+		playerLevel = transform.GetComponent<PlayerLevel>();
 		squares = new Transform[4,4];
 		roomObjects = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
@@ -140,6 +142,7 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
+<<<<<<< HEAD
 			if (GUI.Button (new Rect (1, 61, 115, 30), listAbilities [0].Name)) {
 				SelectAbility(0);
 				selectedIndex = 0;
@@ -152,17 +155,97 @@ public class Game : MonoBehaviour {
 			else if (GUI.Button (new Rect (1, 121, 115, 30), listAbilities [2].Name)) {
 				SelectAbility(2);
 				selectedIndex =2;
+=======
+			if (GUI.Button (new Rect (1, 61, 100, 30), listAbilities [0].Name)) {
+				if(listAbilities[0].Locked && listAbilities[0].BuyCost <= playerLevel.BuyPoints)
+				{
+					playerLevel.BuyAbility(listAbilities[0]);
+					SelectAbility(0);
+					selectedIndex = 0;
+				}
+				else if(listAbilities[0].Locked && listAbilities[0].BuyCost > playerLevel.BuyPoints)
+				{
+					Debug.Log ("Not Enough Points.");
+				}
+				else{
+					SelectAbility(0);
+					selectedIndex = 0;
+				}
+				
+			}
+			else if (GUI.Button (new Rect (1, 91, 100, 30), listAbilities [1].Name)) {
+				if(listAbilities[1].Locked && listAbilities[1].BuyCost <= playerLevel.BuyPoints)
+				{
+					playerLevel.BuyAbility(listAbilities[1]);
+					SelectAbility(1);
+					selectedIndex = 1;
+				}
+				else if(listAbilities[1].Locked && listAbilities[1].BuyCost > playerLevel.BuyPoints)
+				{
+					Debug.Log ("Not Enough Points.");
+				}
+				else{
+					SelectAbility(1);
+					selectedIndex = 1;
+				}
+			}
+			else if (GUI.Button (new Rect (1, 121, 100, 30), listAbilities [2].Name)) {
+				if(listAbilities[2].Locked && listAbilities[2].BuyCost <= playerLevel.BuyPoints)
+				{
+					playerLevel.BuyAbility(listAbilities[2]);
+					SelectAbility(2);
+					selectedIndex = 2;
+				}
+				else if(listAbilities[2].Locked && listAbilities[2].BuyCost > playerLevel.BuyPoints)
+				{
+					Debug.Log ("Not Enough Points.");
+				}
+				else{
+					SelectAbility(2);
+					selectedIndex = 2;
+				}
+>>>>>>> My-Branch
 			}
 			else if (GUI.Button (new Rect (1, 151, 115, 30), listAbilities [3].Name)) {
-				SelectAbility(3);
-				selectedIndex = 3;
+				if(listAbilities[3].Locked && listAbilities[3].BuyCost <= playerLevel.BuyPoints)
+				{
+					playerLevel.BuyAbility(listAbilities[3]);
+					SelectAbility(3);
+					selectedIndex = 3;
+				}
+				else if(listAbilities[3].Locked && listAbilities[3].BuyCost > playerLevel.BuyPoints)
+				{
+					Debug.Log ("Not Enough Points.");
+				}
+				else{
+					SelectAbility(3);
+					selectedIndex = 3;
+				}
 			}
+<<<<<<< HEAD
 			if (GUI.Button (new Rect (1, 181, 115, 30), listAbilities [4].Name)) {
 				SelectAbility(4);
 				selectedIndex = 4;
+=======
+			if (GUI.Button (new Rect (1, 181, 100, 30), listAbilities [4].Name)) {
+				if(listAbilities[4].Locked && listAbilities[4].BuyCost <= playerLevel.BuyPoints)
+				{
+					playerLevel.BuyAbility(listAbilities[4]);
+					SelectAbility(4);
+					selectedIndex = 4;
+				}
+				else if(listAbilities[4].Locked && listAbilities[4].BuyCost > playerLevel.BuyPoints)
+				{
+					Debug.Log ("Not Enough Points.");
+				}
+				else{
+					SelectAbility(4);
+					selectedIndex = 4;
+				}
+>>>>>>> My-Branch
 			}
 			for (int i=0; i<5 ; i++) {
-				if (i==selectedIndex && selectedIndex != 10) {
+				if (i==selectedIndex && selectedIndex != 10 && !listAbilities[i].Locked) {
 					GUI.color = Color.cyan;
 					GUI.Box(new Rect(105, (61 + (i * 30)), 20, 20),"E");
 				}
