@@ -64,7 +64,7 @@ public class PlayerLevel : MonoBehaviour {
 	}
 	
 	public void BuyAbility(Ability ability) {
-		ability.Unlock();
+		ability.Unlock ();
 		buyPoints -= ability.BuyCost;
 	}
 	
