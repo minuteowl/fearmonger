@@ -125,7 +125,7 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (GUI.Button (new Rect (1, 61, 100, 30), listAbilities [0].Name)) {
+			if (GUI.Button (new Rect (1, 61, 115, 30), listAbilities [0].Name)) {
 				if(listAbilities[0].Locked && listAbilities[0].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[0]);
@@ -142,7 +142,7 @@ public class Game : MonoBehaviour {
 				}
 				
 			}
-			else if (GUI.Button (new Rect (1, 91, 100, 30), listAbilities [1].Name)) {
+			else if (GUI.Button (new Rect (1, 91, 115, 30), listAbilities [1].Name)) {
 				if(listAbilities[1].Locked && listAbilities[1].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[1]);
@@ -158,7 +158,7 @@ public class Game : MonoBehaviour {
 					selectedIndex = 1;
 				}
 			}
-			else if (GUI.Button (new Rect (1, 121, 100, 30), listAbilities [2].Name)) {
+			else if (GUI.Button (new Rect (1, 121, 115, 30), listAbilities [2].Name)) {
 				if(listAbilities[2].Locked && listAbilities[2].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[2]);
@@ -190,7 +190,7 @@ public class Game : MonoBehaviour {
 					selectedIndex = 3;
 				}
 			}
-			if (GUI.Button (new Rect (1, 181, 100, 30), listAbilities [4].Name)) {
+			if (GUI.Button (new Rect (1, 181, 115, 30), listAbilities [4].Name)) {
 				if(listAbilities[4].Locked && listAbilities[4].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[4]);

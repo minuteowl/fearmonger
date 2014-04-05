@@ -15,7 +15,7 @@ public abstract class Person : MonoBehaviour {
 	const float RADIUS_SMALL = 1.0f, RADIUS_MED = 1.75f, RADIUS_LARGE = 2.5f;
 
 	// Behavior
-	public Animator anim; // ?????
+	public Animator anim;
 	protected float sightRadius;
 	public AudioClip screamSound;
 	protected GUITexture healthBar;
@@ -42,10 +42,10 @@ public abstract class Person : MonoBehaviour {
 	// HEY ANIMATION PEOPLE!!! USE THIS!!!
 	public void Animate(){
 		SetFacingDirection (); // -> Sets IS_FACING_UP, etc, for you -> don't recalculate them.
-		//anim.SetBool ("walkUp", IS_FACING_UP);
-		//anim.SetBool ("walkDown", IS_FACING_DOWN);
-		//anim.SetBool ("walkRight", IS_FACING_RIGHT);
-		//anim.SetBool ("walkLeft", IS_FACING_LEFT);
+		anim.SetBool ("walkUp", IS_FACING_UP);
+		anim.SetBool ("walkDown", IS_FACING_DOWN);
+		anim.SetBool ("walkRight", IS_FACING_RIGHT);
+		anim.SetBool ("walkLeft", IS_FACING_LEFT);
 	}
 
 	public void SetRoom(RoomObject r)
@@ -65,7 +65,7 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	protected virtual void Start(){
-		//anim = GetComponent<Animator> ();
+		anim = GetComponent<Animator> ();
 		game = myRoom.game;
 		healthBar=transform.GetChild (0).GetComponent<GUITexture>();
 
