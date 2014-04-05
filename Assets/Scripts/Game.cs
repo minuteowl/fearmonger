@@ -59,7 +59,6 @@ public class Game : MonoBehaviour {
 		
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 		playerLevel = transform.GetComponent<PlayerLevel>();
-		transform.GetComponent<PlayerLevel>();
 		squares = new Transform[4,4];
 		roomObjects = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
@@ -126,8 +125,6 @@ public class Game : MonoBehaviour {
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-		//	if (hit){
-		//		if(hit.collider.gameObject.CompareTag("Door")){
 			if (GUI.Button (new Rect (1, 61, 100, 30), listAbilities [0].Name)) {
 				if(listAbilities[0].Locked && listAbilities[0].BuyCost <= playerLevel.BuyPoints)
 				{
@@ -139,12 +136,10 @@ public class Game : MonoBehaviour {
 				{
 					Debug.Log ("Not Enough Points.");
 				}
-		//	else if (GUI.Button (new Rect (1, 61, 125, 30), listAbilities [0].Name)) {
 				else{
 					SelectAbility(0);
 					selectedIndex = 0;
 				}
-		//	else if (GUI.Button (new Rect (1, 91, 125, 30), listAbilities [1].Name)) {
 				
 			}
 			else if (GUI.Button (new Rect (1, 91, 100, 30), listAbilities [1].Name)) {
@@ -154,7 +149,6 @@ public class Game : MonoBehaviour {
 					SelectAbility(1);
 					selectedIndex = 1;
 				}
-		//	else if (GUI.Button (new Rect (1, 121, 125, 30), listAbilities [2].Name)) {
 				else if(listAbilities[1].Locked && listAbilities[1].BuyCost > playerLevel.BuyPoints)
 				{
 					Debug.Log ("Not Enough Points.");
@@ -171,7 +165,6 @@ public class Game : MonoBehaviour {
 					SelectAbility(2);
 					selectedIndex = 2;
 				}
-			//else if (GUI.Button (new Rect (1, 151, 125, 30), listAbilities [3].Name)) {
 				else if(listAbilities[2].Locked && listAbilities[2].BuyCost > playerLevel.BuyPoints)
 				{
 					Debug.Log ("Not Enough Points.");
@@ -188,7 +181,6 @@ public class Game : MonoBehaviour {
 					SelectAbility(3);
 					selectedIndex = 3;
 				}
-		//	else if (GUI.Button (new Rect (1, 181, 125, 30), listAbilities [4].Name)) {
 				else if(listAbilities[3].Locked && listAbilities[3].BuyCost > playerLevel.BuyPoints)
 				{
 					Debug.Log ("Not Enough Points.");
