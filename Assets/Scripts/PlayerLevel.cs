@@ -6,7 +6,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
 	private int level=1,
-		buyPoints=200,
+		buyPoints=20,
 		// when energy is below minimum energy, it regenerates
 		energyMax=10,
 		energyMin=2;
@@ -90,7 +90,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	private void OnGUI()
 	{
-		GUI.Box (new Rect (1, 1, 100, 60), "Player Level: " + Level + "\n" + 
+		GUI.Box (new Rect (1, 1, 110, 60), "Player Level: " + Level + "\n" + 
 		         "Energy: " + energyCurrent + "/" + energyMax + "\n" +
 		         "Ability Points: " + buyPoints);
 	}

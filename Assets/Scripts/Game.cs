@@ -220,58 +220,58 @@ public class Game : MonoBehaviour {
 		// MAP = ROOM SELECTION
 		else if (currentView == View.Map){
 			//Floor 1
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R101")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R101")) {
 				GoToRoom(0,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R102")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R102")) {
 				GoToRoom(0,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R103")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R103")) {
 				GoToRoom(0,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .635f, Screen.width * .07f, Screen.height * .1f), "R104")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R104")) {
 				GoToRoom(0,3);
 			}
 			
 			//Floor 2
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R201")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R201")) {
 				GoToRoom(1,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R202")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R202")) {
 				GoToRoom(1,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R203")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R203")) {
 				GoToRoom(1,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .47f, Screen.width * .07f, Screen.height * .1f), "R204")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R204")) {
 				GoToRoom(1,3);
 			}
 			
 			//Floor 3
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R301")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R301")) {
 				GoToRoom(2,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R302")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R302")) {
 				GoToRoom(2,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R303")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R303")) {
 				GoToRoom(2,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .302f, Screen.width * .07f, Screen.height * .1f), "R304")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R304")) {
 				GoToRoom(2,3);
 			}
 			
 			//Floor 4
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R401")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R401")) {
 				GoToRoom(3,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R402")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R402")) {
 				GoToRoom(3,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R403")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R403")) {
 				GoToRoom(3,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .135f, Screen.width * .07f, Screen.height * .1f), "R404")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R404")) {
 				GoToRoom(3,3);
 			}
 		}
