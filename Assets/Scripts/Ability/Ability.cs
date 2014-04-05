@@ -10,9 +10,9 @@ public class Ability {
 	public int MinLevel; // we might not use this
 	public int BuyCost, EnergyCost;
 	protected float Duration; // in seconds
-	protected Transform HazardTransform;
+	protected GameObject hazard;
 	protected Game game;
-	public AudioClip spiderSound;
+	public AudioClip effectSound;
 	
 	// Animation and sound?
 	
@@ -24,13 +24,14 @@ public class Ability {
 
 	// room = the current room (based on GameManager)
 	// args = depends on ability
-	public virtual void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
+	public virtual void UseAbility(RoomObject room, Vector2 clickLocation){
 		room.ActiveAbilityEffects.Add (this);
 		// normalize to proper Z-depth
 		Debug.Log("Used ability "+ this.Name);
 		Vector3 clickLocation3d = new Vector3(clickLocation.x, clickLocation.y, GameVars.DepthPeopleHazards);
-		GameObject.Instantiate(HazardTransform,clickLocation3d,Quaternion.identity);
-		AudioSource.PlayClipAtPoint (spiderSound, HazardTransform.position);
+		GameObject.Instantiate(hazard,clickLocation3d,Quaternion.identity);
+		if(effectSound!=null)
+			AudioSource.PlayClipAtPoint (effectSound, hazard.transform.position);
 	}
 
 	private void EndAbility(){

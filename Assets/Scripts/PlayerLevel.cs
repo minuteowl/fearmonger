@@ -6,7 +6,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
 	private int level=1,
-		buyPoints=2,
+		buyPoints=200,
 		// when energy is below minimum energy, it regenerates
 		energyMax=10,
 		energyMin=2;

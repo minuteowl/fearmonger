@@ -18,7 +18,7 @@ public class RoomObject : MonoBehaviour {
 	private Transform bed1, bed2, bed3, lamp1, lamp2;
 
 	// AI stuff
-	public AudioClip doorOpenSound, screamSound;
+	public AudioClip doorOpenSound;
 	[HideInInspector] public bool isOccupied=false, isUnlocked=false;
 	private float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	private float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
@@ -26,7 +26,7 @@ public class RoomObject : MonoBehaviour {
 	[HideInInspector] public int LampsOn=2; // accessible to lamps and occupants
 	private int maxLampsOn=2;
 	[HideInInspector] public int numberOccupants=0;
-	private GameObject[] peoplePrefabTypes;
+	private GameObject[] peoplePrefabTypes=new GameObject[7];
 	private Vector3[] spawnPositions;
 
 	/*======== ROOM MANAGEMENT ========*/
@@ -44,7 +44,7 @@ public class RoomObject : MonoBehaviour {
 	// Use this for initialization
 	private void Start () {
 		game=GameObject.Find("GameManager").GetComponent<Game>();
-		ExitLocation = transform.FindChild ("Door").position - new Vector3(0f,0.5f,0f);
+		ExitLocation = transform.FindChild ("Door").position;
 		spawnPositions = new Vector3[]{
 			transform.FindChild("Spawn 1").position,
 			transform.FindChild("Spawn 2").position,
@@ -67,7 +67,15 @@ public class RoomObject : MonoBehaviour {
 		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
 		RoomName = transform.name;
-		peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
+		//peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
+		//print (peoplePrefabTypes.Length);
+		peoplePrefabTypes[0]=Resources.Load<GameObject>("Prefabs/Person/bot1_ChildMale");
+		peoplePrefabTypes[1]=Resources.Load<GameObject>("Prefabs/Person/bot2_ChildFemale");
+		peoplePrefabTypes[2]=Resources.Load<GameObject>("Prefabs/Person/bot3_AdultMale");
+		peoplePrefabTypes[3]=Resources.Load<GameObject>("Prefabs/Person/bot4_AdultFemale");
+		peoplePrefabTypes[4]=Resources.Load<GameObject>("Prefabs/Person/bot5_CandleMale");
+		peoplePrefabTypes[5]=Resources.Load<GameObject>("Prefabs/Person/bot6_CandleFemale");
+		peoplePrefabTypes[6]=Resources.Load<GameObject>("Prefabs/Person/bot7_Priest");
 	}
 
 	private Transform[] getNewCombo() {
@@ -128,7 +136,7 @@ public class RoomObject : MonoBehaviour {
 		numberOccupants=0;
 		game.NumOccupiedRooms--;
 		Debug.Log("Checked out from room "+RoomName);
-		AudioSource.PlayClipAtPoint (screamSound, transform.position); // wrong sound!
+		//AudioSource.PlayClipAtPoint (screamSound, transform.position); // wrong sound!
 	}
 
 	public void TurnLightOn(){

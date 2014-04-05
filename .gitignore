@@ -3,5 +3,8 @@
 *.userprefs
 *.meta
 *.dwlt
-/Library/*.dwlt
+/Library/CurrentLayout.dwlt
+/Library/CurrentMaximizeLayout.dwlt
+/Library/InspectorExpandedItems.asset
 /Library/guidmapper
+*.zip

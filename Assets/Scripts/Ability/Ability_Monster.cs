@@ -10,10 +10,11 @@ public class Ability_Monster : Ability {
 		Duration = 12f;
 		EnergyCost = 4;
 		BuyCost = 4;
-		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Monster").transform;
+		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Monster");
+		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
 	}
 	
-	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
-		base.UseAbility(room, clickLocation, args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation){
+		base.UseAbility(room, clickLocation);
 	}
 }

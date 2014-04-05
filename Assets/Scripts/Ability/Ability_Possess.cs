@@ -10,10 +10,11 @@ public class Ability_Possess : Ability {
 		Duration = 15f;
 		EnergyCost = 8;
 		BuyCost = 6;
-		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Possession").transform;
+		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Possession");
+		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-darksound");
 	}
 	
-	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
-		base.UseAbility(room, clickLocation, args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation){
+		base.UseAbility(room, clickLocation);
 	}
 }

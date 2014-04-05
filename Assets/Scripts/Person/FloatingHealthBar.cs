@@ -8,7 +8,7 @@ using System.Collections;
 [RequireComponent(typeof(GUITexture))]
 public class FloatingHealthBar : MonoBehaviour {
 
-	public Transform guest;                //guest health bar is for 
+	private Transform guest;                //guest health bar is for 
 	public Vector3 offset = Vector3.up;     
 	public bool fixBarToScreen = false;      // If true, label will be visible even if object is off screen
 	public float fixBarBorderSize = .05f;    
@@ -21,6 +21,7 @@ public class FloatingHealthBar : MonoBehaviour {
 
 	void Start()
 	{
+		guest = transform.parent; // <- this is easier
 		displayhealthBarTransform = transform;
 
 		if (useMainCamera)

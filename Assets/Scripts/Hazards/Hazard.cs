@@ -3,19 +3,17 @@ using System.Collections;
 
 public class Hazard : MonoBehaviour {
 
-	protected float duration, timer=0f; // in seconds
+	public float duration, timer; // in seconds
 	protected float radius;
 	protected CircleCollider2D ccollider;
 	protected RoomObject currentRoom;
 	protected int damage;
 
-	public void SetRoom(RoomObject r) {
-		currentRoom = r;
-	}
-
 	// Use this for initialization
 	protected virtual void Start () {
 		ccollider = transform.GetComponent<CircleCollider2D>();
+		// This stays as the room in which the hazard was created
+		currentRoom = GameObject.Find ("GameManager").GetComponent<Game>().currentRoom;
 	}
 	
 	// Update is called once per frame

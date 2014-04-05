@@ -47,8 +47,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Ability\Ability.cs" />
+     <Compile Include="Assets\Scripts\Ability\Ability_Claw.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Darkness.cs" />
-     <Compile Include="Assets\Scripts\Ability\Ability_Grab.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Monster.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Possess.cs" />
      <Compile Include="Assets\Scripts\Ability\Ability_Spiders.cs" />
@@ -56,8 +56,9 @@
      <Compile Include="Assets\Scripts\CursorAppearance.cs" />
      <Compile Include="Assets\Scripts\Game.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard.cs" />
+     <Compile Include="Assets\Scripts\Hazards\Hazard_Claw.cs" />
+     <Compile Include="Assets\Scripts\Hazards\Hazard_Claw_Projectile.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Darkness.cs" />
-     <Compile Include="Assets\Scripts\Hazards\Hazard_Grab.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Monster.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Possess.cs" />
      <Compile Include="Assets\Scripts\Hazards\Hazard_Spiders.cs" />

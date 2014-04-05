@@ -50,9 +50,14 @@ public class LampObject : MovableObject {
 		lightSource.enabled = false;
 		room.TurnLightOff();
 		foreach (Person p in room.occupants) {
-			if (p.isAdult && p.targetLamp!=null){
-				p.AssignLamp(this);
+			print ("assigning a lamp");
+			if (p.isAdult) {
+				if (p.targetLamp!=null){
+					p.AssignLamp(this);
+				}
+				else print ("has a lamp already!");
 			}
+			else print ("not an adult!");
 		}
 	}
 

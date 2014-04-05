@@ -3,39 +3,40 @@ using System.Collections;
 
 public class Person_Candle : Person {
 
-	public GUITexture healthBar;
-	public float maxHealth = 100.00f;
-	public float currentHealth = 100.00f;
-	
-	private Game viewChecker;
+	private Light lightSource;
+	private float lightTimer=0f, lightTimerMax=1.5f; // how long to turn the light back on
+	private bool isLightOff=false;
 
 	// Use this for initialization
-	void Start () {
-		viewChecker = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<Game>();
-
+	protected override void Start () {
 		isAdult=true;
 		defenseBase=1;
 		defenseSupport=3;
 		sanityMax=12;
 		sanityCurrent=sanityMax;
+		base.Start ();
+		lightSource=transform.GetComponent<Light>();
 	}
 	
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update ();
-
-		if (viewChecker.isAtMap()) {
-			healthBar.enabled = false;
-		} else {
-			healthBar.enabled = true;
+		// when light is turned off, turn it back on after some delay
+		if (isLightOff){
+			if(lightTimer < lightTimerMax){
+				lightTimer += GameVars.Tick*Time.deltaTime;
+			}
+			else {
+				lightTimer=0f;
+				isLightOff=false;
+				lightSource.enabled=true;
+			}
 		}
+	}
 
-		if (currentHealth > 0) {
-			float healthRemPercent = currentHealth/maxHealth;
-
-			//divide width by for because pixelinset width is set to 25
-			float healthBarLen = (healthRemPercent * 100.00f)/4;
-			healthBar.guiTexture.pixelInset = new Rect(healthBar.guiTexture.pixelInset.x,healthBar.guiTexture.pixelInset.y, healthBarLen,healthBar.guiTexture.pixelInset.height);
-		}
+	// turn the light off
+	public void TurnOff(){
+		lightSource.enabled = false;
+		isLightOff=true;
 	}
 }

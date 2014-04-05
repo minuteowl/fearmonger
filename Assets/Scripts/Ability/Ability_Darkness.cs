@@ -10,10 +10,11 @@ public class Ability_Darkness : Ability {
 		Duration = 1.75f;
 		EnergyCost = 3;
 		BuyCost = 1;
-		HazardTransform=Resources.Load<GameObject>("Prefabs/Hazards/Darkness").transform;
+		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Darkness");
+		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-darksound");
 	}
 	
-	public override void UseAbility(RoomObject room, Vector2 clickLocation, MonoBehaviour[] args){
-		base.UseAbility(room, clickLocation, args);
+	public override void UseAbility(RoomObject room, Vector2 clickLocation){
+		base.UseAbility(room, clickLocation);
 	}
 }
