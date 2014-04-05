@@ -11,7 +11,7 @@ public class Ability_Claw : Ability {
 		EnergyCost = 6;
 		BuyCost = 3;
 		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Claw");
-		effectSound=null;//Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monster");
+		effectSound=Resources.Load<AudioClip>("Sounds/reaching_claw");;//Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monster");
 	}
 	
 	public override void UseAbility(RoomObject room, Vector2 clickLocation){

@@ -17,7 +17,6 @@ public abstract class Person : MonoBehaviour {
 	// Behavior
 	public Animator anim;
 	protected float sightRadius;
-	public AudioClip screamSound;
 	protected GUITexture healthBar;
 	protected int sanityCurrent, sanityMax=1;
 	protected int defenseBase, defenseCurrent, defenseSupport;
@@ -36,6 +35,12 @@ public abstract class Person : MonoBehaviour {
 	private Vector3 destination;
 	private float walkSpeed;
 	private Vector2 walkDirection;
+
+	// sounds
+	public AudioClip adult_male_scream;
+	public AudioClip adult_female_scream;
+	public AudioClip child_male_scream;
+	public AudioClip child_female_scream;
 
 	/*======== FUNCTIONS ========*/
 
@@ -261,7 +266,7 @@ public abstract class Person : MonoBehaviour {
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
 			isHurt=true;
-			AudioSource.PlayClipAtPoint (screamSound, transform.position);
+			AudioSource.PlayClipAtPoint (adult_male_scream, transform.position);
 			if (delta>=sanityCurrent){
 				delta=sanityCurrent;
 				GoToDoor();
