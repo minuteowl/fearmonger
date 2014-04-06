@@ -5,7 +5,7 @@ public class Hazard_Spiders : Hazard {
 
 	// Use this for initialization
 	protected override void Start () {
-		duration = 1.5f;
+		duration = 2.5f;
 		base.Start ();
 	}
 	
