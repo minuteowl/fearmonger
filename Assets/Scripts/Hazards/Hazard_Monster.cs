@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Hazard_Monster : Hazard {
 
+	public bool IS_FACING_UP=false, IS_FACING_DOWN=false, IS_FACING_RIGHT=false, IS_FACING_LEFT=false;
+	public Animator anim;
+
 	// Monster chases people around
 
 	private Transform nearestPersonTransform;
@@ -14,9 +17,20 @@ public class Hazard_Monster : Hazard {
 
 	// Use this for initialization
 	protected override void Start () {
+		anim = GetComponent<Animator> ();
+
 		duration = 8f;
 		base.Start ();
 		roarSound = Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
+	}
+
+	// HEY ANIMATION PEOPLE!!! USE THIS!!!
+	public void Animate(){
+		SetFacingDirection (); // -> Sets IS_FACING_UP, etc, for you -> don't recalculate them.
+		anim.SetBool ("walkUp", IS_FACING_UP);
+		anim.SetBool ("walkDown", IS_FACING_DOWN);
+		anim.SetBool ("walkRight", IS_FACING_RIGHT);
+		anim.SetBool ("walkLeft", IS_FACING_LEFT);
 	}
 	
 	// Update is called once per frame
@@ -51,6 +65,33 @@ public class Hazard_Monster : Hazard {
 		}
 		else {
 		//	Finish ();
+		}
+
+		Animate ();
+	}
+
+	// use this to determine which sprite(s) to use
+	private void SetFacingDirection()
+	{
+		if (Mathf.Abs(rigidbody2D.velocity.y)>Mathf.Abs(rigidbody2D.velocity.x)){
+			if (rigidbody2D.velocity.y>0) {
+				IS_FACING_UP=true; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=false;
+			}
+			else {
+				IS_FACING_UP=false; IS_FACING_DOWN=true;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=false;
+			}
+		}
+		else {
+			if (rigidbody2D.velocity.x>0){
+				IS_FACING_UP=false; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=true;
+			}
+			else {
+				IS_FACING_UP=false; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=true; IS_FACING_RIGHT=false;
+			}
 		}
 	}
 
