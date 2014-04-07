@@ -37,6 +37,12 @@ public class Game : MonoBehaviour {
 	// the timer max will change randomly
 	private float checkInTimer=0, checkInTimerMax=5f;
 
+	public void UnlockFloor(){
+		if (floorsUnlocked<4){
+			floorsUnlocked++;
+		}
+	}
+
 	public void Pause(){
 		Time.timeScale=0f;
 		GameVars.IsPaused=true;

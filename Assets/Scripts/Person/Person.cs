@@ -8,6 +8,7 @@ public abstract class Person : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
 	protected RoomObject myRoom;
+	public string roomName;
 	protected Game game;
 	protected PlayerLevel leveling;
 	[HideInInspector] public bool isAdult; // adults have different responsibilities
@@ -37,10 +38,7 @@ public abstract class Person : MonoBehaviour {
 	private Vector2 walkDirection;
 
 	// sounds
-	public AudioClip adult_male_scream;
-	public AudioClip adult_female_scream;
-	public AudioClip child_male_scream;
-	public AudioClip child_female_scream;
+	public AudioClip screamSound;
 
 	/*======== FUNCTIONS ========*/
 
@@ -56,6 +54,7 @@ public abstract class Person : MonoBehaviour {
 	public void SetRoom(RoomObject r)
 	{
 		this.myRoom = r;
+		roomName = myRoom.RoomName;
 		transform.parent = myRoom.transform;
 		leveling = myRoom.game.playerLevel;
 		roommates = new Person[myRoom.numberOccupants-1];
@@ -138,8 +137,8 @@ public abstract class Person : MonoBehaviour {
 		motionTimer=0f;
 		motionTimerMax = Random.Range(0.1f, 0.5f);
 		destination= new Vector3(
-			1.85f*UnityEngine.Random.Range(-attentionRadius,attentionRadius),
-			1.75f*UnityEngine.Random.Range(-attentionRadius,attentionRadius),
+			1.85f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.x,
+			1.75f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.y,
 			GameVars.DepthPeopleHazards);
 		walkDirection = (destination-transform.position).normalized;
 		rigidbody2D.velocity = Vector2.zero;
@@ -173,13 +172,13 @@ public abstract class Person : MonoBehaviour {
 		else {attentionRadius = RADIUS_SMALL;}
 		// recalculate defense
 		defenseCurrent=defenseBase;
-		foreach(Person roomie in roommates){
+		/*foreach(Person roomie in roommates){
 			if (roomie!=null){ // always check to see that a person still exists.
 				if (((Vector2)roomie.transform.position-(Vector2)transform.position).magnitude<attentionRadius){
 					DefendOther(roomie);
 				}
 			}
-		}
+		}*/
 		// recovering from an attack
 		if (isHurt) {
 			if (hurtTimer<hurtTimerMax) {
@@ -266,7 +265,9 @@ public abstract class Person : MonoBehaviour {
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
 			isHurt=true;
-			AudioSource.PlayClipAtPoint (adult_male_scream, transform.position);
+			Debug.Log("Hit with "+delta+" fear!");
+			if (screamSound!=null)
+				AudioSource.PlayClipAtPoint (screamSound, transform.position);
 			if (delta>=sanityCurrent){
 				delta=sanityCurrent;
 				GoToDoor();
