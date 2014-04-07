@@ -6,13 +6,14 @@ public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
 	private int level=1,
-		buyPoints=20,
-		// when energy is below minimum energy, it regenerates
-		energyMax=10,
-		energyMin=2;
+	buyPoints=20,
+	// when energy is below minimum energy, it regenerates
+	energyMax=10,
+	energyMin=2;
 	private int energyCurrent;
 	private int expCurrent;
 	private int expToNextLevel;
+	private Game game;
 	
 	// when energy is below minimum energy, it regenerate
 	// By convention, timers start at zero and increment to max, then resets back to zero
@@ -35,6 +36,8 @@ public class PlayerLevel : MonoBehaviour {
 	private void Start () {
 		energyCurrent=energyMax;
 		expToNextLevel=10;
+		game=GameObject.Find("GameManager").GetComponent<Game>();
+		
 	}
 	
 	private void LevelUp(){
@@ -44,6 +47,10 @@ public class PlayerLevel : MonoBehaviour {
 		energyMin ++;
 		buyPoints +=2;
 		expToNextLevel += 10*level;
+		if (level == 4 || level == 8 || level == 12) 
+		{
+			game.unlockFloor ();
+		}
 		Debug.Log ("LEVELED UP TO "+level);
 	}
 	
@@ -75,7 +82,7 @@ public class PlayerLevel : MonoBehaviour {
 		}
 		else return true;
 	}
-
+	
 	private void Update() {
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {

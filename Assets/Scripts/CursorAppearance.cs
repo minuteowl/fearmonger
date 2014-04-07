@@ -12,7 +12,7 @@ public class CursorAppearance : MonoBehaviour {
 	Ray ray;
 	Vector2 mouse2d;
 	// sound effect
-	AudioClip mouseClickSound;
+	public AudioClip mouseClickSound;
 
 	// Use this for initialization
 	void Start () {
@@ -52,5 +52,8 @@ public class CursorAppearance : MonoBehaviour {
 			spriteRenderer.sprite = cursorSprites[0];
 		}
 
+		if (Input.GetMouseButtonDown (0)) {
+			AudioSource.PlayClipAtPoint(mouseClickSound, transform.position);
+		}
 	}
 }

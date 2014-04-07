@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
-
+	
 	// GLOBAL VARIABLES GO HERE:
 	public enum View { Start, Room, Map, Menu}
 	public View currentView;
 	public int NumOccupiedRooms=0;
-
+	
 	// ABILITY AND INPUT
 	public Ability[] listAbilities;
 	public Ability currentAbility;
@@ -19,10 +19,10 @@ public class Game : MonoBehaviour {
 	// INTERFACE LOGIC
 	private CameraObject cameraObject;
 	private Transform cameraMapPositionTransform;
-
+	
 	// we also need to keep track of this
 	[HideInInspector] public PlayerLevel playerLevel;
-
+	
 	// ROOMS
 	public RoomObject currentRoom, lastRoom;
 	private int floorsUnlocked=1;
@@ -31,18 +31,12 @@ public class Game : MonoBehaviour {
 	private int[,] PeoplePerRoom;
 	private int row=0, col=0;
 	private float upBound, leftBound, rightBound, downBound;
-
+	
 	// By convention, timers start at zero and increment to max
 	// this counts the time, in seconds, between check-ins.
 	// the timer max will change randomly
 	private float checkInTimer=0, checkInTimerMax=5f;
-
-	public void UnlockFloor(){
-		if (floorsUnlocked<4){
-			floorsUnlocked++;
-		}
-	}
-
+	
 	public void Pause(){
 		Time.timeScale=0f;
 		GameVars.IsPaused=true;
@@ -51,7 +45,13 @@ public class Game : MonoBehaviour {
 		Time.timeScale=1f;
 		GameVars.IsPaused=false;
 	}
-
+	
+	public void unlockFloor()
+	{
+		if (floorsUnlocked < 4)
+			floorsUnlocked++;
+	}
+	
 	private void Start ()
 	{
 		listAbilities = new Ability[5];
@@ -103,12 +103,12 @@ public class Game : MonoBehaviour {
 			Debug.Log("Room "+room.RoomName+" is locked!");
 		}
 	}
-
+	
 	public void GoToRoom(int row, int column){
 		currentRoom = roomObjects[row,column];
 		GoToRoom(currentRoom);
 	}
-
+	
 	public void GoToMap() {
 		Debug.Log("Going to map");
 		Pause ();
@@ -119,14 +119,14 @@ public class Game : MonoBehaviour {
 			cameraObject.ZoomOut();
 		}
 	}
-
-
+	
+	
 	private void SelectAbility(int index){
 		Debug.Log("Selected ability: "+listAbilities[index].Name);
 		currentAbility = listAbilities[index];
 		// other stuff
 	}
-
+	
 	
 	private void OnGUI(){
 		// GAME MODE = LIST OF ABILITIES
@@ -215,11 +215,11 @@ public class Game : MonoBehaviour {
 			for (int i=0; i<5 ; i++) {
 				if (i==selectedIndex && selectedIndex != 10 && !listAbilities[i].Locked) {
 					GUI.color = Color.cyan;
-					GUI.Box(new Rect(105, (61 + (i * 30)), 20, 20),"E");
+					GUI.Box(new Rect(115, (61 + (i * 30)), 20, 30),"E");
 				}
 				else if (listAbilities[i].Locked) {
 					GUI.color = Color.red;
-					GUI.Box(new Rect(105, (61 + (i * 30)), 20, 20),"L");
+					GUI.Box(new Rect(115, (61 + (i * 30)), 20, 30), listAbilities[i].BuyCost.ToString());
 				}
 			}
 		}
@@ -240,50 +240,101 @@ public class Game : MonoBehaviour {
 			}
 			
 			//Floor 2
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R201")) {
-				GoToRoom(1,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R202")) {
-				GoToRoom(1,1);
+			if(floorsUnlocked >= 2)
+			{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R201")) {
+					GoToRoom(1,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R202")) {
+					GoToRoom(1,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R203")) {
+					GoToRoom(1,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R204")) {
+					GoToRoom(1,3);
+				}
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R203")) {
-				GoToRoom(1,2);
+			else
+			{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,3);
+				}
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R204")) {
-				GoToRoom(1,3);
-			}
-			
 			//Floor 3
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R301")) {
-				GoToRoom(2,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R302")) {
-				GoToRoom(2,1);
+			if(floorsUnlocked >= 3)
+			{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R301")) {
+					GoToRoom(2,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R302")) {
+					GoToRoom(2,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R303")) {
+					GoToRoom(2,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R304")) {
+					GoToRoom(2,3);
+				}
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R303")) {
-				GoToRoom(2,2);
+			else{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,3);
+				}
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R304")) {
-				GoToRoom(2,3);
-			}
-			
 			//Floor 4
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R401")) {
-				GoToRoom(3,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R402")) {
-				GoToRoom(3,1);
+			if(floorsUnlocked >=4)
+			{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R401")) {
+					GoToRoom(3,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R402")) {
+					GoToRoom(3,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R403")) {
+					GoToRoom(3,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R404")) {
+					GoToRoom(3,3);
+				}
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R403")) {
-				GoToRoom(3,2);
-			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R404")) {
-				GoToRoom(3,3);
+			else
+			{
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,3);
+				}
 			}
 		}
 		
 	}
-
+	
 	private void Update() {
 		// UPDATE THE ROOMS AND PEOPLE
 		for (int i=0; i<4; i++) for (int j=0; j<4; j++) {
@@ -326,12 +377,12 @@ public class Game : MonoBehaviour {
 					if( !hit.collider.gameObject.CompareTag("Solid"))
 						if(!hit.collider.gameObject.CompareTag("Background"))
 							currentAbility.UseAbility(currentRoom, clickLocation2D);
-						else
-							print ("missed the room");
+					else
+						print ("missed the room");
 					else
 						print ("can't do on a solid");
-
-
+					
+					
 				}
 				else {
 					Debug.Log ("No ability selected.");
