@@ -8,7 +8,7 @@ public class Ability {
 	public string Name, Description;
 	public bool Locked=true;
 	public int MinLevel; // we might not use this
-	public int BuyCost, EnergyCost;
+	public int BuyCost, EnergyCost, FearDamage;
 	protected float Duration; // in seconds
 	protected GameObject hazard;
 	protected Game game;
@@ -24,8 +24,9 @@ public class Ability {
 
 	// room = the current room (based on GameManager)
 	// args = depends on ability
-	public virtual void UseAbility(RoomObject room, Vector2 clickLocation){
-		room.ActiveAbilityEffects.Add (this);
+	public virtual void UseAbility(Game game, Vector2 clickLocation){
+		game.currentRoom.ActiveAbilityEffects.Add (this);
+		game.playerLevel.UseEnergy(EnergyCost);
 		// normalize to proper Z-depth
 		Debug.Log("Used ability "+ this.Name);
 		Vector3 clickLocation3d = new Vector3(clickLocation.x, clickLocation.y, GameVars.DepthPeopleHazards);

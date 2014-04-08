@@ -46,8 +46,8 @@ public static class ShockPhrases {
 		"Zounds!",
 	};
 
-	public static string Phrase(){
+	public static string Phrase(int dam){
 		int index = UnityEngine.Random.Range (0,phrases.Length-1);
-		return phrases[index];
+		return phrases[index]+"("+dam.ToString ()+")";
 	}
 }

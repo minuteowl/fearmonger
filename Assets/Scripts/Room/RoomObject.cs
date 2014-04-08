@@ -6,7 +6,8 @@ using System.Collections.Generic;
 public class RoomObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-	public string RoomName;
+	private string roomName;
+	public string RoomName { get {return ("Room "+roomName);}}
 	public Person[] occupants;
 	public List<Ability> ActiveAbilityEffects = new List<Ability>();
 	[HideInInspector] public Game game; // accessible to occupants
@@ -16,23 +17,35 @@ public class RoomObject : MonoBehaviour {
 	[HideInInspector] public Vector3 CameraPosition, ExitLocation;//, EntryLocation; 
 	private Vector3 bed1StartPos, bed2StartPos, bed3StartPos, lamp1StartPos, lamp2StartPos;
 	private Transform bed1, bed2, bed3, lamp1, lamp2;
+	public LampObject Lamp1, Lamp2;
 
 	// AI stuff
-	public AudioClip doorOpenSound;
-	[HideInInspector] public bool isOccupied=false, isUnlocked=false;
+	public AudioClip doorOpenSound, doorCloseSound;
+	public bool isOccupied=false, isUnlocked=false;
 	private float stayTimer=0, stayTimerMax; // stay duration, max is reset randomly according to # of occupants
 	private float vacantTimer=0, vacantTimerMax; // time in between vacant rooms, max is reset randomly
 	
-	[HideInInspector] public int LampsOn=2; // accessible to lamps and occupants
-	private int maxLampsOn=2;
-	[HideInInspector] public int numberOccupants=0;
+	public int LightsOn, LampsOn=2; // accessible to lamps and occupants
+	private int LightsOnMax;
+	public int numberOccupants=0;
 	private GameObject[] peoplePrefabTypes=new GameObject[7];
 	private Vector3[] spawnPositions;
+
+	public string MapName(){
+		if (!isUnlocked){
+			return "Locked";
+		} else if (!isOccupied) {
+			return "Vacant";
+		} else {
+			return roomName;
+		}
+	}
 
 	/*======== ROOM MANAGEMENT ========*/
 
 	private void ResetFurniture()
 	{
+		Debug.Log("Reset furniture in "+RoomName);
 		bed1.position = bed1StartPos;
 		bed2.position = bed2StartPos;
 		bed3.position = bed3StartPos;
@@ -59,6 +72,8 @@ public class RoomObject : MonoBehaviour {
 		bed3 = transform.FindChild("Bed 3");
 		lamp1 = transform.FindChild("Lamp 1");
 		lamp2 = transform.FindChild("Lamp 2");
+		Lamp1 = lamp1.GetComponent<LampObject>();
+		Lamp2 = lamp2.GetComponent<LampObject>();
 		bed1StartPos = bed1.position;
 		bed2StartPos = bed2.position;
 		bed3StartPos = bed3.position;
@@ -66,7 +81,7 @@ public class RoomObject : MonoBehaviour {
 		lamp1StartPos = lamp1.position;
 		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
-		RoomName = transform.name;
+		roomName = transform.name.Split(' ')[1];
 		//peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
 		//print (peoplePrefabTypes.Length);
 		peoplePrefabTypes[0]=Resources.Load<GameObject>("Prefabs/Person/bot1_ChildMale");
@@ -101,22 +116,27 @@ public class RoomObject : MonoBehaviour {
 		ResetFurniture ();
 		isOccupied = true;
 		stayTimer = 0; vacantTimer = 0;
-		stayTimerMax = 20f;//UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
+		stayTimerMax = UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
 		Transform[] combo = getNewCombo();
 		numberOccupants = combo.Length;
 		Transform temp;
 		occupants = new Person[numberOccupants];
-		AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
+		if (doorOpenSound!=null)
+			AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
+		LightsOnMax=2;
 		for (int i=0; i<combo.Length; i++) {
 			temp = (Transform)Instantiate(combo[i],spawnPositions[i],Quaternion.identity);
 			occupants[i] = temp.GetComponent<Person>();
+			if (occupants[i] is Person_Candle){
+				LightsOnMax++;
+			}
 		}
 		// this is called separately so occupants can set their roommates
 		foreach (Person p in occupants){
 			p.SetRoom(this);
 		}
 		game.NumOccupiedRooms++;
-		//Debug.Log("Checking in "+numberOccupants+" people into room "+RoomName);
+		//Debug.Log("Checking in "+numberOccupants+" people into room "+roomName);
 	}
 
 	public float GetDuration()
@@ -127,7 +147,7 @@ public class RoomObject : MonoBehaviour {
 	public void CheckOut(){
 		isOccupied=false;
 		vacantTimer=0; stayTimer = 0;
-		vacantTimerMax = 2f;//UnityEngine.Random.Range(7f,12f); // delay to next check-in
+		vacantTimerMax = UnityEngine.Random.Range(6f,10f); // delay to next check-in
 		for (int i=numberOccupants-1; i>=0; i--) {
 			if (occupants[i]!=null) {
 				occupants[i].Leave ();
@@ -135,18 +155,23 @@ public class RoomObject : MonoBehaviour {
 		}
 		numberOccupants=0;
 		game.NumOccupiedRooms--;
-		Debug.Log("Checked out from room "+RoomName);
-		//AudioSource.PlayClipAtPoint (screamSound, transform.position); // wrong sound!
+		Debug.Log("Checked out from room "+roomName);
+		//if (doorCloseSound!=null)
+		//	AudioSource.PlayClipAtPoint (doorCloseSound, transform.position);
 	}
 
 	public void TurnLightOn(){
-		if (LampsOn<maxLampsOn){
+		print ("Turning light on");
+		if (LampsOn<LightsOnMax){
 			LampsOn++;
+			LightsOn++;
 		}
 	}
 
 	public void TurnLightOff(){
+		print ("Turning light off.");
 		if (LampsOn>0){
+			LightsOn--;
 			LampsOn--;
 		}
 	}

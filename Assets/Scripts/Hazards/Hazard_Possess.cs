@@ -5,7 +5,8 @@ public class Hazard_Possess : Hazard {
 
 	// Use this for initialization
 	protected override void Start () {
-		duration = 1f;
+		duration = GameVars.duration_possession;
+		damage = GameVars.damage_possession;
 		base.Start ();
 	}
 	

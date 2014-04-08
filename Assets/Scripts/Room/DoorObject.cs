@@ -3,13 +3,23 @@ using System.Collections;
 
 public class DoorObject : MonoBehaviour {
 
+	//BoxCollider2D box;
+	//RoomObject myRoom;
+	Person p;
+
 	// Use this for initialization
 	void Start () {
-	
+		//box=transform.GetComponent<BoxCollider2D>();
+		//myRoom= transform.GetComponent<RoomObject>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	private void OnTriggerEnter2D(Collider2D other){
+		if (other.CompareTag("Person")){
+			p = other.transform.GetComponent<Person>();
+			if (p.sanityCurrent<=0){
+				p.Leave ();
+			}
+		}
 	}
+
 }

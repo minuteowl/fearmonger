@@ -9,6 +9,7 @@ public class LampObject : MovableObject {
 	// By convention, timers go from zero to max, then reset to zero
 	private float flickerTimer = 0f, flickerTimerMax = 0.1f;
 	private int flickersRemaining=0;
+	private float cryTimer=0f, cryTimerMax=1f;
 
 	// Use this for initialization
 	private void Start () {
@@ -44,25 +45,41 @@ public class LampObject : MovableObject {
 		*/
 	}
 
+	public void AssignToPerson(){
+		float dist=0f, minDist=999f;
+		Person assignee=null;
+		foreach(Person p in room.occupants){
+			if (p!=null && p.isAdult && !p.hasTargetLamp){
+				dist = ((Vector2)transform.position-(Vector2)p.transform.position).magnitude;
+				if (dist<minDist){
+					minDist=dist;
+					assignee=p;
+				}
+			}
+		}
+		if (assignee!=null){
+			assignee.AssignLamp(this);
+		}
+	}
+
 	public void TurnOff()
 	{
 		IsOn = false;
 		lightSource.enabled = false;
 		room.TurnLightOff();
-		foreach (Person p in room.occupants) {
-			print ("assigning a lamp");
-			if (p.isAdult) {
-				if (p.targetLamp!=null){
-					p.AssignLamp(this);
-				}
-				else print ("has a lamp already!");
-			}
-			else print ("not an adult!");
-		}
+		AssignToPerson();
 	}
 
 	// Update is called once per frame
 	private void Update () {
+		if (!IsOn){
+			if(cryTimer<cryTimerMax){
+				cryTimer += GameVars.Tick*Time.deltaTime;
+			} else {
+				cryTimer=0f;
+				AssignToPerson ();
+			}
+		}
 		if (flickersRemaining>0) {
 			if (flickerTimer<flickerTimerMax)
 			{

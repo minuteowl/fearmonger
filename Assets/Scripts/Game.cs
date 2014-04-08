@@ -27,7 +27,7 @@ public class Game : MonoBehaviour {
 	public RoomObject currentRoom, lastRoom;
 	private int floorsUnlocked=1;
 	private Transform[,] squares;
-	private RoomObject[,] roomObjects;
+	private RoomObject[,] rooms;
 	private int[,] PeoplePerRoom;
 	private int row=0, col=0;
 	private float upBound, leftBound, rightBound, downBound;
@@ -65,20 +65,23 @@ public class Game : MonoBehaviour {
 		
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 		playerLevel = transform.GetComponent<PlayerLevel>();
+		if (playerLevel==null){
+			throw(new MissingReferenceException());
+		}
 		squares = new Transform[4,4];
-		roomObjects = new RoomObject[4,4];
+		rooms = new RoomObject[4,4];
 		PeoplePerRoom = new int[4,4];
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++) { // Get all of the rooms
 				squares[i,j] = GameObject.Find("Room "+(i+1)+"0"+(j+1)).transform;
-				roomObjects[i,j] = (RoomObject)squares[i,j].GetComponent<RoomObject>();
+				rooms[i,j] = (RoomObject)squares[i,j].GetComponent<RoomObject>();
 			}
 		}
-		currentRoom = roomObjects[0,0]; 		// Initialize room 101?
-		roomObjects[0,0].Unlock(2f);
-		roomObjects[0,1].Unlock(8f);
-		roomObjects[0,2].Unlock(14f);
-		roomObjects[0,3].Unlock(20f);
+		currentRoom = rooms[0,0]; 		// Initialize room 101?
+		rooms[0,0].Unlock(2f);
+		rooms[0,1].Unlock(8f);
+		rooms[0,2].Unlock(14f);
+		rooms[0,3].Unlock(20f);
 		currentView = View.Room;
 	}
 	public bool isAtMap(){
@@ -105,7 +108,7 @@ public class Game : MonoBehaviour {
 	}
 	
 	public void GoToRoom(int row, int column){
-		currentRoom = roomObjects[row,column];
+		currentRoom = rooms[row,column];
 		GoToRoom(currentRoom);
 	}
 	
@@ -226,110 +229,56 @@ public class Game : MonoBehaviour {
 		// MAP = ROOM SELECTION
 		else if (currentView == View.Map){
 			//Floor 1
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R101")) {
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,0].MapName ())) {
 				GoToRoom(0,0);
 			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R102")) {
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,1].MapName ())) {
 				GoToRoom(0,1);
 			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R103")) {
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,2].MapName ())) {
 				GoToRoom(0,2);
 			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), "R104")) {
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f),  rooms[0,3].MapName ())) {
 				GoToRoom(0,3);
 			}
-			
 			//Floor 2
-			if(floorsUnlocked >= 2)
-			{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R201")) {
-					GoToRoom(1,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R202")) {
-					GoToRoom(1,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R203")) {
-					GoToRoom(1,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "R204")) {
-					GoToRoom(1,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,0].MapName ())) {
+				if(floorsUnlocked >= 2) GoToRoom(1,0);
+			}	
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,1].MapName ())) {
+				if(floorsUnlocked >= 2) GoToRoom(1,1);
 			}
-			else
-			{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,2].MapName ())) {
+				if(floorsUnlocked >= 2) GoToRoom(1,2);
+			}
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,3].MapName ())) {
+				if(floorsUnlocked >= 2) GoToRoom(1,3);
 			}
 			//Floor 3
-			if(floorsUnlocked >= 3)
-			{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R301")) {
-					GoToRoom(2,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R302")) {
-					GoToRoom(2,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R303")) {
-					GoToRoom(2,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "R304")) {
-					GoToRoom(2,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,0].MapName ())) {
+				if(floorsUnlocked >= 3) GoToRoom(2,0);
+			}	
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,1].MapName ())) {
+				if(floorsUnlocked >= 3) GoToRoom(2,1);
 			}
-			else{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,2].MapName ())) {
+				if(floorsUnlocked >= 3) GoToRoom(2,2);
+			}
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,3].MapName ())) {
+				if(floorsUnlocked >= 3) GoToRoom(2,3);
 			}
 			//Floor 4
-			if(floorsUnlocked >=4)
-			{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R401")) {
-					GoToRoom(3,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R402")) {
-					GoToRoom(3,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R403")) {
-					GoToRoom(3,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "R404")) {
-					GoToRoom(3,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,0].MapName ())) {
+				if(floorsUnlocked >=4) GoToRoom(3,0);
+			}	
+			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,1].MapName ())) {
+				if(floorsUnlocked >=4) GoToRoom(3,1);
 			}
-			else
-			{
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,3);
-				}
+			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,2].MapName ())) {
+				if(floorsUnlocked >=4) GoToRoom(3,2);
+			}
+			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,3].MapName ())) {
+				if(floorsUnlocked >=4) GoToRoom(3,3);
 			}
 		}
 		
@@ -338,10 +287,10 @@ public class Game : MonoBehaviour {
 	private void Update() {
 		// UPDATE THE ROOMS AND PEOPLE
 		for (int i=0; i<4; i++) for (int j=0; j<4; j++) {
-			PeoplePerRoom[i,j] = roomObjects[i,j].numberOccupants;
+			PeoplePerRoom[i,j] = rooms[i,j].numberOccupants;
 		}
 		if (!currentRoom) {
-			currentRoom = roomObjects[row,col];
+			currentRoom = rooms[row,col];
 		}
 		// CHECKING PEOPLE IN AND OUT
 		if (NumOccupiedRooms<floorsUnlocked*4) {
@@ -352,9 +301,9 @@ public class Game : MonoBehaviour {
 				// check into a new vacant room, if able room
 				for (int i=0; i<floorsUnlocked; i++){
 					for (int j=0; j<4; j++){
-						if (!roomObjects[i,j].isOccupied)
+						if (!rooms[i,j].isOccupied)
 						{
-							roomObjects[i,j].CheckIn();
+							rooms[i,j].CheckIn();
 							i=5; j=5;
 							checkInTimer =0;
 							checkInTimerMax = Random.Range(20f,40f);
@@ -374,15 +323,13 @@ public class Game : MonoBehaviour {
 					GoToMap ();
 				}
 				else if (currentAbility!=null && hit){
-					if( !hit.collider.gameObject.CompareTag("Solid"))
-						if(!hit.collider.gameObject.CompareTag("Background"))
-							currentAbility.UseAbility(currentRoom, clickLocation2D);
-					else
-						print ("missed the room");
-					else
-						print ("can't do on a solid");
-					
-					
+					if (playerLevel.EnergyCurrent>=currentAbility.EnergyCost){
+						if( !hit.collider.gameObject.CompareTag("Solid") && !hit.collider.gameObject.CompareTag("Background"))
+							currentAbility.UseAbility(this, clickLocation2D);
+					}
+					else {
+						Debug.Log ("Not enough energy!");
+					}
 				}
 				else {
 					Debug.Log ("No ability selected.");

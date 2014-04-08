@@ -10,7 +10,8 @@ public class Hazard_Claw : Hazard {
 
 	// Use this for initialization
 	protected override void Start () {
-		duration=0f;
+		duration=GameVars.duration_claw;
+		damage=GameVars.damage_claw;
 		base.Start ();
 		clawObject=transform.GetChild(0);
 	}

@@ -17,8 +17,8 @@ public class PlayerLevel : MonoBehaviour {
 	
 	// when energy is below minimum energy, it regenerate
 	// By convention, timers start at zero and increment to max, then resets back to zero
-	private float energyRegenTimer=0f, // timer, in seconds
-	energyRegenTimerMax=1f; // time, in seconds, to regen 1 energy
+	public float energyRegenTimer=0f; // timer, in seconds
+	private float energyRegenTimerMax=1f; // time, in seconds, to regen 1 energy
 	
 	// "Read-only" variables
 	public int Level {
@@ -57,7 +57,12 @@ public class PlayerLevel : MonoBehaviour {
 	
 	public void AddExperience(int e){
 		expCurrent += e;
-		if (expCurrent>=expToNextLevel){
+		if (energyCurrent+e>energyMax){
+			energyCurrent=energyMax;
+		} else {
+			energyCurrent += e;
+		}
+		if (expCurrent+e>=expToNextLevel){
 			expCurrent -= expToNextLevel; // to level up, energyCurrent >= energyMax,
 			//UseEnergy (0); // but to be safe, make sure energyCurrent >= 0.
 		}
@@ -87,7 +92,15 @@ public class PlayerLevel : MonoBehaviour {
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {
 			if (energyRegenTimer<energyRegenTimerMax) {
-				energyRegenTimer += Time.deltaTime;
+				energyRegenTimer += Time.deltaTime*GameVars.Tick;
+			} else {
+				energyCurrent++;
+				energyRegenTimer=0f;
+			}
+		} else if (energyCurrent < energyMax){
+			// or, if it's less than max, it refills slowly
+			if (energyRegenTimer<energyRegenTimerMax) {
+				energyRegenTimer += 0.25f*Time.deltaTime*GameVars.Tick;
 			} else {
 				energyCurrent++;
 				energyRegenTimer=0f;

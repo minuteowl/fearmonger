@@ -5,7 +5,7 @@ public class Hazard_Claw_Projectile : MonoBehaviour {
 
 	private Hazard_Claw parentHazard;
 	private Vector2 origin, destination;
-	private const float speed=20f; // how fast it stretches
+	private float speed=20f; // how fast it stretches
 	private bool isExtending=true;
 	private Person targetPerson;
 	private const float minSeparation=0.95f; // when to grab or die
@@ -53,6 +53,7 @@ public class Hazard_Claw_Projectile : MonoBehaviour {
 			transform.position += (Vector3)(destination-origin).normalized*speed*Time.deltaTime;
 			if (((Vector2)transform.position-destination).magnitude<minSeparation){
 				isExtending=false;
+				speed *= 0.33f;
 			}
 		}
 		else { // retracting

@@ -7,14 +7,15 @@ public class Ability_Possess : Ability {
 		Name="Possession";
 		Description = "Selected person becomes possessed, scaring the other people in the room.";
 		MinLevel=12;
-		Duration = 15f;
+		Duration = GameVars.duration_possession;
 		EnergyCost = 8;
 		BuyCost = 6;
+		FearDamage=GameVars.damage_possession;
 		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Possession");
 		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-darksound");
 	}
 	
-	public override void UseAbility(RoomObject room, Vector2 clickLocation){
-		base.UseAbility(room, clickLocation);
+	public override void UseAbility(Game game, Vector2 clickLocation){
+		base.UseAbility(game, clickLocation);
 	}
 }

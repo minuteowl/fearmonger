@@ -11,10 +11,26 @@ public class Hazard_Monster : Hazard {
 	private Vector2 moveDirection;
 	private const float runSpeed=4f;
 	private AudioClip roarSound;
+	public Animator anim;
+
+	public bool IS_FACING_UP=false, IS_FACING_DOWN=false, IS_FACING_RIGHT=false, IS_FACING_LEFT=false;
+
+	// HEY ANIMATION PEOPLE!!! USE THIS!!!
+	public void Animate(){
+		SetFacingDirection (); // -> Sets IS_FACING_UP, etc, for you -> don't recalculate them.
+		if (anim!=null){
+			anim.SetBool ("walkUp", IS_FACING_UP);
+			anim.SetBool ("walkDown", IS_FACING_DOWN);
+			anim.SetBool ("walkRight", IS_FACING_RIGHT);
+			anim.SetBool ("walkLeft", IS_FACING_LEFT);
+		}
+	}
 
 	// Use this for initialization
 	protected override void Start () {
-		duration = 8f;
+		anim = transform.GetComponent<Animator>();
+		duration = GameVars.duration_monster;
+		damage=GameVars.damage_monster;
 		base.Start ();
 		roarSound = Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
 	}
@@ -60,7 +76,7 @@ public class Hazard_Monster : Hazard {
 			Person p = other.transform.GetComponent<Person>();
 			p.Threaten (this);
 			p.Damage (damage);
-			Finish ();//
+			//Finish ();//
 		}
 	}
 
@@ -70,7 +86,32 @@ public class Hazard_Monster : Hazard {
 			print ("triggered with person!");
 			Person p = other.transform.GetComponent<Person>();
 			p.Threaten (this);
-			p.Damage (1);
+			//p.Damage (1);
+		}
+	}
+
+	// use this to determine which sprite(s) to use
+	private void SetFacingDirection()
+	{
+		if (Mathf.Abs(rigidbody2D.velocity.y)>Mathf.Abs(rigidbody2D.velocity.x)){
+			if (rigidbody2D.velocity.y>0) {
+				IS_FACING_UP=true; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=false;
+			}
+			else {
+				IS_FACING_UP=false; IS_FACING_DOWN=true;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=false;
+			}
+		}
+		else {
+			if (rigidbody2D.velocity.x>0){
+				IS_FACING_UP=false; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=false; IS_FACING_RIGHT=true;
+			}
+			else {
+				IS_FACING_UP=false; IS_FACING_DOWN=false;
+				IS_FACING_LEFT=true; IS_FACING_RIGHT=false;
+			}
 		}
 	}
 }
