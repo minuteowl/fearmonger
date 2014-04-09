@@ -15,7 +15,7 @@ public class DoorObject : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag("Person")){
-			Debug.Log("A person approaches the door");
+//			Debug.Log("A person approaches the door");
 			p = other.transform.GetComponent<Person>();
 			if (p.Sanity<=0){
 				p.Leave ();

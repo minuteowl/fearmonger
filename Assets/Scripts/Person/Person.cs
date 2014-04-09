@@ -34,10 +34,11 @@ public abstract class Person : MonoBehaviour {
 
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
-	public bool isHurt=false, isLeaving=false, isText=false;
+	public bool isHurt=false, isLeaving=false, isText=false, isShowHP=false;
 	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
 	private float hurtTimer, hurtTimerMax=1.5f;// temporary invincibility when hurt
-	private float textTimer, textTimerMax=0.8f;
+	private float textTimer, textTimerMax=0.8f; // how long to show response text
+	private float hpTimer, hpTimerMax=0.5f; // how long hp bar is visible after hover
 	//public Vector3 destination3d;
 	public Vector3 destination;
 	private float walkSpeed;
@@ -78,6 +79,15 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	protected virtual void Start(){
+		// Generate random name
+		string n = name+"(";
+		char ch;
+		for (int i=0;i<12;i++){
+			ch = (char)UnityEngine.Random.Range (65,122);
+			n += ch;
+		}
+		name = n+")";
+
 		anim = transform.GetComponent<Animator> ();
 		healthBar=transform.GetChild (0).GetComponent<GUITexture>();
 		text=transform.GetChild (0).GetComponent<GUIText>();
@@ -113,7 +123,16 @@ public abstract class Person : MonoBehaviour {
 			UpdateLeaving();
 		}
 		// Health bar:
-		if (game.currentView==Game.View.Room && sanityCurrent>0){
+		if (isShowHP && healthBar.enabled==true){
+			healthBar.enabled=true;
+			float healthRemPercent = (1.0f*sanityCurrent)/sanityMax;
+			//divide width by for because pixelinset width is set to 25
+			float healthBarLen = (healthRemPercent * 100.00f)/4;
+			healthBar.guiTexture.pixelInset = new Rect(healthBar.guiTexture.pixelInset.x,healthBar.guiTexture.pixelInset.y, healthBarLen,healthBar.guiTexture.pixelInset.height);
+		} else {
+			healthBar.enabled=false;
+		}
+		/*if (game.currentView==Game.View.Room && sanityCurrent>0){
 			healthBar.enabled=true;
 			float healthRemPercent = (1.0f*sanityCurrent)/sanityMax;
 			//divide width by for because pixelinset width is set to 25
@@ -122,19 +141,31 @@ public abstract class Person : MonoBehaviour {
 		}
 		else {
 			healthBar.enabled=false;
-		}
+		}*/
 		Animate ();
 	}
 
+	public void ShowHPBar(){
+		if (game.currentView==Game.View.Room && sanityCurrent>0){
+			isShowHP=true;
+			healthBar.enabled=true;
+		}
+	}
+
+	public void HideHPBar(){
+		isShowHP=false;
+		healthBar.enabled=false;
+	}
+
 	private void UpdateLeaving(){
-		Debug.Log("I am "+((Vector2)destination-(Vector2)transform.position).magnitude+" distance from the door.");
+		//Debug.Log(name+": "+((Vector2)myRoom.ExitLocation-(Vector2)transform.position).magnitude+" distance from the door.");
 		// run toward door, assume that desination is the exit position
-		if (((Vector2)destination-(Vector2)transform.position).magnitude<0.5f) // fleeing and reached destination
+		if (((Vector2)myRoom.ExitLocation-(Vector2)transform.position).magnitude<1.55f) // fleeing and reached destination
 		{
 			Leave ();
 		}
 		else {
-			rigidbody2D.velocity = ((Vector2)destination-(Vector2)transform.position).normalized*walkSpeed;
+			rigidbody2D.velocity = ((Vector2)myRoom.ExitLocation-(Vector2)transform.position).normalized*walkSpeed;
 		}
 	}
 
@@ -169,13 +200,15 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	// Prevent them from sticking to one another
-	private void OnCollisionEnter2D(Collision2D other){
-		if (!isLeaving && other.transform.CompareTag("Person")) {
+	protected virtual void OnCollisionEnter2D(Collision2D other){
+		/*if (!isLeaving && other.transform.CompareTag("Person")) {
 			/// bumping into another person
-			walkDirection = ((Vector2)transform.position-(Vector2)other.transform.position).normalized;
+			destination = (Vector2)transform.position+2f*((Vector2)transform.position-(Vector2)other.transform.position).normalized;
+			destination = new Vector3(destination.x,destination.y,GameVars.DepthPeopleHazards);
+			walkDirection = ((Vector2)destination-(Vector2)other.transform.position).normalized;
 			motionTimerMax*=1.5f;
 		}
-		else if (other.transform.CompareTag ("Hazard")){
+		else */if (!isLeaving && other.transform.CompareTag ("Hazard")){
 			///bump into (or get too close to) a hazard
 			walkDirection = ((Vector2)transform.position-(Vector2)other.transform.position).normalized;
 			motionTimerMax*=2.2f;
@@ -195,9 +228,7 @@ public abstract class Person : MonoBehaviour {
 		if (myRoom.LightsOn>=2) { attentionRadius=RADIUS_LARGE; }
 		else if (myRoom.LightsOn==1){ attentionRadius=RADIUS_MED;}
 		else {attentionRadius = RADIUS_SMALL;}
-
-		// recalculate defense
-		defenseCurrent=defenseBase;
+		defenseCurrent=defenseBase; // recalculate defense
 		foreach(Person roomie in roommates){
 			if (roomie!=null){ // always check to see that a person still exists.
 				if (((Vector2)roomie.transform.position-(Vector2)transform.position).magnitude<attentionRadius){
@@ -205,20 +236,25 @@ public abstract class Person : MonoBehaviour {
 				}
 			}
 		}
-		// recovering from an attack
-		if (isHurt) {
+		if (isHurt) { // recovering from an attack
 			if (hurtTimer<hurtTimerMax) {
 				hurtTimer += GameVars.Tick*Time.deltaTime;
-
 			} else {
 				hurtTimer = 0f;
 				isHurt=false;
 			}
 		}
+		if (isShowHP){ // hp bar is visible for a short time span
+			if (hpTimer<hpTimerMax){
+				hpTimer += GameVars.Tick*Time.deltaTime;
+			} else {
+				hpTimer=0f;
+				HideHPBar ();
+			}
+		}
 		if(canMove){
-			// has been assigned to turn on a lamp
-			if (targetLamp!=null){
-				Debug.Log ("I am "+((Vector2)targetLamp.transform.position-(Vector2)transform.position).magnitude+" away from the lamp.");
+			if (targetLamp!=null){ // has been assigned to turn on a lamp
+				//Debug.Log (name+": "+((Vector2)targetLamp.transform.position-(Vector2)transform.position).magnitude+" away from the lamp.");
 				if (targetLamp.IsOn) {
 					// lamp is already on --> don't have to turn it on anymore
 					targetLamp=null;
@@ -226,7 +262,7 @@ public abstract class Person : MonoBehaviour {
 					RestartWalk();
 				}
 				//private const float LAMP_EPSILON=2f; // minimum distance to activate lamp
-				else if (((Vector2)targetLamp.transform.position-(Vector2)transform.position).magnitude<1f){
+				else if (((Vector2)targetLamp.transform.position-(Vector2)transform.position).magnitude<1.55f){
 					// close enough to the lamp --> turn on the lamp
 					targetLamp.TurnOn();
 					targetLamp=null;
@@ -296,20 +332,19 @@ public abstract class Person : MonoBehaviour {
 		delta -= defenseCurrent;
 		if (!isHurt && delta > 0) {
 			isHurt=true;
-			if (UnityEngine.Random.Range (0,10)<5){
+			if (UnityEngine.Random.Range (0,10)<5){ // only show text sometimes
 				text.text=ShockPhrases.Phrase (delta);
 			} else {
 				text.text="!";
 			}
 			isText=true;
-			if (screamSound!=null)
+			if (screamSound!=null && UnityEngine.Random.Range (0,10)<5) // only play sound sometimes
 				AudioSource.PlayClipAtPoint (screamSound, transform.position);
 			if (delta>=sanityCurrent){
 				delta=sanityCurrent;
 				GoToDoor();
 			}
 			sanityCurrent -= delta;
-			
 			leveling.AddExperience(delta);
 		}
 	}

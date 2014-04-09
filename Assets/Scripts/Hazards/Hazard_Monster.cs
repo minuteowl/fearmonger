@@ -55,7 +55,7 @@ public class Hazard_Monster : Hazard {
 			huntTimer=0;
 			distMin = 999f;
 			foreach (Person p in currentRoom.occupants){
-				if (p!=null) {
+				if (p!=null && p.sanityCurrent>0) {
 					dist = (p.transform.position-this.transform.position).magnitude;
 					if (dist<distMin){
 						distMin=dist;
@@ -69,8 +69,8 @@ public class Hazard_Monster : Hazard {
 			moveDirection=((Vector2)nearestPersonTransform.position-(Vector2)transform.position).normalized;
 			rigidbody2D.velocity=moveDirection*runSpeed;
 		}
-		else {
-		//	Finish ();
+		else { // there's nobody else in the room
+			//Finish ();
 		}
 
 		Animate ();

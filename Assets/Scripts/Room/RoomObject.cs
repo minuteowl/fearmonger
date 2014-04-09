@@ -16,6 +16,7 @@ public class RoomObject : MonoBehaviour {
 	// Physical
 	[HideInInspector] public Vector3 CameraPosition, ExitLocation;//, EntryLocation; 
 	private Vector3 bed1StartPos, bed2StartPos, bed3StartPos, lamp1StartPos, lamp2StartPos;
+	private Vector3 bed1angle, bed2angle, bed3angle, lamp1angle, lamp2angle;
 	private Transform bed1, bed2, bed3, lamp1, lamp2;
 	public LampObject Lamp1, Lamp2;
 
@@ -45,12 +46,12 @@ public class RoomObject : MonoBehaviour {
 
 	private void ResetFurniture()
 	{
-		Debug.Log("Reset furniture in "+RoomName);
-		bed1.position = bed1StartPos;
-		bed2.position = bed2StartPos;
-		bed3.position = bed3StartPos;
-		lamp1.position = lamp1StartPos;
-		lamp2.position = lamp2StartPos;
+		Debug.Log("Checking in to "+RoomName);
+		bed1.position = bed1StartPos; bed1.eulerAngles=bed1angle;
+		bed2.position = bed2StartPos; bed2.eulerAngles=bed2angle;
+		bed3.position = bed3StartPos; bed3.eulerAngles=bed3angle;
+		lamp1.position = lamp1StartPos; lamp1.eulerAngles=lamp1angle;
+		lamp2.position = lamp2StartPos; lamp2.eulerAngles=lamp2angle;
 		LampsOn = 2;
 	}
 	
@@ -67,11 +68,11 @@ public class RoomObject : MonoBehaviour {
 		spawnPositions[0] = new Vector3(spawnPositions[0].x, spawnPositions[0].y, GameVars.DepthPeopleHazards);
 		spawnPositions[1] = new Vector3(spawnPositions[1].x, spawnPositions[1].y, GameVars.DepthPeopleHazards);
 		spawnPositions[2] = new Vector3(spawnPositions[2].x, spawnPositions[2].y, GameVars.DepthPeopleHazards);
-		bed1 = transform.FindChild("Bed 1");
-		bed2 = transform.FindChild("Bed 2");
-		bed3 = transform.FindChild("Bed 3");
-		lamp1 = transform.FindChild("Lamp 1");
-		lamp2 = transform.FindChild("Lamp 2");
+		bed1 = transform.FindChild("Bed 1"); bed1angle=bed1.eulerAngles;
+		bed2 = transform.FindChild("Bed 2"); bed2angle=bed2.eulerAngles;
+		bed3 = transform.FindChild("Bed 3"); bed3angle=bed3.eulerAngles;
+		lamp1 = transform.FindChild("Lamp 1"); lamp1angle=lamp1.eulerAngles;
+		lamp2 = transform.FindChild("Lamp 2"); lamp2angle=lamp2.eulerAngles;
 		Lamp1 = lamp1.GetComponent<LampObject>();
 		Lamp2 = lamp2.GetComponent<LampObject>();
 		bed1StartPos = bed1.position;
@@ -84,17 +85,17 @@ public class RoomObject : MonoBehaviour {
 		roomName = transform.name.Split(' ')[1];
 		//peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
 		//print (peoplePrefabTypes.Length);
-		peoplePrefabTypes[0]=Resources.Load<GameObject>("Prefabs/Person/bot1_ChildMale");
-		peoplePrefabTypes[1]=Resources.Load<GameObject>("Prefabs/Person/bot2_ChildFemale");
-		peoplePrefabTypes[2]=Resources.Load<GameObject>("Prefabs/Person/bot3_AdultMale");
-		peoplePrefabTypes[3]=Resources.Load<GameObject>("Prefabs/Person/bot4_AdultFemale");
-		peoplePrefabTypes[4]=Resources.Load<GameObject>("Prefabs/Person/bot5_CandleMale");
-		peoplePrefabTypes[5]=Resources.Load<GameObject>("Prefabs/Person/bot6_CandleFemale");
-		peoplePrefabTypes[6]=Resources.Load<GameObject>("Prefabs/Person/bot7_Priest");
+		peoplePrefabTypes[0]=Resources.Load<GameObject>("Prefabs/Person/Boy");
+		peoplePrefabTypes[1]=Resources.Load<GameObject>("Prefabs/Person/Girl");
+		peoplePrefabTypes[2]=Resources.Load<GameObject>("Prefabs/Person/Man");
+		peoplePrefabTypes[3]=Resources.Load<GameObject>("Prefabs/Person/Lady");
+		peoplePrefabTypes[4]=Resources.Load<GameObject>("Prefabs/Person/LightMan");
+		peoplePrefabTypes[5]=Resources.Load<GameObject>("Prefabs/Person/LightLady");
+		peoplePrefabTypes[6]=Resources.Load<GameObject>("Prefabs/Person/Priest");
 	}
 
 	private Transform[] getNewCombo() {
-		int i = UnityEngine.Random.Range(0,100)%(PersonLists.Combinations.Count);
+		int i = UnityEngine.Random.Range(0,200)%(PersonLists.Combinations.Count);
 		int[] array = PersonLists.Combinations[i];
 		Transform[] t = new Transform[array.Length];
 		for(int j=0; j<array.Length; j++){
@@ -157,13 +158,13 @@ public class RoomObject : MonoBehaviour {
 		game.NumOccupiedRooms--;
 		Lamp1.TurnOff ();
 		Lamp2.TurnOff ();
-		Debug.Log("Checked out from room "+roomName +" lamps on ="+LampsOn);
+//		Debug.Log("Checked out from room "+roomName +" lamps on ="+LampsOn);
 		//if (doorCloseSound!=null)
 		//	AudioSource.PlayClipAtPoint (doorCloseSound, transform.position);
 	}
 
 	public void TurnLightOn(){
-		print ("Turning light on");
+//		print ("Turning light on");
 		if (LampsOn<LightsOnMax){
 			LampsOn++;
 			LightsOn++;
@@ -171,7 +172,7 @@ public class RoomObject : MonoBehaviour {
 	}
 
 	public void TurnLightOff(){
-		print ("Turning light off.");
+//		print ("Turning light off.");
 		if (LampsOn>0){
 			LightsOn--;
 			LampsOn--;

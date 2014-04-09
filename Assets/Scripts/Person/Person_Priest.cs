@@ -6,12 +6,12 @@ public class Person_Priest : Person {
 
 	List<Ability> activeSpells;
 
-	// Use this for initialization
+	// More support defense. Special ability: Dispel
 	protected override void Start () {
 		isAdult=true;
-		defenseBase=4;
+		defenseBase=2;
 		defenseSupport=2;
-		sanityMax=12;
+		sanityMax=30;
 		sanityCurrent=sanityMax;
 		activeSpells = myRoom.ActiveAbilityEffects;
 		base.Start ();

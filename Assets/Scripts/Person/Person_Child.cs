@@ -3,18 +3,13 @@ using System.Collections;
 
 public class Person_Child : Person
 {
-	// Use this for initialization
+	// Nothing special. Weakest victim.
 	protected override void Start () {
 		isAdult=false;
 		defenseBase=0;
 		defenseSupport=1;
-		sanityMax=8;
+		sanityMax=15;
 		sanityCurrent=sanityMax;
 		base.Start ();
-	}
-	
-	// Update is called once per frame
-	protected override void Update () {
-		base.Update();
 	}
 }

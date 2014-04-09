@@ -7,12 +7,12 @@ public class Person_Candle : Person {
 	private float lightTimer=0f, lightTimerMax=1.5f; // how long to turn the light back on
 	private bool isLightOff=false;
 
-	// Use this for initialization
+	// More support defense. Special ability: provides light
 	protected override void Start () {
 		isAdult=true;
 		defenseBase=1;
 		defenseSupport=3;
-		sanityMax=12;
+		sanityMax=25;
 		sanityCurrent=sanityMax;
 		base.Start ();
 		lightSource=transform.GetComponent<Light>();

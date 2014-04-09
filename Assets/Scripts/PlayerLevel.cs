@@ -6,7 +6,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
 	private int level=1,
-	buyPoints=20,
+	buyPoints=2,
 	// when energy is below minimum energy, it regenerates
 	energyMax=10,
 	energyMin=2;
@@ -41,9 +41,10 @@ public class PlayerLevel : MonoBehaviour {
 	}
 	
 	private void LevelUp(){
+		PersonLists.GetNewCombos (level);
 		level++;
 		// these next values are arbitrary & we can change them later:
-		energyMax = 10*level;
+		energyMax = 8+2*level; //level 1: 10, level 11: 30, etc.
 		energyMin ++;
 		buyPoints +=2;
 		expToNextLevel += 10*level;
@@ -63,6 +64,7 @@ public class PlayerLevel : MonoBehaviour {
 			energyCurrent += e;
 		}
 		if (expCurrent+e>=expToNextLevel){
+			LevelUp ();
 			expCurrent -= expToNextLevel; // to level up, energyCurrent >= energyMax,
 			//UseEnergy (0); // but to be safe, make sure energyCurrent >= 0.
 		}
@@ -110,7 +112,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	private void OnGUI()
 	{
-		GUI.Box (new Rect (1, 1, 110, 60), "Player Level: " + Level + "\n" + 
+		GUI.Box (new Rect (1, 1, 110, 60), "Player Level: " + level + "\n" + 
 		         "Energy: " + energyCurrent + "/" + energyMax + "\n" +
 		         "Ability Points: " + buyPoints);
 	}

@@ -13,12 +13,12 @@ public class Hazard_Darkness : Hazard {
 	// The darkness turns off lamps and lanterns
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.transform.CompareTag ("Lamp")){
-			print ("i love lamp");
+		//	print ("i love lamp");
 			LampObject l = other.GetComponent<LampObject>();
 			l.TurnOff ();
 		}
 		else if (other.transform.CompareTag("Person")){
-			print ("hello person");
+		//	print ("hello person");
 			Person p = other.GetComponent<Person>();
 			p.Damage (damage);
 			p.Threaten(this);

@@ -313,12 +313,20 @@ public class Game : MonoBehaviour {
 		hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 		Ray ray3d = Camera.main.ScreenPointToRay(Input.mousePosition);    
 		clickLocation2D = (Vector2)(ray3d.origin + ray3d.direction);
+		// Only show the HP bar when mouse over
+		if (hit && hit.collider.gameObject.CompareTag("Person")){
+			Person p = hit.collider.gameObject.GetComponent<Person>();
+			if (p!=null)
+				p.ShowHPBar ();
+		}
+		// Register click
 		if (Input.GetMouseButtonDown (0)) {
 			if (currentView == View.Room) {
 				if (hit && hit.collider.gameObject.CompareTag("Door")){
 					// clicked on the door -> go to the map
 					GoToMap ();
 				}
+
 				else if (currentAbility!=null && hit){
 					if (playerLevel.EnergyCurrent>=currentAbility.EnergyCost){
 						if( !hit.collider.gameObject.CompareTag("Solid") && !hit.collider.gameObject.CompareTag("Background"))
