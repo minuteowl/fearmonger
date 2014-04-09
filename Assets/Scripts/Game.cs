@@ -256,26 +256,7 @@ public class Game : MonoBehaviour {
 			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,3].MapName ())) {
 				if(floorsUnlocked >= 2) GoToRoom(1,3);
 			}
-			}
-			else
-			{
-				GUI.skin.button.fontSize = 9;
 
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(1,3);
-				}
-
-				GUI.skin.button.fontSize = orginalFontSize;
-			}
 			//Floor 3
 			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,0].MapName ())) {
 				if(floorsUnlocked >= 3) GoToRoom(2,0);
@@ -288,25 +269,6 @@ public class Game : MonoBehaviour {
 			}
 			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,3].MapName ())) {
 				if(floorsUnlocked >= 3) GoToRoom(2,3);
-			}
-			}
-			else{
-				GUI.skin.button.fontSize = 9;
-
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(2,3);
-				}
-
-				GUI.skin.button.fontSize = orginalFontSize;
 			}
 			//Floor 4
 			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,0].MapName ())) {
@@ -322,28 +284,8 @@ public class Game : MonoBehaviour {
 				if(floorsUnlocked >=4) GoToRoom(3,3);
 			}
 		}
-			else
-			{
-				GUI.skin.button.fontSize = 9;
-
-				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,0);
-				}	
-				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,1);
-				}
-				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,2);
-				}
-				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
-					GoToRoom(3,3);
-				}
-
-				GUI.skin.button.fontSize = orginalFontSize;
-			}
-		}
-		
 	}
+
 	
 	private void Update() {
 		// UPDATE THE ROOMS AND PEOPLE
