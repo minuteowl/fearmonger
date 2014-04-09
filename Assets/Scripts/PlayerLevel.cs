@@ -51,7 +51,7 @@ public class PlayerLevel : MonoBehaviour {
 		{
 			game.unlockFloor ();
 		}
-		Debug.Log ("LEVELED UP TO "+level);
+		Debug.Log ("LEVELED UP TO "+level); // also some message text is displayed
 	}
 	
 	

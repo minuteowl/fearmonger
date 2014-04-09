@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Hazard_Monster : Hazard {
 
+	public bool IS_FACING_UP=false, IS_FACING_DOWN=false, IS_FACING_RIGHT=false, IS_FACING_LEFT=false;
+	public Animator anim;
+
 	// Monster chases people around
 
 	private Transform nearestPersonTransform;
@@ -11,9 +14,9 @@ public class Hazard_Monster : Hazard {
 	private Vector2 moveDirection;
 	private const float runSpeed=4f;
 	private AudioClip roarSound;
-	public Animator anim;
+	//public Animator anim;
 
-	public bool IS_FACING_UP=false, IS_FACING_DOWN=false, IS_FACING_RIGHT=false, IS_FACING_LEFT=false;
+	//public bool IS_FACING_UP=false, IS_FACING_DOWN=false, IS_FACING_RIGHT=false, IS_FACING_LEFT=false;
 
 	// HEY ANIMATION PEOPLE!!! USE THIS!!!
 	public void Animate(){
@@ -31,10 +34,11 @@ public class Hazard_Monster : Hazard {
 		anim = transform.GetComponent<Animator>();
 		duration = GameVars.duration_monster;
 		damage=GameVars.damage_monster;
+		duration = 8f;
 		base.Start ();
 		roarSound = Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
 	}
-	
+
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update ();
@@ -68,26 +72,8 @@ public class Hazard_Monster : Hazard {
 		else {
 		//	Finish ();
 		}
-	}
 
-	private void OnCollisionEnter2D(Collision2D other) {
-		if (other.transform.CompareTag ("Person")){
-			print ("collision with person!");
-			Person p = other.transform.GetComponent<Person>();
-			p.Threaten (this);
-			p.Damage (damage);
-			//Finish ();//
-		}
-	}
-
-	// Scaring other people (not touching)
-	private void OnTriggerEnter2D(Collider2D other){
-		if (other.transform.CompareTag ("Person")){
-			print ("triggered with person!");
-			Person p = other.transform.GetComponent<Person>();
-			p.Threaten (this);
-			//p.Damage (1);
-		}
+		Animate ();
 	}
 
 	// use this to determine which sprite(s) to use
@@ -114,4 +100,26 @@ public class Hazard_Monster : Hazard {
 			}
 		}
 	}
+
+	private void OnCollisionEnter2D(Collision2D other) {
+		if (other.transform.CompareTag ("Person")){
+			print ("collision with person!");
+			Person p = other.transform.GetComponent<Person>();
+			p.Threaten (this);
+			p.Damage (damage);
+			//Finish ();//
+		}
+	}
+
+	// Scaring other people (not touching)
+	private void OnTriggerEnter2D(Collider2D other){
+		if (other.transform.CompareTag ("Person")){
+			print ("triggered with person!");
+			Person p = other.transform.GetComponent<Person>();
+			p.Threaten (this);
+			//p.Damage (1);
+		}
+	}
+
+
 }

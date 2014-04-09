@@ -8,7 +8,7 @@ public abstract class Person : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
 	protected RoomObject myRoom;
-	public string roomName;
+	//public string roomName;
 	protected Game game;
 	protected PlayerLevel leveling;
 	[HideInInspector] public bool isAdult; // adults have different responsibilities
@@ -16,18 +16,20 @@ public abstract class Person : MonoBehaviour {
 	const float RADIUS_SMALL = 2.0f, RADIUS_MED = 4.0f, RADIUS_LARGE = 6.0f;
 
 	// Behavior
-	public Animator anim;
+	protected Animator anim;
 	protected float sightRadius;
 	protected GUITexture healthBar;
 	protected GUIText text;
 	public int sanityCurrent, sanityMax;
-	public int defenseBase, defenseCurrent, defenseSupport;
+	public int Sanity {get{return sanityCurrent;}}
+	protected int defenseBase, defenseCurrent, defenseSupport;
 	public Person[] roommates;
-	[HideInInspector] public bool canMove=true;
+	private bool canMove=true;
+	public bool CanMove {get{return canMove;} set{canMove=value;}}
 
 	//protected Ability abilityWeak, abilityResist;
 	// turning on or off lamps
-	public LampObject targetLamp=null;
+	protected LampObject targetLamp=null;
 	public bool hasTargetLamp=false;
 
 	// people move by choosing a destination and then walking toward it
@@ -36,7 +38,8 @@ public abstract class Person : MonoBehaviour {
 	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
 	private float hurtTimer, hurtTimerMax=1.5f;// temporary invincibility when hurt
 	private float textTimer, textTimerMax=0.8f;
-	private Vector3 destination;
+	//public Vector3 destination3d;
+	public Vector3 destination;
 	private float walkSpeed;
 	private Vector2 walkDirection;
 
@@ -59,7 +62,7 @@ public abstract class Person : MonoBehaviour {
 	public void SetRoom(RoomObject r)
 	{
 		this.myRoom = r;
-		roomName = myRoom.RoomName;
+		//roomName = myRoom.RoomName;
 		transform.parent = myRoom.transform;
 		leveling = myRoom.game.playerLevel;
 		roommates = new Person[myRoom.numberOccupants-1];
@@ -89,7 +92,7 @@ public abstract class Person : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update () {
 		walkSpeed = 3.2f*(1.75f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
-		if (isText){
+		if (game.currentView==Game.View.Room && isText){
 			if (textTimer<textTimerMax){
 				textTimer += GameVars.Tick*Time.deltaTime;
 			} else {
@@ -97,6 +100,10 @@ public abstract class Person : MonoBehaviour {
 				textTimer=0f;
 				isText=false;
 			}
+		} else {
+			text.text="";
+			textTimer=0f;
+			isText=false;
 		}
 		if (!isLeaving && sanityCurrent>0) {
 			// reduce # of times to update complex AI
@@ -120,6 +127,7 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	private void UpdateLeaving(){
+		Debug.Log("I am "+((Vector2)destination-(Vector2)transform.position).magnitude+" distance from the door.");
 		// run toward door, assume that desination is the exit position
 		if (((Vector2)destination-(Vector2)transform.position).magnitude<0.5f) // fleeing and reached destination
 		{
@@ -142,7 +150,6 @@ public abstract class Person : MonoBehaviour {
 
 	// if the lamp is off, the room assigns me to turn the lamp on
 	public void AssignLamp(LampObject lamp) {
-		print ("i've been assigned a lamp");
 		targetLamp = lamp;
 		hasTargetLamp=true;
 		destination = new Vector3(targetLamp.transform.position.x,
@@ -164,11 +171,12 @@ public abstract class Person : MonoBehaviour {
 	// Prevent them from sticking to one another
 	private void OnCollisionEnter2D(Collision2D other){
 		if (!isLeaving && other.transform.CompareTag("Person")) {
-			///print ("oh excuse me");
+			/// bumping into another person
 			walkDirection = ((Vector2)transform.position-(Vector2)other.transform.position).normalized;
+			motionTimerMax*=1.5f;
 		}
 		else if (other.transform.CompareTag ("Hazard")){
-			///print ("omg hazard!!!");
+			///bump into (or get too close to) a hazard
 			walkDirection = ((Vector2)transform.position-(Vector2)other.transform.position).normalized;
 			motionTimerMax*=2.2f;
 		}
@@ -210,6 +218,7 @@ public abstract class Person : MonoBehaviour {
 		if(canMove){
 			// has been assigned to turn on a lamp
 			if (targetLamp!=null){
+				Debug.Log ("I am "+((Vector2)targetLamp.transform.position-(Vector2)transform.position).magnitude+" away from the lamp.");
 				if (targetLamp.IsOn) {
 					// lamp is already on --> don't have to turn it on anymore
 					targetLamp=null;
@@ -228,7 +237,7 @@ public abstract class Person : MonoBehaviour {
 					walkDirection = ((Vector2)destination-(Vector2)transform.position).normalized;
 				}
 			}
-			else if ((transform.position-destination).magnitude<0.8f || motionTimer>=motionTimerMax){
+			else if (((Vector2)transform.position-(Vector2)destination).magnitude<0.8f || motionTimer>=motionTimerMax){
 				RestartWalk();
 			}
 			else {
@@ -266,9 +275,11 @@ public abstract class Person : MonoBehaviour {
 
 	// 
 	public void Threaten(Hazard haz){
-		Vector3 v = (transform.position - haz.transform.position).normalized;
-		Vector2 noise = new Vector2(UnityEngine.Random.Range(-.45f,.45f),UnityEngine.Random.Range(-.4f,.4f));
-		walkDirection = new Vector3(v.x+noise.x, v.y+noise.x);
+		if (!hasTargetLamp && !isLeaving && sanityCurrent>0) {
+			Vector3 v = (transform.position - haz.transform.position).normalized;
+			Vector2 noise = new Vector2(UnityEngine.Random.Range(-.45f,.45f),UnityEngine.Random.Range(-.4f,.4f));
+			walkDirection = new Vector3(v.x+noise.x, v.y+noise.x);
+		}
 	}
 
 	// forces the person to leave, delete object

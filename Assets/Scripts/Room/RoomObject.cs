@@ -35,7 +35,7 @@ public class RoomObject : MonoBehaviour {
 		if (!isUnlocked){
 			return "Locked";
 		} else if (!isOccupied) {
-			return "Vacant";
+			return roomName;//"Vacant";
 		} else {
 			return roomName;
 		}
@@ -155,7 +155,9 @@ public class RoomObject : MonoBehaviour {
 		}
 		numberOccupants=0;
 		game.NumOccupiedRooms--;
-		Debug.Log("Checked out from room "+roomName);
+		Lamp1.TurnOff ();
+		Lamp2.TurnOff ();
+		Debug.Log("Checked out from room "+roomName +" lamps on ="+LampsOn);
 		//if (doorCloseSound!=null)
 		//	AudioSource.PlayClipAtPoint (doorCloseSound, transform.position);
 	}

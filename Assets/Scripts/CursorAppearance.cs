@@ -51,9 +51,13 @@ public class CursorAppearance : MonoBehaviour {
 		else {
 			spriteRenderer.sprite = cursorSprites[0];
 		}
-
-		if (Input.GetMouseButtonDown (0)) {
-			AudioSource.PlayClipAtPoint(mouseClickSound, transform.position);
+		if (hit){
+			if ((Input.GetMouseButtonDown(0) && hit.collider.gameObject.CompareTag ("Door")) ||
+			    (Input.GetMouseButtonDown(0) && hit.collider.gameObject.CompareTag ("Lamp"))) {
+				AudioSource.PlayClipAtPoint(mouseClickSound, transform.position);
+			}
 		}
+
+
 	}
 }

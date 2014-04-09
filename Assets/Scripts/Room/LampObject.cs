@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LampObject : MovableObject {
 
-	public bool IsOn;
+	[HideInInspector] public bool IsOn=false;
 	private Light lightSource;
 	protected RoomObject room;
 	// By convention, timers go from zero to max, then reset to zero
@@ -13,7 +13,7 @@ public class LampObject : MovableObject {
 
 	// Use this for initialization
 	private void Start () {
-		IsOn = true;
+		//IsOn = true;
 		lightSource = (Light)transform.GetComponent("Light");
 		room = transform.parent.GetComponent<RoomObject>();
 	}

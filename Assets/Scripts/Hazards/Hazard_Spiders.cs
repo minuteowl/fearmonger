@@ -20,12 +20,12 @@ public class Hazard_Spiders : Hazard {
 
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Person")){
-			Debug.Log ("Spider collided with person");
+			//Debug.Log ("Spider collided with person");
 			Person p = other.transform.GetComponent<Person>();
 			p.Damage (damage);
-		} else {
-			Debug.Log ("Spider collided with non-person");
-		}
+		}// else {
+			//Debug.Log ("Spider collided with non-person");
+		//}
 	}
 	
 	// Update is called once per frame

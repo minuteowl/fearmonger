@@ -24,7 +24,8 @@ public class Game : MonoBehaviour {
 	[HideInInspector] public PlayerLevel playerLevel;
 	
 	// ROOMS
-	public RoomObject currentRoom, lastRoom;
+	public RoomObject currentRoom;
+	private RoomObject lastRoom;
 	private int floorsUnlocked=1;
 	private Transform[,] squares;
 	private RoomObject[,] rooms;
@@ -84,26 +85,22 @@ public class Game : MonoBehaviour {
 		rooms[0,3].Unlock(20f);
 		currentView = View.Room;
 	}
-	public bool isAtMap(){
-		if (currentView == View.Map) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	public bool isAtMap{
+		get { return (bool)(currentView==View.Map);}}
+
 	
 	public void GoToRoom(RoomObject room)
 	{
 		if (room.isUnlocked) {
-			Unpause();
+			//Unpause();
 			if (currentView==View.Map) {
-				Debug.Log("Go to room "+room.RoomName);
+				//Debug.Log("Go to room "+room.RoomName);
 				cameraObject.ZoomIn(room);
 				currentView = View.Room;
 			}
 		}
 		else {
-			Debug.Log("Room "+room.RoomName+" is locked!");
+			//A "room is locked!" message is displayed
 		}
 	}
 	
@@ -114,7 +111,7 @@ public class Game : MonoBehaviour {
 	
 	public void GoToMap() {
 		Debug.Log("Going to map");
-		Pause ();
+		//Pause ();
 		if (currentView==View.Room) {
 			lastRoom = currentRoom;
 			cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
@@ -328,11 +325,11 @@ public class Game : MonoBehaviour {
 							currentAbility.UseAbility(this, clickLocation2D);
 					}
 					else {
-						Debug.Log ("Not enough energy!");
+						Debug.Log ("Not enough energy!"); // play a "fail" sound
 					}
 				}
 				else {
-					Debug.Log ("No ability selected.");
+					Debug.Log ("No ability selected."); // play a "fail" sound
 				}
 			}
 		}

@@ -32,7 +32,7 @@ public class Hazard_Claw_Projectile : MonoBehaviour {
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.transform.CompareTag ("Person")){
 			targetPerson = other.transform.GetComponent<Person>();
-			targetPerson.canMove=false;
+			targetPerson.CanMove=false;
 			isExtending=false;
 			targetPerson.Damage(parentHazard.dam);
 		}
@@ -60,13 +60,13 @@ public class Hazard_Claw_Projectile : MonoBehaviour {
 			transform.position += (Vector3)(origin-destination).normalized*speed*Time.deltaTime;
 			if (((Vector2)transform.position-origin).magnitude>minSeparation){
 				if (targetPerson != null) {
-					targetPerson.canMove=false;
+					targetPerson.CanMove=false;
 					targetPerson.rigidbody2D.velocity = (origin-destination).normalized*speed;
 				}
 			}
 			else {
 				if (targetPerson != null){
-					targetPerson.canMove=true;
+					targetPerson.CanMove=true;
 				}
 				Finish ();
 			}
