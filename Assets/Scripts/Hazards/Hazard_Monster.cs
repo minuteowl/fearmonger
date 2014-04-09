@@ -21,7 +21,7 @@ public class Hazard_Monster : Hazard {
 
 		duration = 8f;
 		base.Start ();
-		roarSound = Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
+		roarSound = Resources.Load<AudioClip>("Sounds/ghost_giggle_3");
 	}
 
 	// HEY ANIMATION PEOPLE!!! USE THIS!!!

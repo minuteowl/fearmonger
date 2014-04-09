@@ -11,7 +11,7 @@ public class Ability_Monster : Ability {
 		EnergyCost = 4;
 		BuyCost = 4;
 		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Monster");
-		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
+		effectSound=Resources.Load<AudioClip>("Sounds/ghost_giggle_3");
 	}
 	
 	public override void UseAbility(RoomObject room, Vector2 clickLocation){
