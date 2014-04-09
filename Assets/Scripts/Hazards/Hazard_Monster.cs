@@ -36,7 +36,7 @@ public class Hazard_Monster : Hazard {
 		damage=GameVars.damage_monster;
 		duration = 8f;
 		base.Start ();
-		roarSound = Resources.Load<AudioClip>("Sounds/PLACEHOLDER-monstersound");
+		roarSound = Resources.Load<AudioClip>("Sounds/ghost_giggle_3");
 	}
 
 	// Update is called once per frame

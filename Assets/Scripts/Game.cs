@@ -129,9 +129,12 @@ public class Game : MonoBehaviour {
 	
 	
 	private void OnGUI(){
+		int orginalFontSize = GUI.skin.button.fontSize;
+
+		GUI.skin.button.fontSize = 12;
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (GUI.Button (new Rect (1, 61, 115, 30), listAbilities [0].Name)) {
+			if (GUI.Button (new Rect (1, 61, 110, 30), listAbilities [0].Name)) {
 				if(listAbilities[0].Locked && listAbilities[0].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[0]);
@@ -148,7 +151,7 @@ public class Game : MonoBehaviour {
 				}
 				
 			}
-			else if (GUI.Button (new Rect (1, 91, 115, 30), listAbilities [1].Name)) {
+			else if (GUI.Button (new Rect (1, 91, 110, 30), listAbilities [1].Name)) {
 				if(listAbilities[1].Locked && listAbilities[1].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[1]);
@@ -164,7 +167,7 @@ public class Game : MonoBehaviour {
 					selectedIndex = 1;
 				}
 			}
-			else if (GUI.Button (new Rect (1, 121, 115, 30), listAbilities [2].Name)) {
+			else if (GUI.Button (new Rect (1, 121, 110, 30), listAbilities [2].Name)) {
 				if(listAbilities[2].Locked && listAbilities[2].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[2]);
@@ -180,7 +183,7 @@ public class Game : MonoBehaviour {
 					selectedIndex = 2;
 				}
 			}
-			else if (GUI.Button (new Rect (1, 151, 115, 30), listAbilities [3].Name)) {
+			else if (GUI.Button (new Rect (1, 151, 110, 30), listAbilities [3].Name)) {
 				if(listAbilities[3].Locked && listAbilities[3].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[3]);
@@ -196,7 +199,7 @@ public class Game : MonoBehaviour {
 					selectedIndex = 3;
 				}
 			}
-			if (GUI.Button (new Rect (1, 181, 115, 30), listAbilities [4].Name)) {
+			if (GUI.Button (new Rect (1, 181, 110, 30), listAbilities [4].Name)) {
 				if(listAbilities[4].Locked && listAbilities[4].BuyCost <= playerLevel.BuyPoints)
 				{
 					playerLevel.BuyAbility(listAbilities[4]);
@@ -223,8 +226,10 @@ public class Game : MonoBehaviour {
 				}
 			}
 		}
+
+		GUI.skin.button.fontSize = orginalFontSize;
 		// MAP = ROOM SELECTION
-		else if (currentView == View.Map){
+		if (currentView == View.Map){
 			//Floor 1
 			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,0].MapName ())) {
 				GoToRoom(0,0);
@@ -251,6 +256,26 @@ public class Game : MonoBehaviour {
 			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,3].MapName ())) {
 				if(floorsUnlocked >= 2) GoToRoom(1,3);
 			}
+			}
+			else
+			{
+				GUI.skin.button.fontSize = 9;
+
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(1,3);
+				}
+
+				GUI.skin.button.fontSize = orginalFontSize;
+			}
 			//Floor 3
 			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,0].MapName ())) {
 				if(floorsUnlocked >= 3) GoToRoom(2,0);
@@ -264,6 +289,25 @@ public class Game : MonoBehaviour {
 			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,3].MapName ())) {
 				if(floorsUnlocked >= 3) GoToRoom(2,3);
 			}
+			}
+			else{
+				GUI.skin.button.fontSize = 9;
+
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(2,3);
+				}
+
+				GUI.skin.button.fontSize = orginalFontSize;
+			}
 			//Floor 4
 			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,0].MapName ())) {
 				if(floorsUnlocked >=4) GoToRoom(3,0);
@@ -276,6 +320,26 @@ public class Game : MonoBehaviour {
 			}
 			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,3].MapName ())) {
 				if(floorsUnlocked >=4) GoToRoom(3,3);
+			}
+		}
+			else
+			{
+				GUI.skin.button.fontSize = 9;
+
+				if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,0);
+				}	
+				if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,1);
+				}
+				if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,2);
+				}
+				if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), "Locked")) {
+					GoToRoom(3,3);
+				}
+
+				GUI.skin.button.fontSize = orginalFontSize;
 			}
 		}
 		
