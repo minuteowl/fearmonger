@@ -41,9 +41,8 @@ public class PlayerLevel : MonoBehaviour {
 
 	private void Start () {
 		energyCurrent=energyMax;
-		expToNextLevel=10;
+		expToNextLevel=20;
 		game=GameObject.Find("GameManager").GetComponent<Game>();
-		
 	}
 	
 	private void LevelUp(){
@@ -53,7 +52,9 @@ public class PlayerLevel : MonoBehaviour {
 		energyMax = 8+2*level; //level 1: 10, level 11: 30, etc.
 		energyMin ++;
 		buyPoints +=2;
-		expToNextLevel += 10*level;
+		expCurrent -= expToNextLevel;// resets to zero or overflow
+		if (expCurrent<0) expCurrent=0;
+		expToNextLevel = 20*level;
 		if (level == 3 || level == 6 || level == 9) 
 		{
 			game.unlockFloor ();
@@ -71,8 +72,6 @@ public class PlayerLevel : MonoBehaviour {
 		}
 		if (expCurrent+e>=expToNextLevel){
 			LevelUp ();
-			expCurrent -= expToNextLevel; // to level up, energyCurrent >= energyMax,
-			//UseEnergy (0); // but to be safe, make sure energyCurrent >= 0.
 		}
 	}
 	
@@ -119,8 +118,9 @@ public class PlayerLevel : MonoBehaviour {
 	
 	private void OnGUI()
 	{
-		GUI.Box (new Rect (1, 1, 110, 60), "Player Level: " + level + "\n" + 
-		         "Energy: " + energyCurrent + "/" + energyMax + "\n" +
-		         "Ability Points: " + buyPoints);
+		GUI.Box (new Rect (1, 1, 110, 60), "Level " + level +
+		         ", XP: "+expCurrent+"/"+expToNextLevel + 
+		         "\nEnergy: " + energyCurrent + "/" + energyMax +
+		         "\nAbility Points: " + buyPoints);
 	}
 }

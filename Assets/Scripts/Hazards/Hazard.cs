@@ -14,6 +14,7 @@ public class Hazard : MonoBehaviour {
 		ccollider = transform.GetComponent<CircleCollider2D>();
 		// This stays as the room in which the hazard was created
 		currentRoom = GameObject.Find ("GameManager").GetComponent<Game>().currentRoom;
+		transform.parent = currentRoom.transform;
 	}
 	
 	// Update is called once per frame

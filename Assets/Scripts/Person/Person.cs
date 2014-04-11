@@ -36,9 +36,9 @@ public abstract class Person : MonoBehaviour {
 	// By convention, timers start at zero and increment to max, then reset to zero
 	public bool isHurt=false, isLeaving=false, isText=false, isShowHP=false;
 	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
-	private float hurtTimer, hurtTimerMax=1.5f;// temporary invincibility when hurt
-	private float textTimer, textTimerMax=0.8f; // how long to show response text
-	private float hpTimer, hpTimerMax=0.5f; // how long hp bar is visible after hover
+	private float hurtTimer, hurtTimerMax=2.0f;// temporary invincibility when hurt
+	private float textTimer, textTimerMax=1.0f; // how long to show response text
+	private float hpTimer, hpTimerMax=0.8f; // how long hp bar is visible after hover
 	//public Vector3 destination3d;
 	public Vector3 destination;
 	private float walkSpeed;

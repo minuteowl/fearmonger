@@ -49,8 +49,13 @@ public class Game : MonoBehaviour {
 	
 	public void unlockFloor()
 	{
-		if (floorsUnlocked < 4)
+		if (floorsUnlocked < 4){
+			rooms[floorsUnlocked,0].Unlock(10f);
+			rooms[floorsUnlocked,1].Unlock(10f);
+			rooms[floorsUnlocked,2].Unlock(10f);
+			rooms[floorsUnlocked,3].Unlock(10f);
 			floorsUnlocked++;
+		}
 	}
 	
 	private void Start ()
