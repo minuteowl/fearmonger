@@ -20,7 +20,7 @@ public static class GameVars {
 	public static int damage_spiders=2;
 	public static float duration_darkness=8f;
 	public static int damage_darkness=4;
-	public static float duration_claw=0f;
+	public static float duration_claw=8f;
 	public static int damage_claw=6;
 	public static float duration_monster=10f;
 	public static int damage_monster=7;

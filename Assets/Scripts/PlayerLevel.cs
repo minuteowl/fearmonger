@@ -32,7 +32,13 @@ public class PlayerLevel : MonoBehaviour {
 	}
 	
 	/*======== FUNCTIONS ========*/
-	
+
+	void CHEAT_DEBUG(){
+		if (Input.GetKeyDown ("space")){
+			LevelUp ();
+		}
+	}
+
 	private void Start () {
 		energyCurrent=energyMax;
 		expToNextLevel=10;
@@ -48,7 +54,7 @@ public class PlayerLevel : MonoBehaviour {
 		energyMin ++;
 		buyPoints +=2;
 		expToNextLevel += 10*level;
-		if (level == 4 || level == 8 || level == 12) 
+		if (level == 3 || level == 6 || level == 9) 
 		{
 			game.unlockFloor ();
 		}
@@ -91,6 +97,7 @@ public class PlayerLevel : MonoBehaviour {
 	}
 	
 	private void Update() {
+		CHEAT_DEBUG();
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {
 			if (energyRegenTimer<energyRegenTimerMax) {

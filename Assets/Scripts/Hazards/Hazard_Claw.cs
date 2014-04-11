@@ -19,8 +19,8 @@ public class Hazard_Claw : Hazard {
 	public RoomObject room { get { return currentRoom;}}
 	public int dam { get { return damage;}}
 
-	// No duration
 	protected override void Update () {
+		base.Update();
 		if(clawObject==null){
 			Finish ();
 		}
