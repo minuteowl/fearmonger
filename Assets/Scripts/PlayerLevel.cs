@@ -56,7 +56,7 @@ public class PlayerLevel : MonoBehaviour {
 	private void LevelDown(){
 		currentlevel--;
 		expToNextLevel=expToCurrentLevel;
-		expToCurrentLevel = expToNextLevel - 5*currentlevel;
+		expToCurrentLevel = expToNextLevel - 15*currentlevel;
 		PersonLists.GetNewCombos (currentlevel);
 		game.WriteText("Your level has dropped to "+currentlevel+"!"); // also some message text is displayed
 		decayTimerMax = GameVars.Difficulty/currentlevel;
@@ -71,7 +71,7 @@ public class PlayerLevel : MonoBehaviour {
 			maxlevel++;
 			energyMax = 8+2*currentlevel; //level 1: 10, level 11: 30, etc.
 			energyMin ++;
-			buyPoints +=2;
+			buyPoints ++;
 			if (currentlevel == 3 || currentlevel == 6 || currentlevel == 9) 
 			{
 				game.unlockFloor ();
@@ -79,7 +79,7 @@ public class PlayerLevel : MonoBehaviour {
 		}
 		expCurrent+=currentlevel;//extra bonus, makes it easier to not level down
 		decayTimer=0f;
-		expToNextLevel = expToCurrentLevel + 5*currentlevel;
+		expToNextLevel = expToCurrentLevel + 15*currentlevel;
 		decayTimerMax = GameVars.Difficulty/currentlevel;
 		game.WriteText("Your level has increased to "+currentlevel+"!"); // also some message text is displayed
 	}

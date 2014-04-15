@@ -109,8 +109,9 @@ public class Game : MonoBehaviour {
 		rooms[0,1].Unlock(8f);
 		rooms[0,2].Unlock(14f);
 		rooms[0,3].Unlock(20f);
-		currentView = View.Room;
+		currentView = View.Map;
 		messageTextStyle.contentOffset = new Vector2(0,(Screen.height-2*messageTextStyle.fontSize));
+		GoToMap ();
 		//print (Screen.height);
 	}
 	public bool isAtMap{

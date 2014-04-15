@@ -120,7 +120,7 @@ public class RoomObject : MonoBehaviour {
 		LightsOnMax=2;
 		GameObject temp;
 		stayTimer = 0; vacantTimer = 0;
-		stayTimerMax = UnityEngine.Random.Range(55f+numberOccupants*4,60f+numberOccupants*4);
+		stayTimerMax = UnityEngine.Random.Range(42f+numberOccupants*4,78f+numberOccupants*4);
 
 		GameObject[] combo = getNewCombo();
 		numberOccupants = combo.Length;

@@ -18,6 +18,7 @@ public class CameraObject : MonoBehaviour {
 		SetCameraSize(sizeSmall);
 		cursor = GameObject.Find ("Cursor");
 		//renderer = transform.GetComponent<SpriteRenderer>();
+		ZoomOut ();
 	}
 
 	// Update is called once per frame
