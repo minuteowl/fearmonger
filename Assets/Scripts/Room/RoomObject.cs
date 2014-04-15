@@ -94,13 +94,13 @@ public class RoomObject : MonoBehaviour {
 		peoplePrefabTypes[6]=Resources.Load<GameObject>("Prefabs/Person/Priest");
 	}
 
-	private Transform[] getNewCombo() {
+	private GameObject[] getNewCombo() {
 		int i = UnityEngine.Random.Range(0,200)%(PersonLists.Combinations.Count);
 		int[] array = PersonLists.Combinations[i];
-		Transform[] t = new Transform[array.Length];
+		GameObject[] t = new GameObject[array.Length];
 		for(int j=0; j<array.Length; j++){
 			if (array[j]>-1) {
-				t[j] = peoplePrefabTypes[array[j]].transform;
+				t[j] = peoplePrefabTypes[array[j]];
 			}
 			else t[j]=null;
 		}
@@ -116,17 +116,19 @@ public class RoomObject : MonoBehaviour {
 		// Prepare the room
 		ResetFurniture ();
 		isOccupied = true;
+		LightsOnMax=2;
+		GameObject temp;
 		stayTimer = 0; vacantTimer = 0;
 		stayTimerMax = UnityEngine.Random.Range(55f+numberOccupants*4,60f+numberOccupants*4);
-		Transform[] combo = getNewCombo();
+
+		GameObject[] combo = getNewCombo();
 		numberOccupants = combo.Length;
-		Transform temp;
 		occupants = new Person[numberOccupants];
 		if (doorOpenSound!=null)
-			AudioSource.PlayClipAtPoint (doorOpenSound, transform.position);
-		LightsOnMax=2;
+			AudioSource.PlayClipAtPoint (doorOpenSound, ExitLocation);
+
 		for (int i=0; i<combo.Length; i++) {
-			temp = (Transform)Instantiate(combo[i],spawnPositions[i],Quaternion.identity);
+			temp = Instantiate(combo[i],spawnPositions[i],Quaternion.identity) as GameObject;
 			occupants[i] = temp.GetComponent<Person>();
 			if (occupants[i] is Person_Candle){
 				LightsOnMax++;
@@ -138,7 +140,7 @@ public class RoomObject : MonoBehaviour {
 		}
 		game.NumOccupiedRooms++;
 		//Debug.Log("Checking in "+numberOccupants+" people into room "+roomName);
-		game.WriteText(numberOccupants+" new victims checked into "+RoomName+".");
+		game.WriteText(numberOccupants+" potential victims checked into "+RoomName+".");
 	}
 
 	public float GetDuration()

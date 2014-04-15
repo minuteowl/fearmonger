@@ -12,7 +12,7 @@ public class Ability_Darkness : Ability {
 		EnergyCost = 3;
 		BuyCost = 1;
 		hazard=Resources.Load<GameObject>("Prefabs/Hazards/Darkness");
-		effectSound=Resources.Load<AudioClip>("Sounds/PLACEHOLDER-darksound");
+		effectSound = Resources.Load<AudioClip> ("Sounds/dark_orb");
 	}
 	
 	public override void UseAbility(Game game, Vector2 clickLocation){
