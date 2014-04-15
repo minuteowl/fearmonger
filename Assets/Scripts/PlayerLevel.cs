@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class PlayerLevel : MonoBehaviour {
 	
 	/*======== VARIABLES ========*/
-	private int level=1,
+	private int currentlevel=1,maxlevel=1,
 	buyPoints=2,
 	// when energy is below minimum energy, it regenerates
 	energyMax=10,
@@ -14,7 +14,11 @@ public class PlayerLevel : MonoBehaviour {
 	private int expCurrent;
 	private int expToNextLevel;
 	private Game game;
-	
+	public Font statusFont;
+	public GUIStyle guistyle;
+	private float decayTimer=0f,decayTimerMax;
+
+
 	// when energy is below minimum energy, it regenerate
 	// By convention, timers start at zero and increment to max, then resets back to zero
 	public float energyRegenTimer=0f; // timer, in seconds
@@ -22,7 +26,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	// "Read-only" variables
 	public int Level {
-		get {return level;}
+		get {return currentlevel;}
 	}
 	public int BuyPoints {
 		get {return buyPoints;}
@@ -43,23 +47,36 @@ public class PlayerLevel : MonoBehaviour {
 		energyCurrent=energyMax;
 		expToNextLevel=20;
 		game=GameObject.Find("GameManager").GetComponent<Game>();
+		decayTimerMax = GameVars.Difficulty; // automatically = difficulty/1
 	}
-	
+
+	private void LevelDown(){
+		expToNextLevel -= 20*currentlevel;
+		currentlevel--;
+		PersonLists.GetNewCombos (currentlevel);
+		game.WriteText("Your level has dropped to "+currentlevel+"!"); // also some message text is displayed
+		decayTimerMax = GameVars.Difficulty/currentlevel;
+	}
+
 	private void LevelUp(){
-		PersonLists.GetNewCombos (level);
-		level++;
-		// these next values are arbitrary & we can change them later:
-		energyMax = 8+2*level; //level 1: 10, level 11: 30, etc.
-		energyMin ++;
-		buyPoints +=2;
-		expCurrent -= expToNextLevel;// resets to zero or overflow
-		if (expCurrent<0) expCurrent=0;
-		expToNextLevel = 20*level;
-		if (level == 3 || level == 6 || level == 9) 
-		{
-			game.unlockFloor ();
+		currentlevel++;
+		PersonLists.GetNewCombos (currentlevel);
+		// you haven't reached this level before
+		if (currentlevel>maxlevel) { 
+			maxlevel++;
+			energyMax = 8+2*currentlevel; //level 1: 10, level 11: 30, etc.
+			energyMin ++;
+			buyPoints +=2;
+			if (currentlevel == 3 || currentlevel == 6 || currentlevel == 9) 
+			{
+				game.unlockFloor ();
+			}
 		}
-		Debug.Log ("LEVELED UP TO "+level); // also some message text is displayed
+		//expCurrent -= expToNextLevel;// resets to zero or overflow
+		//if (expCurrent<0) expCurrent=0;
+		expToNextLevel += 20*currentlevel;
+		decayTimerMax = GameVars.Difficulty/currentlevel;
+		game.WriteText("YOU HAVE REACHED LEVEL "+currentlevel+"!"); // also some message text is displayed
 	}
 	
 	
@@ -89,7 +106,7 @@ public class PlayerLevel : MonoBehaviour {
 	
 	public bool CanUseAbility(Ability ability) {
 		if (!ability.Locked && energyCurrent<ability.EnergyCost) {
-			Debug.Log("Not enough energy to use "+ability.Name+", which requires "+ability.EnergyCost+" energy.");
+			game.WriteText ("You need "+ability.EnergyCost+" energy to use "+ability.Name+".");
 			return false;
 		}
 		else return true;
@@ -97,6 +114,14 @@ public class PlayerLevel : MonoBehaviour {
 	
 	private void Update() {
 		CHEAT_DEBUG();
+		if (currentlevel>0 && expCurrent>0){
+			if (decayTimer<decayTimerMax){
+				decayTimer+=GameVars.Tick*Time.deltaTime;
+			} else {
+				expCurrent--;
+				decayTimer=0f;
+			}
+		}
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {
 			if (energyRegenTimer<energyRegenTimerMax) {
@@ -118,9 +143,10 @@ public class PlayerLevel : MonoBehaviour {
 	
 	private void OnGUI()
 	{
-		GUI.Box (new Rect (1, 1, 110, 60), "Level " + level +
+		//ability points goes near abilities
+		GUI.Box (new Rect (10, 10, Screen.width, 60), "Level " + currentlevel +
 		         ", XP: "+expCurrent+"/"+expToNextLevel + 
-		         "\nEnergy: " + energyCurrent + "/" + energyMax +
-		         "\nAbility Points: " + buyPoints);
+		         "\t\t\tEnergy: " + energyCurrent + "/" + energyMax +
+		         "\t\t\tPurchase Points: " + buyPoints, guistyle);
 	}
 }

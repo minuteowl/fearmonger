@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public class RoomObject : MonoBehaviour {
 
 	/*======== VARIABLES ========*/
-	private string roomName;
-	public string RoomName { get {return ("Room "+roomName);}}
+	private string roomNumber;
+	public string RoomName { get {return ("Room "+roomNumber);}}
 	public Person[] occupants;
 	public List<Ability> ActiveAbilityEffects = new List<Ability>();
 	[HideInInspector] public Game game; // accessible to occupants
@@ -36,9 +36,9 @@ public class RoomObject : MonoBehaviour {
 		if (!isUnlocked){
 			return "Locked";
 		} else if (!isOccupied) {
-			return roomName;//"Vacant";
+			return roomNumber;//"Vacant";
 		} else {
-			return roomName;
+			return roomNumber;
 		}
 	}
 
@@ -82,7 +82,7 @@ public class RoomObject : MonoBehaviour {
 		lamp1StartPos = lamp1.position;
 		lamp2StartPos = lamp2.position;
 		CameraPosition = this.transform.FindChild("CameraPosition").position;
-		roomName = transform.name.Split(' ')[1];
+		roomNumber = transform.name.Split(' ')[1];
 		//peoplePrefabTypes = Resources.LoadAll<GameObject>("Prefabs/Person");
 		//print (peoplePrefabTypes.Length);
 		peoplePrefabTypes[0]=Resources.Load<GameObject>("Prefabs/Person/Boy");
@@ -117,7 +117,7 @@ public class RoomObject : MonoBehaviour {
 		ResetFurniture ();
 		isOccupied = true;
 		stayTimer = 0; vacantTimer = 0;
-		stayTimerMax = UnityEngine.Random.Range(30f+numberOccupants*4,40f+numberOccupants*4);
+		stayTimerMax = UnityEngine.Random.Range(55f+numberOccupants*4,60f+numberOccupants*4);
 		Transform[] combo = getNewCombo();
 		numberOccupants = combo.Length;
 		Transform temp;
@@ -138,6 +138,7 @@ public class RoomObject : MonoBehaviour {
 		}
 		game.NumOccupiedRooms++;
 		//Debug.Log("Checking in "+numberOccupants+" people into room "+roomName);
+		game.WriteText(numberOccupants+" new victims checked into "+RoomName+".");
 	}
 
 	public float GetDuration()
@@ -148,7 +149,7 @@ public class RoomObject : MonoBehaviour {
 	public void CheckOut(){
 		isOccupied=false;
 		vacantTimer=0; stayTimer = 0;
-		vacantTimerMax = UnityEngine.Random.Range(6f,10f); // delay to next check-in
+		vacantTimerMax = UnityEngine.Random.Range(10f,15f); // delay to next check-in
 		for (int i=numberOccupants-1; i>=0; i--) {
 			if (occupants[i]!=null) {
 				occupants[i].Leave ();
@@ -161,6 +162,7 @@ public class RoomObject : MonoBehaviour {
 //		Debug.Log("Checked out from room "+roomName +" lamps on ="+LampsOn);
 		//if (doorCloseSound!=null)
 		//	AudioSource.PlayClipAtPoint (doorCloseSound, transform.position);
+		game.WriteText (RoomName+" has become vacant.");
 	}
 
 	public void TurnLightOn(){
@@ -188,6 +190,7 @@ public class RoomObject : MonoBehaviour {
 					stayTimer += GameVars.Tick*Time.deltaTime;
 				}
 				else if (numberOccupants>0){
+					game.WriteText (RoomName+"'s occupants are checking out.");
 					foreach(Person p in occupants){
 						p.GoToDoor();
 					}

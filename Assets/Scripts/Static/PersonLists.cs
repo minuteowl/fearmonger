@@ -15,64 +15,57 @@ public static class PersonLists {
 	 * 4 = man w/ candle, 5 = woman w/ candle
 	 * 6 = priest
 	 */
+	// Starting list, level 1: 1 child, 1 adult, or 2 adults -> RoomObjects access this
+	public static List<int[]> combo1 = new List<int[]>(){
+		new int[]{2,2}, new int[]{0,2}, new int[]{0,3}, new int[]{2,3},
+		new int[]{1,2}, new int[]{1,3}, new int[]{3,3},
+	};
+
 	// PlayerLevel accesses this
+	public static List<int[]> Combinations = combo1;
+
 	public static void GetNewCombos(int level){
-		switch (level){
-		case 1:
+		Combinations = combo1;
+		//if (level >= 1){
 			AddLists (combo2);
 			AddLists (combo3);
-			break;
-		case 2:
+		//}
+		if (level >= 2){
 			AddLists(combo4);
-			break;
-		case 3:
+		} if (level >= 3){
 			AddLists(combo5);
 			AddLists(combo6);
 			AddLists(combo8);
-			break;
-		case 4:
+		} if (level >= 4){
 			AddLists(combo13);
 			AddLists (combo14);
-			break;
-		case 5:
+		} if (level >= 5){
 			AddLists (combo9);
 			AddLists (combo17);
 			AddLists(combo10);
-			break;
-		case 6:
+		} if (level >= 6){
 			AddLists (combo11);
 			AddLists (combo12);
-			break;
-		case 7:
+		} if (level >= 7){
 			AddLists(combo15);
 			AddLists(combo18);
-			break;
-		case 8:
+		} if (level >= 8){
 			AddLists(combo19);
 			AddLists (combo16);
-			break;
-		case 9:
+		} if (level >= 9){
 			AddLists (combo20);
 			AddLists (combo21);
-			break;
-		case 10:
+		} if (level >= 10){
 			AddLists (combo22);
-			break;
-		default:
-			break; // level 11 and above
 		}
-
 	}
 	static void AddLists(List<int[]> l){
 		foreach (int[] i in l){
 			Combinations.Add (i);
 		}
 	}
-	// Starting list, level 1: 1 child, 1 adult, or 2 adults -> RoomObjects access this
-	public static List<int[]> Combinations = new List<int[]>(){
-		new int[]{2,2}, new int[]{0,2}, new int[]{0,3}, new int[]{2,3},
-		new int[]{1,2}, new int[]{1,3}, new int[]{3,3},
-	};
+
+
 	// Next list: 2 children, 1 adult
 	static List<int[]> combo2 = new List<int[]>(){
 		new int[]{0,0,2}, new int[]{0,0,3}, new int[]{0,1,2}, new int[]{0,1,3},

@@ -77,6 +77,9 @@
      <Compile Include="Assets\Scripts\Static\GameVars.cs" />
      <Compile Include="Assets\Scripts\Static\PersonLists.cs" />
      <Compile Include="Assets\Scripts\Static\ShockPhrases.cs" />
+     <Compile Include="Assets\Scripts\startgame.cs" />
+     <None Include="Assets\Resources\Fonts\were_beast\werebeast.txt" />
+     <None Include="Assets\Resources\Fonts\my_type_of_font\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

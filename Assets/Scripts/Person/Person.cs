@@ -36,9 +36,9 @@ public abstract class Person : MonoBehaviour {
 	// By convention, timers start at zero and increment to max, then reset to zero
 	public bool isHurt=false, isLeaving=false, isText=false, isShowHP=false;
 	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
-	private float hurtTimer, hurtTimerMax=2.0f;// temporary invincibility when hurt
-	private float textTimer, textTimerMax=1.0f; // how long to show response text
-	private float hpTimer, hpTimerMax=0.8f; // how long hp bar is visible after hover
+	private float hurtTimer, hurtTimerMax=2.5f;// temporary invincibility when hurt
+	private float textTimer, textTimerMax=1.9f; // how long to show response text
+	private float hpTimer, hpTimerMax=1.3f; // how long hp bar is visible after hover
 	//public Vector3 destination3d;
 	public Vector3 destination;
 	private float walkSpeed;
@@ -101,7 +101,7 @@ public abstract class Person : MonoBehaviour {
 
 	// Update is called once per frame
 	protected virtual void Update () {
-		walkSpeed = 3.2f*(1.75f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
+		walkSpeed = 1.8f*(2f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
 		if (game.currentView==Game.View.Room && isText){
 			if (textTimer<textTimerMax){
 				textTimer += GameVars.Tick*Time.deltaTime;
@@ -190,7 +190,7 @@ public abstract class Person : MonoBehaviour {
 
 	private void RestartWalk(){
 		motionTimer=0f;
-		motionTimerMax = Random.Range(0.3f, 0.9f);
+		motionTimerMax = Random.Range(0.5f, 1.5f);
 		destination= new Vector3(
 			3.85f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.x,
 			3.75f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.y,
@@ -321,6 +321,10 @@ public abstract class Person : MonoBehaviour {
 	// forces the person to leave, delete object
 	public void Leave(){
 		myRoom.numberOccupants--;
+		if (sanityCurrent<=0)
+			game.WriteText ("A victim has been scared from "+myRoom.RoomName+"!");
+		//else
+		//	game.WriteText ("Someone is leaving "+myRoom.RoomName);
 		Destroy(gameObject);
 		Destroy(this);
 	}

@@ -6,17 +6,23 @@ public class CameraObject : MonoBehaviour {
 	private float sizeSmall, sizeLarge;
 	private Vector3 mapPosition;
 	//private GameManager game;
+	private GameObject cursor;
+	//private SpriteRenderer renderer;
 
 	// Use this for initialization
 	private void Start () {
-		sizeSmall=9.6f; // for some reason I have to call this twice
-		sizeLarge=90f;
+		Screen.showCursor = false; 
+		sizeSmall=11f;
+		sizeLarge=82f;
 		mapPosition = GameObject.Find("GameManager").transform.position;
 		SetCameraSize(sizeSmall);
+		cursor = GameObject.Find ("Cursor");
+		//renderer = transform.GetComponent<SpriteRenderer>();
 	}
 
 	// Update is called once per frame
 	private void Update () {
+
 	}
 
 	private void SetCameraSize(float newsize) {
@@ -27,10 +33,12 @@ public class CameraObject : MonoBehaviour {
 		//Debug.Log("zooming in to "+room.CameraPosition+" at room "+room.RoomName);
 		transform.position = room.CameraPosition;
 		SetCameraSize(sizeSmall);
+		cursor.transform.localScale *= (sizeSmall/sizeLarge);
 	}
 
 	public void ZoomOut() {
 		transform.position = mapPosition;
 		SetCameraSize(sizeLarge);
+		cursor.transform.localScale *= (sizeLarge/sizeSmall);
 	}
 }

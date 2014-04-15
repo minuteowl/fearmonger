@@ -6,7 +6,7 @@ public class Hazard_Darkness : Hazard {
 	CircleCollider2D circle;
 	bool spent = false;
 	//SpriteRenderer renderer;
-	Vector3 dtscale;
+	Vector3 dtscale, rotvector;
 
 	// Use this for initialization
 	protected override void Start () {
@@ -17,6 +17,7 @@ public class Hazard_Darkness : Hazard {
 		//renderer=transform.GetComponent<SpriteRenderer>();
 		//dtCollider = circle.radius/duration;
 		dtscale = transform.localScale/duration;
+		rotvector = Vector3.back*300f;
 	}
 
 	// The darkness turns off lamps and lanterns
@@ -42,7 +43,9 @@ public class Hazard_Darkness : Hazard {
 	protected override void Update () {
 		if (transform.localScale.x>0f){
 			transform.localScale -= dtscale*GameVars.Tick*Time.deltaTime;
+			transform.Rotate (rotvector*GameVars.Tick*Time.deltaTime);
 		}
+
 		base.Update();
 	}
 }

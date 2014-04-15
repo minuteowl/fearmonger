@@ -14,11 +14,18 @@ public class Game : MonoBehaviour {
 	private Vector2 clickLocation2D;
 	private RaycastHit2D hit;
 	private Ray2D ray;
-	private int selectedIndex;
+	//private int selectedIndex=10;
 	
 	// INTERFACE LOGIC
 	private CameraObject cameraObject;
+	private CursorAppearance cursorAppearance;
 	private Transform cameraMapPositionTransform;
+	private Rect textRect;
+	public GUIStyle messageTextStyle;
+	private GUIStyle abilityTextStyle;
+	public Font typewriterFont;
+	private float textTimer=0, textTimerMax=4f;
+	private bool isWritingText=false;
 	
 	// we also need to keep track of this
 	[HideInInspector] public PlayerLevel playerLevel;
@@ -57,7 +64,22 @@ public class Game : MonoBehaviour {
 			floorsUnlocked++;
 		}
 	}
-	
+
+	private string textstring="";
+	private int textstringLength=0;
+	public void WriteText(string str){
+		textstring=str;
+		textstringLength=textstring.Length;
+		textTimer=0f;
+		isWritingText=true;
+	}
+
+	private Rect WriteBox(){
+		int height =20;
+		//int yOffset = 50;
+		return new Rect((Screen.width-textstringLength)/2,0,textstringLength,height);
+	}
+
 	private void Start ()
 	{
 		listAbilities = new Ability[5];
@@ -66,9 +88,8 @@ public class Game : MonoBehaviour {
 		listAbilities[2] = new Ability_Claw();
 		listAbilities[3] = new Ability_Monster();
 		listAbilities[4] = new Ability_Possess();
-		
-		selectedIndex = 10;
-		
+	//	selectedIndex = 10;
+		cursorAppearance = GameObject.Find("Cursor").GetComponent<CursorAppearance>();
 		cameraObject = GameObject.FindGameObjectWithTag("MainCamera").transform.GetComponent<CameraObject>();
 		playerLevel = transform.GetComponent<PlayerLevel>();
 		if (playerLevel==null){
@@ -89,6 +110,8 @@ public class Game : MonoBehaviour {
 		rooms[0,2].Unlock(14f);
 		rooms[0,3].Unlock(20f);
 		currentView = View.Room;
+		messageTextStyle.contentOffset = new Vector2(0,(Screen.height-2*messageTextStyle.fontSize));
+		print (Screen.height);
 	}
 	public bool isAtMap{
 		get { return (bool)(currentView==View.Map);}}
@@ -105,6 +128,7 @@ public class Game : MonoBehaviour {
 			}
 		}
 		else {
+			WriteText (room.RoomName+" is locked.");
 			//A "room is locked!" message is displayed
 		}
 	}
@@ -134,94 +158,47 @@ public class Game : MonoBehaviour {
 	
 	
 	private void OnGUI(){
-		int orginalFontSize = GUI.skin.button.fontSize;
+		//int orginalFontSize = GUI.skin.button.fontSize;
+		GUI.skin.font=typewriterFont;
 
-		GUI.skin.button.fontSize = 12;
+		// main HUD text
+		if (isWritingText)
+			GUI.Label (WriteBox (), textstring, messageTextStyle);
+
 		// GAME MODE = LIST OF ABILITIES
 		if (currentView == View.Room){
-			if (GUI.Button (new Rect (1, 61, 110, 30), listAbilities [0].Name)) {
-				if(listAbilities[0].Locked && listAbilities[0].BuyCost <= playerLevel.BuyPoints)
-				{
-					playerLevel.BuyAbility(listAbilities[0]);
-					SelectAbility(0);
-					selectedIndex = 0;
+			GUI.skin.button.fontSize = 15;
+			for (int i=0;i<listAbilities.Length;i++){
+				if(listAbilities[i].Locked && listAbilities[i].BuyCost <= playerLevel.BuyPoints){
+					GUI.contentColor=Color.gray;
+				} else if (listAbilities[i].Locked && listAbilities[i].BuyCost > playerLevel.BuyPoints){
+					GUI.contentColor=Color.red;
+				} else if (currentAbility==listAbilities[i]){
+					GUI.contentColor=Color.green;
+				} else {
+					GUI.contentColor=Color.white;
 				}
-				else if(listAbilities[0].Locked && listAbilities[0].BuyCost > playerLevel.BuyPoints)
-				{
-					Debug.Log ("Not Enough Points.");
-				}
-				else{
-					SelectAbility(0);
-					selectedIndex = 0;
-				}
-				
-			}
-			else if (GUI.Button (new Rect (1, 91, 110, 30), listAbilities [1].Name)) {
-				if(listAbilities[1].Locked && listAbilities[1].BuyCost <= playerLevel.BuyPoints)
-				{
-					playerLevel.BuyAbility(listAbilities[1]);
-					SelectAbility(1);
-					selectedIndex = 1;
-				}
-				else if(listAbilities[1].Locked && listAbilities[1].BuyCost > playerLevel.BuyPoints)
-				{
-					Debug.Log ("Not Enough Points.");
-				}
-				else{
-					SelectAbility(1);
-					selectedIndex = 1;
+				if (GUI.Button (new Rect (10, 80+50*i, 145, 40), listAbilities [i].Name)) {
+					//cursorAppearance.SetSprite (2);
+					if(listAbilities[i].Locked && listAbilities[i].BuyCost <= playerLevel.BuyPoints)
+					{
+						playerLevel.BuyAbility(listAbilities[i]);
+						SelectAbility(i);
+						WriteText("New ability: "+listAbilities[i].Name+".");
+					}
+					else if(listAbilities[i].Locked && listAbilities[i].BuyCost > playerLevel.BuyPoints)
+					{
+						GUI.color=Color.red;
+						WriteText("You need "+listAbilities[i].BuyCost+" points to buy "+listAbilities[i].Name+".");
+					}
+					else{
+						SelectAbility(i);
+						WriteText("Current ability: "+listAbilities[i].Name+".");
+					}
 				}
 			}
-			else if (GUI.Button (new Rect (1, 121, 110, 30), listAbilities [2].Name)) {
-				if(listAbilities[2].Locked && listAbilities[2].BuyCost <= playerLevel.BuyPoints)
-				{
-					playerLevel.BuyAbility(listAbilities[2]);
-					SelectAbility(2);
-					selectedIndex = 2;
-				}
-				else if(listAbilities[2].Locked && listAbilities[2].BuyCost > playerLevel.BuyPoints)
-				{
-					Debug.Log ("Not Enough Points.");
-				}
-				else{
-					SelectAbility(2);
-					selectedIndex = 2;
-				}
-			}
-			else if (GUI.Button (new Rect (1, 151, 110, 30), listAbilities [3].Name)) {
-				if(listAbilities[3].Locked && listAbilities[3].BuyCost <= playerLevel.BuyPoints)
-				{
-					playerLevel.BuyAbility(listAbilities[3]);
-					SelectAbility(3);
-					selectedIndex = 3;
-				}
-				else if(listAbilities[3].Locked && listAbilities[3].BuyCost > playerLevel.BuyPoints)
-				{
-					Debug.Log ("Not Enough Points.");
-				}
-				else{
-					SelectAbility(3);
-					selectedIndex = 3;
-				}
-			}
-			if (GUI.Button (new Rect (1, 181, 110, 30), listAbilities [4].Name)) {
-				if(listAbilities[4].Locked && listAbilities[4].BuyCost <= playerLevel.BuyPoints)
-				{
-					playerLevel.BuyAbility(listAbilities[4]);
-					SelectAbility(4);
-					selectedIndex = 4;
-				}
-				else if(listAbilities[4].Locked && listAbilities[4].BuyCost > playerLevel.BuyPoints)
-				{
-					Debug.Log ("Not Enough Points.");
-				}
-				else{
-					SelectAbility(4);
-					selectedIndex = 4;
-				}
-			}
-			for (int i=0; i<5 ; i++) {
-				if (i==selectedIndex && selectedIndex != 10 && !listAbilities[i].Locked) {
+			/*for (int i=0; i<listAbilities.Length ; i++) {
+				if (!listAbilities[i].Locked) {
 					GUI.color = Color.cyan;
 					GUI.Box(new Rect(115, (61 + (i * 30)), 20, 30),"E");
 				}
@@ -229,70 +206,51 @@ public class Game : MonoBehaviour {
 					GUI.color = Color.red;
 					GUI.Box(new Rect(115, (61 + (i * 30)), 20, 30), listAbilities[i].BuyCost.ToString());
 				}
-			}
+			}*/
 		}
 
-		GUI.skin.button.fontSize = orginalFontSize;
+		//GUI.skin.button.fontSize = orginalFontSize;
 		// MAP = ROOM SELECTION
-		if (currentView == View.Map){
-			//Floor 1
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,0].MapName ())) {
-				GoToRoom(0,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,1].MapName ())) {
-				GoToRoom(0,1);
-			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f), rooms[0,2].MapName ())) {
-				GoToRoom(0,2);
-			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .735f, Screen.width * .07f, Screen.height * .05f),  rooms[0,3].MapName ())) {
-				GoToRoom(0,3);
-			}
-			//Floor 2
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,0].MapName ())) {
-				if(floorsUnlocked >= 2) GoToRoom(1,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,1].MapName ())) {
-				if(floorsUnlocked >= 2) GoToRoom(1,1);
-			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,2].MapName ())) {
-				if(floorsUnlocked >= 2) GoToRoom(1,2);
-			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .57f, Screen.width * .07f, Screen.height * .05f), rooms[1,3].MapName ())) {
-				if(floorsUnlocked >= 2) GoToRoom(1,3);
-			}
+		else if (currentView == View.Map){
+			GUI.skin.button.fontSize = 18;
+			float w= Screen.width*0.085f;
+			float h = Screen.height*0.12f;
+			for (int x=0;x<4;x++){
+				for (int y=0; y<4; y++){
+					if (rooms[y,x].isUnlocked){
+						GUI.color=Color.white;
+					} else {
+						GUI.color=Color.grey;
+					}
+					/*if (GUI.Button (new Rect(Screen.width*(.273f+0.12f*x),
+					                         Screen.height*(.7f-0.1645f*y),
+					                         Screen.width*0.085f,
+					                         Screen.height*0.12f),
+					                rooms[y,x].MapName()))*/
 
-			//Floor 3
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,0].MapName ())) {
-				if(floorsUnlocked >= 3) GoToRoom(2,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,1].MapName ())) {
-				if(floorsUnlocked >= 3) GoToRoom(2,1);
-			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,2].MapName ())) {
-				if(floorsUnlocked >= 3) GoToRoom(2,2);
-			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .402f, Screen.width * .07f, Screen.height * .05f), rooms[2,3].MapName ())) {
-				if(floorsUnlocked >= 3) GoToRoom(2,3);
-			}
-			//Floor 4
-			if (GUI.Button (new Rect (Screen.width * .325f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,0].MapName ())) {
-				if(floorsUnlocked >=4) GoToRoom(3,0);
-			}	
-			if (GUI.Button (new Rect (Screen.width * .42f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,1].MapName ())) {
-				if(floorsUnlocked >=4) GoToRoom(3,1);
-			}
-			if (GUI.Button (new Rect (Screen.width * .513f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,2].MapName ())) {
-				if(floorsUnlocked >=4) GoToRoom(3,2);
-			}
-			if (GUI.Button (new Rect (Screen.width * .608f, Screen.height * .235f, Screen.width * .07f, Screen.height * .05f), rooms[3,3].MapName ())) {
-				if(floorsUnlocked >=4) GoToRoom(3,3);
+					if (GUI.Button (new Rect(Camera.main.WorldToScreenPoint(rooms[y,x].transform.position).x-w/2,// Screen.width*(.273f+0.12f*x),
+					                         Camera.main.WorldToScreenPoint(rooms[3-y,x].transform.position).y-h/4,// Screen.height*(.7f-0.1645f*y),
+					                         w,
+					                         h),
+					                rooms[y,x].MapName()))
+					{GoToRoom (y,x);}
+				}
 			}
 		}
 	}
 
 	
 	private void Update() {
+		//cursorAppearance.SetSprite (0);
+		if (isWritingText){
+			if (textTimer<textTimerMax){
+				textTimer+=GameVars.Tick*Time.deltaTime;
+			} else {
+				textTimer=0f;
+				isWritingText=false;
+			}
+		}
+
 		// UPDATE THE ROOMS AND PEOPLE
 		for (int i=0; i<4; i++) for (int j=0; j<4; j++) {
 			PeoplePerRoom[i,j] = rooms[i,j].numberOccupants;
@@ -312,6 +270,7 @@ public class Game : MonoBehaviour {
 						if (!rooms[i,j].isOccupied)
 						{
 							rooms[i,j].CheckIn();
+							//WriteText("People checked into "+rooms[i,j].RoomName+".");
 							i=5; j=5;
 							checkInTimer =0;
 							checkInTimerMax = Random.Range(20f,40f);
@@ -332,24 +291,31 @@ public class Game : MonoBehaviour {
 		}
 		// Register click
 		if (Input.GetMouseButtonDown (0)) {
-			if (currentView == View.Room) {
-				if (hit && hit.collider.gameObject.CompareTag("Door")){
+			if ((currentView == View.Room) && hit) {
+				if (hit.collider.gameObject.CompareTag("Door")){
 					// clicked on the door -> go to the map
+					//cursorAppearance.SetSprite (1);
 					GoToMap ();
 				}
-
-				else if (currentAbility!=null && hit){
+				else if (hit.collider.gameObject.CompareTag ("Lamp")){
+					LampObject l = hit.collider.gameObject.GetComponent<LampObject>();
+					l.Switch ();
+				}
+				else if (currentAbility!=null){
 					if (playerLevel.EnergyCurrent>=currentAbility.EnergyCost){
 						if( !hit.collider.gameObject.CompareTag("Solid") && !hit.collider.gameObject.CompareTag("Background"))
 							currentAbility.UseAbility(this, clickLocation2D);
 					}
 					else {
-						Debug.Log ("Not enough energy!"); // play a "fail" sound
+						WriteText("Not enough energy!");
+						//Debug.Log ("Not enough energy!"); // play a "fail" sound
 					}
 				}
-				else {
-					Debug.Log ("No ability selected."); // play a "fail" sound
-				}
+
+				//else {
+				//	WriteText("No ability selected.");
+					//Debug.Log ("No ability selected."); // play a "fail" sound
+				//}
 			}
 		}
 	}
