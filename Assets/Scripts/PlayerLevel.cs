@@ -12,7 +12,7 @@ public class PlayerLevel : MonoBehaviour {
 	energyMin=2;
 	private int energyCurrent;
 	private int expCurrent;
-	private int expToNextLevel;
+	private int expToNextLevel, expToCurrentLevel;
 	private Game game;
 	public Font statusFont;
 	public GUIStyle guistyle;
@@ -39,7 +39,10 @@ public class PlayerLevel : MonoBehaviour {
 
 	void CHEAT_DEBUG(){
 		if (Input.GetKeyDown ("space")){
+			expCurrent=expToNextLevel;
 			LevelUp ();
+		} else if (expCurrent>1 && Input.GetKeyDown ("a")){
+			expCurrent--;
 		}
 	}
 
@@ -51,8 +54,9 @@ public class PlayerLevel : MonoBehaviour {
 	}
 
 	private void LevelDown(){
-		expToNextLevel -= 20*currentlevel;
 		currentlevel--;
+		expToNextLevel=expToCurrentLevel;
+		expToCurrentLevel = expToNextLevel - 5*currentlevel;
 		PersonLists.GetNewCombos (currentlevel);
 		game.WriteText("Your level has dropped to "+currentlevel+"!"); // also some message text is displayed
 		decayTimerMax = GameVars.Difficulty/currentlevel;
@@ -60,6 +64,7 @@ public class PlayerLevel : MonoBehaviour {
 
 	private void LevelUp(){
 		currentlevel++;
+		expToCurrentLevel=expToNextLevel;
 		PersonLists.GetNewCombos (currentlevel);
 		// you haven't reached this level before
 		if (currentlevel>maxlevel) { 
@@ -72,11 +77,11 @@ public class PlayerLevel : MonoBehaviour {
 				game.unlockFloor ();
 			}
 		}
-		//expCurrent -= expToNextLevel;// resets to zero or overflow
-		//if (expCurrent<0) expCurrent=0;
-		expToNextLevel += 20*currentlevel;
+		expCurrent+=currentlevel;//extra bonus, makes it easier to not level down
+		decayTimer=0f;
+		expToNextLevel = expToCurrentLevel + 5*currentlevel;
 		decayTimerMax = GameVars.Difficulty/currentlevel;
-		game.WriteText("YOU HAVE REACHED LEVEL "+currentlevel+"!"); // also some message text is displayed
+		game.WriteText("Your level has increased to "+currentlevel+"!"); // also some message text is displayed
 	}
 	
 	
@@ -121,6 +126,9 @@ public class PlayerLevel : MonoBehaviour {
 				expCurrent--;
 				decayTimer=0f;
 			}
+		}
+		if (currentlevel>1 && expCurrent<expToCurrentLevel){
+			LevelDown ();
 		}
 		// energy regeneration to bring it up to energyMin
 		if (energyCurrent < energyMin) {

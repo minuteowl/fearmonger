@@ -8,18 +8,18 @@ public class CursorAppearance : MonoBehaviour {
 	//Transform targetTransform;
 	//private Sprite[] cursorSprites;
 	//SpriteRenderer spriteRenderer;
-	Game g;
-	RaycastHit2D hit;
-	Ray ray;
-	Vector2 mouse2d;
+	private Game g;
+	private RaycastHit2D hit;
+	private Ray ray;
+	private Vector2 mouse2d;
 	// sound effect
 	public AudioClip mouseClickSound;
-	Texture2D[] texes;
-	int texw, texh;
-	int offsetx=-3, offsety=2;
+	private Texture2D[] texes;
+	private int texw, texh;
+	private int offsetx=-3, offsety=2;
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
 		//cursorSprites = Resources.LoadAll<Sprite>("Sprites/Cursors");
 		texes = Resources.LoadAll<Texture2D>("Sprites/Cursors");
 		//spriteRenderer = transform.GetComponent<SpriteRenderer>();
@@ -61,7 +61,7 @@ public class CursorAppearance : MonoBehaviour {
 		//mouse2d = (Vector2)(ray.origin + ray.direction);
 		mouse2d = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-		transform.position = new Vector3(mouse2d.x, mouse2d.y, GameVars.DepthCursor);
+		//transform.position = new Vector3(mouse2d.x, mouse2d.y, GameVars.DepthCursor);
 		if (g.currentView==Game.View.Room && hit && hit.collider.gameObject.CompareTag("Door")){
 			//spriteRenderer.sprite = cursorSprites[1];
 			GUI.DrawTexture (new Rect(Input.mousePosition.x-(texw/4)+offsetx,Screen.height-Input.mousePosition.y-(texh/4)+offsety,.6f*texw,.6f*texh),texes[1]);

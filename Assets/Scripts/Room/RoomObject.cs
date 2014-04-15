@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor; // Contains the PrefabUtility class.
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ public class RoomObject : MonoBehaviour {
 	private string roomNumber;
 	public string RoomName { get {return ("Room "+roomNumber);}}
 	public Person[] occupants;
-	public List<Ability> ActiveAbilityEffects = new List<Ability>();
+	//public List<Ability> ActiveAbilityEffects = new List<Ability>();
 	[HideInInspector] public Game game; // accessible to occupants
 	protected PlayerLevel playerLevel;
 	
@@ -128,8 +129,13 @@ public class RoomObject : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (doorOpenSound, ExitLocation);
 
 		for (int i=0; i<combo.Length; i++) {
-			temp = Instantiate(combo[i],spawnPositions[i],Quaternion.identity) as GameObject;
+			//Vector3 spawn = 
+
+			temp = PrefabUtility.InstantiatePrefab (combo[i]) as GameObject;
+			temp.transform.position = new Vector3(ExitLocation.x,ExitLocation.y,GameVars.DepthPeopleHazards);
+			//temp = PrefabUtility.InstantiatePrefab(combo[i],spawn,Quaternion.identity) as Transform;
 			occupants[i] = temp.GetComponent<Person>();
+			occupants[i].SetDestination(spawnPositions[i]);
 			if (occupants[i] is Person_Candle){
 				LightsOnMax++;
 			}

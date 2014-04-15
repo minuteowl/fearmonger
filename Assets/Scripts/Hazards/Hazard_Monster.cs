@@ -40,13 +40,14 @@ public class Hazard_Monster : Hazard {
 
 	// Update is called once per frame
 	protected override void Update () {
-		// Should find a new target?
+		base.Update ();
 		if(soundTimer<soundTimerMax)
 			soundTimer+=GameVars.Tick*Time.deltaTime;
 		else {
 			soundTimer=0f;
 			AudioSource.PlayClipAtPoint (roarSound,transform.position);
 		}
+		// Should find a new target?
 		if (huntTimer<huntTimerMax)
 			huntTimer+=GameVars.Tick*Time.deltaTime;
 		else {
@@ -67,12 +68,12 @@ public class Hazard_Monster : Hazard {
 			moveDirection=((Vector2)nearestPersonTransform.position-(Vector2)transform.position).normalized;
 			rigidbody2D.velocity=moveDirection*runSpeed;
 		}
-		else { // there's nobody else in the room
+		else if (currentRoom.occupants.Length==0) { // there's nobody else in the room
 			//Debug.LogError("nobody in the room!");
-			//Finish ();
+			Finish ();
 		}
 		Animate ();
-		base.Update ();
+
 	}
 
 	// use this to determine which sprite(s) to use

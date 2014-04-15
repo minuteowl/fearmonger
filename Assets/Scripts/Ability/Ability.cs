@@ -25,7 +25,7 @@ public class Ability {
 	// room = the current room (based on GameManager)
 	// args = depends on ability
 	public virtual void UseAbility(Game game, Vector2 clickLocation){
-		game.currentRoom.ActiveAbilityEffects.Add (this);
+		//game.currentRoom.ActiveAbilityEffects.Add (this);
 		game.playerLevel.UseEnergy(EnergyCost);
 		// normalize to proper Z-depth
 		Debug.Log("Used ability "+ this.Name);
@@ -36,7 +36,7 @@ public class Ability {
 	}
 
 	private void EndAbility(){
-		game.currentRoom.ActiveAbilityEffects.Remove (this);
+		//game.currentRoom.ActiveAbilityEffects.Remove (this);
 	}
 	
 }

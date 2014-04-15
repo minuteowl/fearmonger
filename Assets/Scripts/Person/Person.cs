@@ -16,6 +16,7 @@ public abstract class Person : MonoBehaviour {
 	const float RADIUS_SMALL = 2.0f, RADIUS_MED = 4.0f, RADIUS_LARGE = 6.0f;
 
 	// Behavior
+	public bool isPossessed=false;
 	protected Animator anim;
 	protected float sightRadius;
 	protected GUITexture healthBar;
@@ -35,9 +36,10 @@ public abstract class Person : MonoBehaviour {
 	// people move by choosing a destination and then walking toward it
 	// By convention, timers start at zero and increment to max, then reset to zero
 	public bool isHurt=false, isLeaving=false, isText=false, isShowHP=false;
+	private float regenTimer=0f, regenTimerMax=5f;
 	private float motionTimer=0f, motionTimerMax; // how long to walk or wait
-	private float hurtTimer, hurtTimerMax=2.5f;// temporary invincibility when hurt
-	private float textTimer, textTimerMax=1.9f; // how long to show response text
+	private float hurtTimer, hurtTimerMax=1.85f;// temporary invincibility when hurt
+	private float textTimer, textTimerMax=2.1f; // how long to show response text
 	private float hpTimer, hpTimerMax=1.3f; // how long hp bar is visible after hover
 	//public Vector3 destination3d;
 	public Vector3 destination;
@@ -52,6 +54,11 @@ public abstract class Person : MonoBehaviour {
 	// HEY ANIMATION PEOPLE!!! USE THIS!!!
 	public void Animate(){
 		SetFacingDirection (); // -> Sets IS_FACING_UP, etc, for you -> don't recalculate them.
+		if (isHurt && hurtTimer<hurtTimerMax/2){
+			GetComponent<SpriteRenderer>().color=Color.red;
+		} else {
+			GetComponent<SpriteRenderer>().color=Color.white;
+		}
 		if (anim!=null){
 			anim.SetBool ("walkUp", IS_FACING_UP);
 			anim.SetBool ("walkDown", IS_FACING_DOWN);
@@ -78,6 +85,14 @@ public abstract class Person : MonoBehaviour {
 		RestartWalk();
 	}
 
+	public void SetDestination(Vector3 v){
+		destination = new Vector3(v.x, v.y, GameVars.DepthPeopleHazards);
+	}
+
+	public void SetDestination(Vector2 v){
+		destination = new Vector3(v.x,v.y,GameVars.DepthPeopleHazards);
+	}
+
 	protected virtual void Start(){
 		// Generate random name
 		string n = name+"(";
@@ -89,6 +104,8 @@ public abstract class Person : MonoBehaviour {
 		name = n+")";
 
 		anim = transform.GetComponent<Animator> ();
+		if (!anim.enabled)
+			anim=null;
 		healthBar=transform.GetChild (0).GetComponent<GUITexture>();
 		text=transform.GetChild (0).GetComponent<GUIText>();
 		text.text="";
@@ -101,7 +118,7 @@ public abstract class Person : MonoBehaviour {
 
 	// Update is called once per frame
 	protected virtual void Update () {
-		walkSpeed = 1.8f*(2f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
+		walkSpeed = UnityEngine.Random.Range(1.55f,1.8f)*(2f - sanityCurrent/sanityMax); // proportional to sanity% + 25%
 		if (game.currentView==Game.View.Room && isText){
 			if (textTimer<textTimerMax){
 				textTimer += GameVars.Tick*Time.deltaTime;
@@ -170,8 +187,9 @@ public abstract class Person : MonoBehaviour {
 	}
 
 	// Logic for comforting or being comforted
-	private void DefendOther(Person other){
-		other.AddDefense(defenseSupport);
+	protected virtual void DefendOther(Person other){
+		if (!isPossessed)
+			other.AddDefense(defenseSupport);
 	}
 
 	// Other roommates are sources of external defense
@@ -191,9 +209,9 @@ public abstract class Person : MonoBehaviour {
 	private void RestartWalk(){
 		motionTimer=0f;
 		motionTimerMax = Random.Range(0.5f, 1.5f);
-		destination= new Vector3(
-			3.85f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.x,
-			3.75f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.y,
+		destination = new Vector3(
+			4.85f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.x,
+			4.75f*UnityEngine.Random.Range(-attentionRadius,attentionRadius)+myRoom.transform.position.y,
 			GameVars.DepthPeopleHazards);
 		walkDirection = ((Vector2)destination-(Vector2)transform.position).normalized;
 		rigidbody2D.velocity = Vector2.zero;
@@ -235,6 +253,12 @@ public abstract class Person : MonoBehaviour {
 					DefendOther(roomie);
 				}
 			}
+		}
+		if (regenTimer<regenTimerMax){ // regenerate sanity over time
+			regenTimer += GameVars.Tick*Time.deltaTime;
+		} else if (sanityCurrent<sanityMax){
+			regenTimer=0;
+			sanityCurrent++;
 		}
 		if (isHurt) { // recovering from an attack
 			if (hurtTimer<hurtTimerMax) {

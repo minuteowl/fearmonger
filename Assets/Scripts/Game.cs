@@ -111,7 +111,7 @@ public class Game : MonoBehaviour {
 		rooms[0,3].Unlock(20f);
 		currentView = View.Room;
 		messageTextStyle.contentOffset = new Vector2(0,(Screen.height-2*messageTextStyle.fontSize));
-		print (Screen.height);
+		//print (Screen.height);
 	}
 	public bool isAtMap{
 		get { return (bool)(currentView==View.Map);}}
